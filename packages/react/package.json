@@ -1,6 +1,6 @@
 {
   "name": "@jackpotkit/react",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "React web renderers for JackpotKit.",
   "type": "module",
   "sideEffects": false,
