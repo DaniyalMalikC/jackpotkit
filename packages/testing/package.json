@@ -38,9 +38,12 @@
     "build": "tsc -p tsconfig.build.json",
     "clean": "node ../../scripts/clean-output.mjs dist coverage",
     "lint": "eslint src",
-    "test": "vitest run --passWithNoTests",
-    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@jackpotkit/core": "workspace:^"
   },
   "publishConfig": {
     "access": "public",

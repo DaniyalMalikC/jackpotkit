@@ -11,6 +11,7 @@
   "scripts": {
     "build": "turbo run build",
     "check:boundaries": "node scripts/check-boundaries.mjs",
+    "check:consumers": "node scripts/check-packed-consumers.mjs",
     "check:expo": "turbo run doctor --filter=@jackpotkit/expo-example",
     "check:exports": "node scripts/check-package-exports.mjs",
     "check:packs": "node scripts/check-package-packs.mjs",
@@ -25,7 +26,7 @@
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
     "typecheck": "turbo run typecheck",
-    "validate": "prettier --check . && turbo run lint && turbo run typecheck && turbo run test && turbo run build && turbo run doctor --filter=@jackpotkit/expo-example && node scripts/check-boundaries.mjs && node scripts/check-package-exports.mjs && node scripts/check-package-packs.mjs",
+    "validate": "prettier --check . && turbo run lint && turbo run typecheck && turbo run test && turbo run build && turbo run doctor --filter=@jackpotkit/expo-example && node scripts/check-boundaries.mjs && node scripts/check-package-exports.mjs && node scripts/check-packed-consumers.mjs && node scripts/check-package-packs.mjs",
     "version-packages": "changeset version"
   },
   "devDependencies": {

@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest';
 
 describe('web-independent core package', () => {
-  it('loads in a Node test environment without DOM globals', async () => {
-    const core = await import('@jackpotkit/core');
+  it('runs deterministic primitives in Node without DOM globals', async () => {
+    const { SeededRandomSource, createGameEvent, nextRandomValue } =
+      await import('@jackpotkit/core');
+    const first = new SeededRandomSource('web-smoke');
+    const second = new SeededRandomSource('web-smoke');
 
-    expect(Object.keys(core)).toEqual([]);
+    expect(nextRandomValue(first)).toBe(nextRandomValue(second));
+    expect(createGameEvent('ready', null, { timestamp: 0 })).toEqual({
+      payload: null,
+      timestamp: 0,
+      type: 'ready',
+    });
   });
 });

@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 0 foundation. The package shells are published at `0.0.x`, but no game API is implemented yet.
+> **Project status:** Phase 1 shared primitives. `@jackpotkit/core` and `@jackpotkit/testing` now provide functional APIs. The first game, Spin Wheel, is planned for Phase 2.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -22,19 +22,34 @@ JackpotKit has no backend and sends no telemetry by default.
 - Coin Flip
 - Lucky Box
 
-These games are roadmap items, not current exports.
+These games remain roadmap items and are not current exports.
 
 ## Workspace
 
-| Package                    | Responsibility              | Phase 0 status          |
-| -------------------------- | --------------------------- | ----------------------- |
-| `@jackpotkit/core`         | Pure TypeScript mechanics   | Empty buildable shell   |
-| `@jackpotkit/react-native` | Native hooks and renderers  | Empty Builder Bob shell |
-| `@jackpotkit/react`        | React web renderers         | Empty buildable shell   |
-| `@jackpotkit/theme`        | Theme contracts and presets | Empty buildable shell   |
-| `@jackpotkit/testing`      | Consumer testing utilities  | Empty buildable shell   |
+| Package                    | Responsibility              | Current status                        |
+| -------------------------- | --------------------------- | ------------------------------------- |
+| `@jackpotkit/core`         | Pure TypeScript mechanics   | Phase 1 primitives available          |
+| `@jackpotkit/react-native` | Native hooks and renderers  | Foundation shell; games begin Phase 2 |
+| `@jackpotkit/react`        | React web renderers         | Foundation shell                      |
+| `@jackpotkit/theme`        | Theme contracts and presets | Foundation shell                      |
+| `@jackpotkit/testing`      | Consumer testing utilities  | Phase 1 helpers available             |
 
-The `@jackpotkit` packages are public on npm. Versions in the `0.0.x` line are foundation previews with intentionally empty runtime entrypoints; the first functional APIs begin in Phase 1.
+The `@jackpotkit` packages are public on npm. They remain pre-release APIs until the stable-release hardening milestone.
+
+## Quick start
+
+```bash
+npm install @jackpotkit/core
+```
+
+```ts
+import { SeededRandomSource, nextRandomValue } from '@jackpotkit/core';
+
+const random = new SeededRandomSource('preview');
+console.log(nextRandomValue(random));
+```
+
+Seeded randomness is for repeatable tests, previews, and debugging. It is not cryptographically secure. Valuable outcomes must be chosen and persisted by an authoritative backend.
 
 ## Development
 
@@ -55,6 +70,7 @@ pnpm build
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm check:consumers
 pnpm check:exports
 pnpm check:packs
 ```

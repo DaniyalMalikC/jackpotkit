@@ -4,6 +4,38 @@ import { pathToFileURL } from 'node:url';
 
 const repositoryRoot = resolve(import.meta.dirname, '..');
 const packageDirectories = ['core', 'react-native', 'react', 'theme', 'testing'];
+const expectedRuntimeExports = {
+  core: [
+    'GAME_EVENT_TYPES',
+    'GAME_STATUSES',
+    'GameStateError',
+    'InvalidConfigurationError',
+    'InvalidResultError',
+    'JackpotKitError',
+    'MathRandomSource',
+    'ResultProviderError',
+    'SeededRandomSource',
+    'assertRandomValue',
+    'assertValidConfiguration',
+    'assertValidResult',
+    'createGameEvent',
+    'createValidationResult',
+    'isGameStatus',
+    'isRandomValue',
+    'nextRandomValue',
+    'resolveResult',
+  ],
+  'react-native': [],
+  react: [],
+  theme: [],
+  testing: [
+    'MockResultProvider',
+    'SequenceRandomSource',
+    'createGameResult',
+    'createReward',
+    'createSequenceRandom',
+  ],
+};
 
 function collectExportTargets(value) {
   if (typeof value === 'string') return [value];
@@ -17,7 +49,7 @@ for (const directory of packageDirectories) {
   const exportKeys = Object.keys(packageJson.exports ?? {});
 
   if (exportKeys.length !== 1 || exportKeys[0] !== '.') {
-    throw new Error(`${packageJson.name} must expose only its root entrypoint in Phase 0.`);
+    throw new Error(`${packageJson.name} must expose only its root entrypoint.`);
   }
 
   for (const target of collectExportTargets(packageJson.exports['.'])) {
@@ -33,9 +65,16 @@ for (const directory of packageDirectories) {
   const importTarget = packageJson.exports['.'].import;
   const importedModule = await import(pathToFileURL(join(packageRoot, importTarget)).href);
 
-  if (Object.keys(importedModule).length !== 0) {
-    throw new Error(`${packageJson.name} unexpectedly exposes a runtime API in Phase 0.`);
+  const actualRuntimeExports = Object.keys(importedModule).sort();
+  const intentionalRuntimeExports = expectedRuntimeExports[directory].toSorted();
+
+  if (JSON.stringify(actualRuntimeExports) !== JSON.stringify(intentionalRuntimeExports)) {
+    throw new Error(
+      `${packageJson.name} runtime exports do not match the Phase 1 allowlist.\n` +
+        `Expected: ${intentionalRuntimeExports.join(', ')}\n` +
+        `Received: ${actualRuntimeExports.join(', ')}`,
+    );
   }
 }
 
-console.log('All public package export maps and empty Phase 0 entrypoints are valid.');
+console.log('All public package export maps and Phase 1 runtime entrypoints are valid.');

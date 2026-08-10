@@ -33,3 +33,7 @@ An outcome never depends on where an animation happens to stop. The pure TypeScr
 - `shared-config`: private workspace configuration; never published.
 
 Subpath exports are added only alongside implemented public features. Wildcard exports are avoided so private implementation files cannot become accidental APIs.
+
+## Phase 1 boundary
+
+The core package now owns contracts and small utilities, not a universal runtime or event bus. A game may use the standard statuses and events without being forced into transitions that do not match its interaction model. Consumers inject randomness and result providers; networking and persistence stay outside the library.

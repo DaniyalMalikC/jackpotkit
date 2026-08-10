@@ -125,7 +125,14 @@ li {
 }
 
 li span {
-  color: #6843d5;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 999px;
+  color: white;
+  background: #6843d5;
+  font-size: 0.8rem;
 }
 
 .note {

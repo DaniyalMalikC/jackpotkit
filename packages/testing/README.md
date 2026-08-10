@@ -2,4 +2,25 @@
 
 Deterministic testing utilities for JackpotKit consumers.
 
-This package is a published Phase 0 foundation preview. Testing helpers are introduced with the shared core primitives in Phase 1; version `0.0.x` intentionally exposes no runtime API yet.
+```bash
+npm install --save-dev @jackpotkit/testing
+```
+
+```ts
+import { resolveResult } from '@jackpotkit/core';
+import { MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+
+const random = new SequenceRandomSource([0.1, 0.8]);
+random.next(); // 0.1
+random.next(); // 0.8
+
+const mock = new MockResultProvider({
+  result: createGameResult({ data: { rewardId: 'bonus-points' } }),
+});
+
+const result = await resolveResult(mock.provide, { campaignId: 'test' });
+mock.calls; // 1
+mock.requests; // [{ campaignId: 'test' }]
+```
+
+The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result/reward factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.

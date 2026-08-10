@@ -306,7 +306,11 @@ importers:
         specifier: 4.1.10
         version: 4.1.10(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(jiti@1.21.7)(terser@5.49.2)(yaml@2.9.0)
 
-  packages/testing: {}
+  packages/testing:
+    dependencies:
+      '@jackpotkit/core':
+        specifier: workspace:^
+        version: link:../core
 
   packages/theme: {}
 
