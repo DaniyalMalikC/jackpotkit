@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 0 foundation. The workspace builds and validates, but no game API is implemented or published yet.
+> **Project status:** Phase 0 foundation. The package shells are published at `0.0.x`, but no game API is implemented yet.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -34,7 +34,7 @@ These games are roadmap items, not current exports.
 | `@jackpotkit/theme`        | Theme contracts and presets | Empty buildable shell   |
 | `@jackpotkit/testing`      | Consumer testing utilities  | Empty buildable shell   |
 
-The `@jackpotkit` scope is provisional until npm ownership is authenticated and verified. Do not publish these packages from the foundation milestone.
+The `@jackpotkit` packages are public on npm. Versions in the `0.0.x` line are foundation previews with intentionally empty runtime entrypoints; the first functional APIs begin in Phase 1.
 
 ## Development
 
@@ -58,6 +58,12 @@ pnpm test
 pnpm check:exports
 pnpm check:packs
 ```
+
+## Releases
+
+Every publishable package change requires a Changeset. Merges to `main` update a draft release pull request; npm publication is a separate, manually approved workflow that uses npm Trusted Publishing rather than a long-lived write token.
+
+See [the release guide](./docs/releasing.md) for the release sequence and one-time repository configuration.
 
 ## Architecture
 

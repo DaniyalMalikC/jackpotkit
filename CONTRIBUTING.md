@@ -27,7 +27,7 @@ TypeScript is intentionally pinned to 6.0.3. Do not adopt TypeScript 7 until the
 - Keep changes focused and preserve existing behavior.
 - Add tests and documentation for public behavior.
 - Run `pnpm validate` before requesting review.
-- Add a Changeset for changes to publishable packages once releases begin.
+- Add a Changeset for every change to a publishable package.
 - Do not include credentials, generated archives, build outputs, or mandatory large assets.
 - Do not introduce telemetry or a JackpotKit-controlled backend.
 
@@ -51,6 +51,12 @@ A game contribution must ultimately include:
 8. Deliberate public exports and a Changeset.
 
 See [the game development template](./docs/game-development-template.md) for expected organization.
+
+## Releases
+
+Changesets maintains a draft version pull request on `main`. npm publication runs separately through the manually approved `Publish` workflow and npm Trusted Publishing; contributors must never add an npm write token to the repository.
+
+See [the release guide](./docs/releasing.md) for the complete sequence.
 
 ## Conduct and security
 

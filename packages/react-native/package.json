@@ -8,11 +8,11 @@
   "author": "Muhammad Daniyal Malik",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daniyalmalikc/jackpotkit.git",
+    "url": "git+https://github.com/DaniyalMalikC/jackpotkit.git",
     "directory": "packages/react-native"
   },
-  "homepage": "https://github.com/daniyalmalikc/jackpotkit#readme",
-  "bugs": "https://github.com/daniyalmalikc/jackpotkit/issues",
+  "homepage": "https://github.com/DaniyalMalikC/jackpotkit#readme",
+  "bugs": "https://github.com/DaniyalMalikC/jackpotkit/issues",
   "keywords": [
     "games",
     "gamification",
@@ -22,6 +22,7 @@
   "files": [
     "src",
     "lib",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ],

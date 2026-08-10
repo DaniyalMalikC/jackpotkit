@@ -7,7 +7,7 @@ const config: Config = {
   favicon: 'img/favicon.svg',
   url: 'https://daniyalmalikc.github.io',
   baseUrl: '/jackpotkit/',
-  organizationName: 'daniyalmalikc',
+  organizationName: 'DaniyalMalikC',
   projectName: 'jackpotkit',
   future: {
     v4: true,
@@ -46,7 +46,7 @@ const config: Config = {
         { label: 'Roadmap', position: 'left', to: '/roadmap' },
         {
           'aria-label': 'JackpotKit GitHub repository',
-          href: 'https://github.com/daniyalmalikc/jackpotkit',
+          href: 'https://github.com/DaniyalMalikC/jackpotkit',
           label: 'GitHub',
           position: 'right',
         },

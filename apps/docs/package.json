@@ -20,7 +20,8 @@
     "clsx": "2.1.1",
     "prism-react-renderer": "2.4.1",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "search-insights": "2.17.3"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.2",

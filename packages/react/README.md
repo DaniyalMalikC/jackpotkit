@@ -2,4 +2,4 @@
 
 React web renderers for JackpotKit.
 
-This package is an unpublished Phase 0 shell. Web renderers are introduced in a later milestone; it intentionally exposes no runtime API yet.
+This package is a published Phase 0 foundation preview. Web renderers are introduced in a later milestone; version `0.0.x` intentionally exposes no runtime API yet.

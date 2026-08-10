@@ -7,6 +7,7 @@
     "scheme": "jackpotkit",
     "userInterfaceStyle": "automatic",
     "experiments": {
+      "reactCompiler": true,
       "typedRoutes": true
     },
     "plugins": ["expo-router"],

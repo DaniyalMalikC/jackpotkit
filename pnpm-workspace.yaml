@@ -2,6 +2,11 @@ packages:
   - apps/*
   - packages/*
 
+autoInstallPeers: false
+linkWorkspacePackages: true
+preferWorkspacePackages: true
+strictPeerDependencies: true
+
 allowBuilds:
   '@swc/core': true
   core-js: true
@@ -10,7 +15,7 @@ allowBuilds:
 catalog:
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.3
-  expo: 57.0.11
+  expo: 57.0.12
   react: 19.2.3
   react-dom: 19.2.3
   react-native: 0.86.2
@@ -18,3 +23,18 @@ catalog:
   react-native-reanimated: 4.5.1
   react-native-web: 0.21.2
   react-native-worklets: 0.10.1
+
+minimumReleaseAgeExclude:
+  - '@expo/cli@57.0.14'
+  - '@expo/fingerprint@0.20.7'
+  - '@expo/inline-modules@0.1.5'
+  - '@expo/local-build-cache-provider@57.0.6'
+  - '@expo/metro-config@57.0.8'
+  - '@expo/metro-runtime@57.0.9'
+  - '@expo/prebuild-config@57.0.11'
+  - '@expo/ui@57.0.10'
+  - expo-asset@57.0.10
+  - expo-constants@57.0.10
+  - expo-router@57.0.12
+  - expo-server@57.0.2
+  - expo@57.0.12

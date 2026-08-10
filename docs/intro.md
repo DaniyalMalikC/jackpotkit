@@ -11,7 +11,7 @@ sidebar_position: 1
 
 Open-source game mechanics and animated components for React Native and React.
 
-**Current status:** Phase 0 foundation. The package names are provisional and no game API is published yet.
+**Current status:** Phase 0 foundation. The package shells are published at `0.0.x`, but no game API is implemented yet.
 
 </div>
 
@@ -31,4 +31,4 @@ The library uses generic concepts such as rewards, results, values, points, item
 - `@jackpotkit/theme`
 - `@jackpotkit/testing`
 
-These are buildable package shells at version `0.0.0`. Runtime APIs begin in later milestones and the packages must not be published until npm scope ownership is verified.
+These are published, buildable package shells. The `0.0.x` line intentionally exposes no runtime behavior; functional APIs begin in later milestones.
