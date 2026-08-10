@@ -1,5 +1,14 @@
 # @jackpotkit/theme
 
-Platform-neutral theme contracts and presets for JackpotKit.
+Platform-neutral theme contracts and lightweight presets for JackpotKit renderers.
 
-This package is a published Phase 0 foundation preview. Theme APIs are introduced with the first complete game; version `0.0.x` intentionally exposes no runtime API yet.
+```ts
+import { createJackpotTheme, defaultTheme, neonTheme } from '@jackpotkit/theme';
+
+const campaignTheme = createJackpotTheme({
+  colors: { primary: '#0057FF', pointer: '#101828' },
+  animation: { spinDuration: 2400 },
+});
+```
+
+Themes contain colors, typography, spacing, radii, and animation defaults. They affect presentation only and never change selection probability or game results. `defaultTheme` and `neonTheme` are copied and frozen at their public boundaries.

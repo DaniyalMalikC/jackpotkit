@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Server-authoritative results
@@ -40,5 +40,18 @@ const result = await resolveResult(requestResult, { campaignId: 'summer-2026' })
 ```
 
 `resolveResult` accepts synchronous and asynchronous providers. Unknown provider failures are normalized to `ResultProviderError` and retain the original error as `cause`. Applications still own authentication, authorization, replay protection, transport validation, and server-side persistence.
+
+Spin Wheel consumes the same boundary directly:
+
+```tsx
+const resultProvider = async () => {
+  const response = await api.requestSpin();
+  return { segmentId: response.segmentId };
+};
+
+<SpinWheel segments={segments} resultProvider={resultProvider} />;
+```
+
+The component enters `requesting-result`, validates the returned segment ID, calculates the exact destination, and only then starts animation.
 
 Built-in random sources are intended for demonstrations, ordinary gamification, reproducible testing, and debugging. They are not represented as cryptographically secure, certified, regulator-approved, or inherently fair.

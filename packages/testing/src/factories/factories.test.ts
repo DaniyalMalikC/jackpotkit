@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createGameResult } from './create-game-result.js';
 import { createReward } from './create-reward.js';
+import { createWheelSegments } from './create-wheel-segments.js';
 
 describe('testing factories', () => {
   it('creates a deterministic game result with overridable fields', () => {
@@ -44,5 +45,29 @@ describe('testing factories', () => {
       metadata: { rarity: 'rare' },
       value: { badgeId: 'early-adopter' },
     });
+  });
+
+  it('creates deterministic wheel segments with per-index overrides', () => {
+    const segments = createWheelSegments(3, (index) => ({
+      ...(index === 1 ? { color: '#FF00FF' } : {}),
+      weight: index + 1,
+    }));
+
+    expect(segments).toEqual([
+      { id: 'segment-1', label: 'Segment 1', value: 0, weight: 1 },
+      {
+        color: '#FF00FF',
+        id: 'segment-2',
+        label: 'Segment 2',
+        value: 1,
+        weight: 2,
+      },
+      { id: 'segment-3', label: 'Segment 3', value: 2, weight: 3 },
+    ]);
+    expect(Object.isFrozen(segments)).toBe(true);
+  });
+
+  it('rejects invalid wheel segment counts', () => {
+    expect(() => createWheelSegments(0)).toThrow('count must be a positive integer');
   });
 });

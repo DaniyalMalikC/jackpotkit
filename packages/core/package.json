@@ -32,6 +32,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./spin-wheel": {
+      "types": "./dist/spin-wheel/index.d.ts",
+      "import": "./dist/spin-wheel/index.js",
+      "default": "./dist/spin-wheel/index.js"
     }
   },
   "scripts": {

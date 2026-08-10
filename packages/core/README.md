@@ -49,4 +49,26 @@ const event = createGameEvent('result-resolved', result);
 
 For rewards with real value, the backend must validate eligibility, choose and persist the outcome, and return that result. JackpotKit does not provide networking, settlement, fulfilment, or a security boundary.
 
-Only the package root is public. Import from `@jackpotkit/core`; internal file paths and game subpaths are not supported.
+Shared primitives are available from `@jackpotkit/core`; Spin Wheel also has the intentional `@jackpotkit/core/spin-wheel` subpath. Other internal paths are unsupported.
+
+## Spin Wheel
+
+```ts
+import { SeededRandomSource } from '@jackpotkit/core';
+import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
+
+const wheel = createSpinWheel({
+  segments: [
+    { id: 'common', label: '10 points', weight: 9 },
+    { id: 'rare', label: 'Bonus badge', weight: 1 },
+  ],
+  randomSource: new SeededRandomSource('preview'),
+});
+
+wheel.spin();
+wheel.spinTo('rare');
+await wheel.spinWith(serverResultProvider, request);
+wheel.reset();
+```
+
+Weights affect selection probability only; every prebuilt visual slice remains equal. Controlled and server results are validated against configured segment IDs before animation.

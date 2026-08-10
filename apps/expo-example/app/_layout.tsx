@@ -19,6 +19,10 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ title: 'JackpotKit' }} />
+        <Stack.Screen
+          name="spin-wheel"
+          options={{ headerLargeTitle: false, title: 'Spin Wheel' }}
+        />
         <Stack.Screen name="+not-found" options={{ headerLargeTitle: false, title: 'Not Found' }} />
       </Stack>
     </GestureHandlerRootView>

@@ -11,13 +11,13 @@ sidebar_position: 3
 npm install @jackpotkit/core
 ```
 
-Only the root entrypoint is public:
+Shared primitives use the root entrypoint:
 
 ```ts
 import { SeededRandomSource, type GameResult } from '@jackpotkit/core';
 ```
 
-Internal paths and game subpaths are intentionally unavailable.
+Implemented games may add focused public subpaths. Spin Wheel is available from `@jackpotkit/core/spin-wheel`; other internal paths remain unavailable.
 
 ## Results and rewards
 

@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -24,7 +24,7 @@ function run(command, arguments_, cwd) {
 
 function pack(directory) {
   const destination = join(fixtureRoot, directory);
-  run('mkdir', ['-p', destination], fixtureRoot);
+  mkdirSync(destination, { recursive: true });
   run(
     'corepack',
     ['pnpm', 'pack', '--pack-destination', destination],
@@ -42,6 +42,7 @@ function pack(directory) {
 
 try {
   const coreArchive = pack('core');
+  const themeArchive = pack('theme');
   const testingArchive = pack('testing');
 
   writeFileSync(
@@ -57,6 +58,7 @@ try {
       '--no-fund',
       '--no-package-lock',
       coreArchive,
+      themeArchive,
       testingArchive,
     ],
     fixtureRoot,
@@ -65,7 +67,9 @@ try {
   writeFileSync(
     join(fixtureRoot, 'smoke.mjs'),
     `import { SeededRandomSource, nextRandomValue, resolveResult } from '@jackpotkit/core';
-import { MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
+import { createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import { createJackpotTheme, neonTheme } from '@jackpotkit/theme';
 
 const first = new SeededRandomSource('packed-consumer');
 const second = new SeededRandomSource('packed-consumer');
@@ -78,11 +82,18 @@ const expected = createGameResult({ data: { rewardId: 'badge' } });
 const provider = new MockResultProvider({ result: expected });
 const actual = await resolveResult(provider.provide, { campaignId: 'smoke' });
 if (actual !== expected || provider.calls !== 1) throw new Error('Result provider smoke test failed.');
+
+const segments = createWheelSegments(3, (index) => ({ weight: index + 1 }));
+const wheel = createSpinWheel({ segments, randomSource: new SequenceRandomSource([0.99]) });
+if (wheel.spin().segmentId !== 'segment-3') throw new Error('Spin Wheel subpath failed.');
+
+const customTheme = createJackpotTheme({ colors: { primary: '#123456' } }, neonTheme);
+if (customTheme.colors.primary !== '#123456') throw new Error('Theme package failed.');
 `,
   );
 
   run(process.execPath, ['smoke.mjs'], fixtureRoot);
-  console.log('Packed core and testing packages install and run in an isolated consumer.');
+  console.log('Packed core, theme, and testing packages install and run in an isolated consumer.');
 } finally {
   rmSync(fixtureRoot, { force: true, recursive: true });
 }

@@ -8,7 +8,12 @@ npm install --save-dev @jackpotkit/testing
 
 ```ts
 import { resolveResult } from '@jackpotkit/core';
-import { MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import {
+  MockResultProvider,
+  SequenceRandomSource,
+  createGameResult,
+  createWheelSegments,
+} from '@jackpotkit/testing';
 
 const random = new SequenceRandomSource([0.1, 0.8]);
 random.next(); // 0.1
@@ -21,6 +26,8 @@ const mock = new MockResultProvider({
 const result = await resolveResult(mock.provide, { campaignId: 'test' });
 mock.calls; // 1
 mock.requests; // [{ campaignId: 'test' }]
+
+const segments = createWheelSegments(4, (index) => ({ weight: index + 1 }));
 ```
 
-The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result/reward factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.
+The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, and wheel-segment factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.

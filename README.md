@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 1 shared primitives. `@jackpotkit/core` and `@jackpotkit/testing` now provide functional APIs. The first game, Spin Wheel, is planned for Phase 2.
+> **Project status:** Phase 2. Spin Wheel is the first complete headless and React Native game. Other games remain roadmap items.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -22,34 +22,67 @@ JackpotKit has no backend and sends no telemetry by default.
 - Coin Flip
 - Lucky Box
 
-These games remain roadmap items and are not current exports.
+Spin Wheel is available now. The other games remain roadmap items and are not current exports.
 
 ## Workspace
 
 | Package                    | Responsibility              | Current status                        |
 | -------------------------- | --------------------------- | ------------------------------------- |
-| `@jackpotkit/core`         | Pure TypeScript mechanics   | Phase 1 primitives available          |
-| `@jackpotkit/react-native` | Native hooks and renderers  | Foundation shell; games begin Phase 2 |
+| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and Spin Wheel engine |
+| `@jackpotkit/react-native` | Native hooks and renderers  | Spin Wheel component and hook         |
 | `@jackpotkit/react`        | React web renderers         | Foundation shell                      |
-| `@jackpotkit/theme`        | Theme contracts and presets | Foundation shell                      |
-| `@jackpotkit/testing`      | Consumer testing utilities  | Phase 1 helpers available             |
+| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes               |
+| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories   |
 
 The `@jackpotkit` packages are public on npm. They remain pre-release APIs until the stable-release hardening milestone.
 
-## Quick start
+## React Native quick start
 
 ```bash
-npm install @jackpotkit/core
+npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
+
+```tsx
+import { SpinWheel } from '@jackpotkit/react-native';
+
+export function RewardWheel() {
+  return (
+    <SpinWheel
+      segments={[
+        { id: 'points', label: '100 points', value: 100, weight: 4 },
+        { id: 'badge', label: 'Bonus badge', value: 'badge', weight: 1 },
+      ]}
+      onComplete={(result) => handleResult(result.segmentId)}
+    />
+  );
+}
+```
+
+## Headless example
 
 ```ts
-import { SeededRandomSource, nextRandomValue } from '@jackpotkit/core';
+import { SeededRandomSource, createSpinWheel } from '@jackpotkit/core';
 
-const random = new SeededRandomSource('preview');
-console.log(nextRandomValue(random));
+const wheel = createSpinWheel({
+  segments,
+  randomSource: new SeededRandomSource('preview'),
+});
+
+const result = wheel.spin();
 ```
 
-Seeded randomness is for repeatable tests, previews, and debugging. It is not cryptographically secure. Valuable outcomes must be chosen and persisted by an authoritative backend.
+## Server result example
+
+```tsx
+const resultProvider = async () => {
+  const response = await api.requestSpin();
+  return { segmentId: response.segmentId };
+};
+
+<SpinWheel segments={segments} resultProvider={resultProvider} />;
+```
+
+Seeded and client randomness are for repeatable tests, previews, debugging, and ordinary gamification. They are not cryptographically secure. Valuable outcomes must be chosen and persisted by an authoritative backend.
 
 ## Development
 

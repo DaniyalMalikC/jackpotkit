@@ -37,3 +37,19 @@ Subpath exports are added only alongside implemented public features. Wildcard e
 ## Phase 1 boundary
 
 The core package now owns contracts and small utilities, not a universal runtime or event bus. A game may use the standard statuses and events without being forced into transitions that do not match its interaction model. Consumers inject randomness and result providers; networking and persistence stay outside the library.
+
+## Spin Wheel reference flow
+
+```text
+Random, controlled, or provider selection
+    ↓
+Core validates the segment ID
+    ↓
+Core calculates the exact destination angle
+    ↓
+React Native animates a shared rotation value
+    ↓
+Renderer reveals and announces the known result
+```
+
+Selection weights affect only the first step. The SVG renderer always divides its circle into equal visual slices, so probability cannot accidentally leak into layout geometry.

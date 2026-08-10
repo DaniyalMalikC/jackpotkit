@@ -1,6 +1,6 @@
 ---
 title: Privacy and telemetry
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 # Privacy and telemetry

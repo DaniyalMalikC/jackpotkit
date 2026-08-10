@@ -3,12 +3,14 @@ export interface GalleryGame {
   readonly emoji: string;
   readonly milestone: string;
   readonly name: string;
+  readonly href?: '/spin-wheel';
 }
 
 export const galleryGames: readonly GalleryGame[] = [
   {
     description: 'The reference game for result-driven animation and customization.',
     emoji: '🎡',
+    href: '/spin-wheel',
     milestone: 'Phase 2',
     name: 'Spin Wheel',
   },

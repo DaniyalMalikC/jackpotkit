@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  AnimationError,
   GameStateError,
   InvalidConfigurationError,
   InvalidResultError,
+  InvalidSegmentError,
   JackpotKitError,
   ResultProviderError,
 } from './index.js';
@@ -25,8 +27,10 @@ describe('JackpotKit errors', () => {
   });
 
   it.each([
+    [AnimationError, 'ANIMATION_ERROR'],
     [InvalidConfigurationError, 'INVALID_CONFIGURATION'],
     [InvalidResultError, 'INVALID_RESULT'],
+    [InvalidSegmentError, 'INVALID_SEGMENT'],
     [ResultProviderError, 'RESULT_PROVIDER_ERROR'],
     [GameStateError, 'GAME_STATE_ERROR'],
   ] as const)('provides %s with its public code', (ErrorType, code) => {

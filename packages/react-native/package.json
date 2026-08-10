@@ -20,7 +20,14 @@
     "typescript"
   ],
   "files": [
-    "src",
+    "src/index.ts",
+    "src/theme-provider.tsx",
+    "src/spin-wheel/geometry.ts",
+    "src/spin-wheel/index.ts",
+    "src/spin-wheel/spin-wheel.tsx",
+    "src/spin-wheel/types.ts",
+    "src/spin-wheel/use-spin-wheel.ts",
+    "src/spin-wheel/validation.ts",
     "lib",
     "CHANGELOG.md",
     "LICENSE",
@@ -35,43 +42,58 @@
       "react-native": "./src/index.ts",
       "import": "./lib/module/index.js",
       "default": "./lib/module/index.js"
+    },
+    "./spin-wheel": {
+      "types": "./lib/typescript/src/spin-wheel/index.d.ts",
+      "react-native": "./src/spin-wheel/index.ts",
+      "import": "./lib/module/spin-wheel/index.js",
+      "default": "./lib/module/spin-wheel/index.js"
     }
   },
   "scripts": {
     "build": "bob build",
     "clean": "node ../../scripts/clean-output.mjs lib coverage",
-    "lint": "eslint src jest.config.cjs",
-    "test": "jest --config jest.config.cjs --passWithNoTests",
-    "test:coverage": "jest --config jest.config.cjs --coverage --passWithNoTests",
+    "lint": "eslint src babel.config.cjs jest.config.cjs jest.setup.cjs",
+    "test": "jest --config jest.config.cjs --runInBand",
+    "test:coverage": "jest --config jest.config.cjs --coverage --runInBand",
     "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@jackpotkit/core": "workspace:^",
+    "@jackpotkit/theme": "workspace:^"
   },
   "peerDependencies": {
     "react": "^19.2.3",
     "react-native": ">=0.83 <0.87",
     "react-native-gesture-handler": ">=2.32 <4",
     "react-native-reanimated": ">=4.5 <5",
+    "react-native-svg": ">=15.15 <16",
     "react-native-worklets": ">=0.10 <0.12"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
     "@react-native/babel-preset": "0.86.2",
     "@react-native/jest-preset": "0.86.2",
-    "@types/jest": "30.0.0",
+    "@testing-library/react-native": "14.0.1",
+    "@types/jest": "29.5.14",
     "@types/react": "catalog:",
-    "babel-jest": "30.4.1",
-    "jest": "30.4.2",
+    "babel-jest": "29.7.0",
+    "jest": "29.7.0",
     "react": "catalog:",
     "react-native": "catalog:",
     "react-native-builder-bob": "0.43.0",
     "react-native-gesture-handler": "catalog:",
     "react-native-reanimated": "catalog:",
-    "react-native-worklets": "catalog:"
+    "react-native-svg": "catalog:",
+    "react-native-worklets": "catalog:",
+    "test-renderer": "1.2.0"
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
   "react-native-builder-bob": {
+    "exclude": "**/*.test.{ts,tsx}",
     "source": "src",
     "output": "lib",
     "targets": [

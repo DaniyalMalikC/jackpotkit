@@ -11,7 +11,7 @@ sidebar_position: 1
 
 Open-source game mechanics and animated components for React Native and React.
 
-**Current status:** Phase 1 shared primitives. The core and testing packages expose functional APIs; game packages begin with Spin Wheel in Phase 2.
+**Current status:** Phase 2. Spin Wheel is available as a headless engine, React Native hook, and accessible animated component.
 
 </div>
 
@@ -31,6 +31,6 @@ The library uses generic concepts such as rewards, results, values, points, item
 - `@jackpotkit/theme`
 - `@jackpotkit/testing`
 
-All five packages are published. `@jackpotkit/core` now contains result, reward, lifecycle, randomness, provider, event, error, and validation primitives. `@jackpotkit/testing` contains deterministic consumer helpers. React, React Native, and theme entrypoints remain intentionally empty until their roadmap phases.
+All five packages are published. `@jackpotkit/core` contains shared primitives and the Spin Wheel engine. `@jackpotkit/react-native` contains the Spin Wheel hook, renderer, provider, and imperative API. `@jackpotkit/theme` contains platform-neutral themes, while `@jackpotkit/testing` contains deterministic consumer helpers. The React web renderer remains intentionally empty until its roadmap phase.
 
-Start with [Core primitives](./core-primitives.md), or review the [server-authoritative result boundary](./server-authoritative-results.md) before integrating rewards with real value.
+Start with [Spin Wheel](./spin-wheel.md) or [Core primitives](./core-primitives.md), and review the [server-authoritative result boundary](./server-authoritative-results.md) before integrating rewards with real value.

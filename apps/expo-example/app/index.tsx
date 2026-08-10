@@ -32,7 +32,7 @@ export default function GalleryScreen() {
           selectable
           style={{ color: '#B7A6FF', fontSize: 13, fontWeight: '800', letterSpacing: 1.2 }}
         >
-          FOUNDATION MILESTONE
+          PHASE 2 · REFERENCE GAME
         </Text>
         <Text
           selectable
@@ -41,8 +41,8 @@ export default function GalleryScreen() {
           Game Gallery
         </Text>
         <Text selectable style={{ color: '#D7D0F3', fontSize: 16, lineHeight: 23, maxWidth: 680 }}>
-          The workspace, package boundaries, and example environments are ready. Game APIs are added
-          only after their engines, tests, accessibility, and documentation are complete.
+          Spin Wheel is now an interactive reference implementation. The remaining games stay
+          visibly scoped to their future milestones.
         </Text>
       </View>
 
@@ -64,11 +64,12 @@ export default function GalleryScreen() {
         }}
       >
         <Text selectable style={{ color: '#302361', fontSize: 15, fontWeight: '700' }}>
-          Why the cards are disabled
+          Milestone boundary
         </Text>
         <Text selectable style={{ color: '#5E557A', fontSize: 14, lineHeight: 20 }}>
-          Phase 0 establishes infrastructure without pretending incomplete games are playable. Spin
-          Wheel becomes the first interactive reference implementation in Phase 2.
+          Spin Wheel is playable because its headless engine, native renderer, accessibility,
+          controlled/server modes, tests, and documentation ship together. Other cards remain
+          disabled until their own definition of done passes.
         </Text>
       </View>
     </ScrollView>
