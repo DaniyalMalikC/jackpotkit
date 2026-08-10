@@ -1,0 +1,91 @@
+{
+  "name": "@jackpotkit/react-native",
+  "version": "0.0.0",
+  "description": "React Native renderers and hooks for JackpotKit.",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Muhammad Daniyal Malik",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniyalmalikc/jackpotkit.git",
+    "directory": "packages/react-native"
+  },
+  "homepage": "https://github.com/daniyalmalikc/jackpotkit#readme",
+  "bugs": "https://github.com/daniyalmalikc/jackpotkit/issues",
+  "keywords": [
+    "games",
+    "gamification",
+    "react-native",
+    "typescript"
+  ],
+  "files": [
+    "src",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "types": "./lib/typescript/src/index.d.ts",
+  "module": "./lib/module/index.js",
+  "react-native": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/src/index.d.ts",
+      "react-native": "./src/index.ts",
+      "import": "./lib/module/index.js",
+      "default": "./lib/module/index.js"
+    }
+  },
+  "scripts": {
+    "build": "bob build",
+    "clean": "node ../../scripts/clean-output.mjs lib coverage",
+    "lint": "eslint src jest.config.cjs",
+    "test": "jest --config jest.config.cjs --passWithNoTests",
+    "test:coverage": "jest --config jest.config.cjs --coverage --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.2.3",
+    "react-native": ">=0.83 <0.87",
+    "react-native-gesture-handler": ">=2.32 <4",
+    "react-native-reanimated": ">=4.5 <5",
+    "react-native-worklets": ">=0.10 <0.12"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@react-native/babel-preset": "0.86.2",
+    "@react-native/jest-preset": "0.86.2",
+    "@types/jest": "30.0.0",
+    "@types/react": "catalog:",
+    "babel-jest": "30.4.1",
+    "jest": "30.4.2",
+    "react": "catalog:",
+    "react-native": "catalog:",
+    "react-native-builder-bob": "0.43.0",
+    "react-native-gesture-handler": "catalog:",
+    "react-native-reanimated": "catalog:",
+    "react-native-worklets": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}

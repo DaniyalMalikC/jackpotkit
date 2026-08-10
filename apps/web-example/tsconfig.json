@@ -1,0 +1,10 @@
+{
+  "extends": "@jackpotkit/shared-config/tsconfig/react.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "./node_modules/.cache/web-example.tsbuildinfo",
+    "types": ["vite/client", "vitest/globals"]
+  },
+  "include": ["src", "vite.config.ts"]
+}

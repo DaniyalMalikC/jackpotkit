@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a backwards-compatible capability or API improvement.
+title: '[Feature]: '
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API or behavior
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: accessibility
+    attributes:
+      label: Accessibility and platform considerations
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Product boundary
+      options:
+        - label: This proposal does not add payments, wallets, KYC, settlement, or telemetry.
+          required: true

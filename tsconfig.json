@@ -1,0 +1,14 @@
+{
+  "extends": "@jackpotkit/shared-config/tsconfig/base.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/react-native" },
+    { "path": "./packages/react" },
+    { "path": "./packages/theme" },
+    { "path": "./packages/testing" },
+    { "path": "./apps/expo-example" },
+    { "path": "./apps/web-example" },
+    { "path": "./apps/docs" }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@jackpotkit/shared-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint/index.mjs",
+    "./prettier": "./prettier/index.mjs",
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/react.json": "./tsconfig/react.json",
+    "./tsconfig/react-native.json": "./tsconfig/react-native.json"
+  },
+  "scripts": {
+    "clean": "node -e \"process.exit(0)\"",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "typecheck": "node -e \"process.exit(0)\""
+  },
+  "dependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.9.0",
+    "typescript-eslint": "8.66.0"
+  },
+  "devDependencies": {
+    "eslint": "10.8.1",
+    "vitest": "4.1.10"
+  }
+}

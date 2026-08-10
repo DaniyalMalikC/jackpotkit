@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "JackpotKit Gallery",
+    "slug": "jackpotkit-gallery",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "scheme": "jackpotkit",
+    "userInterfaceStyle": "automatic",
+    "experiments": {
+      "typedRoutes": true
+    },
+    "plugins": ["expo-router"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.daniyalmalikc.jackpotkit.gallery"
+    },
+    "android": {
+      "package": "com.daniyalmalikc.jackpotkit.gallery"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    }
+  }
+}

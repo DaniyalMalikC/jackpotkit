@@ -1,0 +1,14 @@
+{
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "exactOptionalPropertyTypes": true,
+    "ignoreDeprecations": "6.0",
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "tsBuildInfoFile": "./node_modules/.cache/docs.tsbuildinfo"
+  },
+  "include": ["docusaurus.config.ts", "sidebars.ts", "src"]
+}

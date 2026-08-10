@@ -1,0 +1,50 @@
+name: Bug report
+description: Report reproducible incorrect behavior in JackpotKit.
+title: '[Bug]: '
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for providing a focused reproduction without secrets or customer data.
+  - type: input
+    id: package
+    attributes:
+      label: Package and version
+      placeholder: '@jackpotkit/core 0.0.0'
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include code, repository, or precise steps.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Node, React, React Native or browser versions where relevant.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: This report contains no secrets or private customer data.
+          required: true

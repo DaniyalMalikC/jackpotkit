@@ -1,0 +1,58 @@
+{
+  "name": "@jackpotkit/react",
+  "version": "0.0.0",
+  "description": "React web renderers for JackpotKit.",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Muhammad Daniyal Malik",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniyalmalikc/jackpotkit.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/daniyalmalikc/jackpotkit#readme",
+  "bugs": "https://github.com/daniyalmalikc/jackpotkit/issues",
+  "keywords": [
+    "games",
+    "gamification",
+    "react",
+    "typescript"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "node ../../scripts/clean-output.mjs dist coverage",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

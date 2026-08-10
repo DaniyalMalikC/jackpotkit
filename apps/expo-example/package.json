@@ -1,0 +1,43 @@
+{
+  "name": "@jackpotkit/expo-example",
+  "version": "0.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "android": "expo start --android",
+    "build": "expo export --platform all --output-dir dist --clear",
+    "clean": "node ../../scripts/clean-output.mjs .expo dist coverage",
+    "dev": "expo start",
+    "doctor": "expo-doctor .",
+    "ios": "expo start --ios",
+    "lint": "eslint app components constants",
+    "start": "expo start",
+    "test": "node -e \"process.exit(0)\"",
+    "test:coverage": "node -e \"process.exit(0)\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "57.0.8",
+    "@jackpotkit/react-native": "workspace:*",
+    "expo": "catalog:",
+    "expo-constants": "57.0.9",
+    "expo-linking": "57.0.5",
+    "expo-router": "57.0.11",
+    "expo-status-bar": "57.0.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native": "catalog:",
+    "react-native-gesture-handler": "catalog:",
+    "react-native-reanimated": "catalog:",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-web": "catalog:",
+    "react-native-worklets": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "babel-preset-expo": "57.0.6",
+    "expo-doctor": "1.20.1"
+  }
+}

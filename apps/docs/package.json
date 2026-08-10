@@ -1,0 +1,33 @@
+{
+  "name": "@jackpotkit/docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/sync-docs.mjs && docusaurus build",
+    "clean": "docusaurus clear",
+    "dev": "node scripts/sync-docs.mjs && docusaurus start",
+    "lint": "eslint docusaurus.config.ts sidebars.ts scripts",
+    "serve": "docusaurus serve",
+    "test": "node -e \"process.exit(0)\"",
+    "test:coverage": "node -e \"process.exit(0)\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/faster": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@mdx-js/react": "3.1.1",
+    "clsx": "2.1.1",
+    "prism-react-renderer": "2.4.1",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/plugin-content-docs": "3.10.2",
+    "@docusaurus/tsconfig": "3.10.2",
+    "@docusaurus/types": "3.10.2",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
+  }
+}

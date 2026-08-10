@@ -1,0 +1,48 @@
+{
+  "name": "@jackpotkit/theme",
+  "version": "0.0.0",
+  "description": "Platform-neutral theme contracts and presets for JackpotKit.",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Muhammad Daniyal Malik",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniyalmalikc/jackpotkit.git",
+    "directory": "packages/theme"
+  },
+  "homepage": "https://github.com/daniyalmalikc/jackpotkit#readme",
+  "bugs": "https://github.com/daniyalmalikc/jackpotkit/issues",
+  "keywords": [
+    "design-system",
+    "gamification",
+    "theme",
+    "typescript"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "node ../../scripts/clean-output.mjs dist coverage",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

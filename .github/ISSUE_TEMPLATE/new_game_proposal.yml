@@ -1,0 +1,53 @@
+name: New game proposal
+description: Propose a reusable game mechanic for the JackpotKit ecosystem.
+title: '[Game]: '
+labels: [new-game, needs-design]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Game name
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Game description and use cases
+    validations:
+      required: true
+  - type: textarea
+    id: engine
+    attributes:
+      label: Headless engine behavior
+      description: Describe inputs, state, deterministic behavior, validation, and results.
+    validations:
+      required: true
+  - type: textarea
+    id: platforms
+    attributes:
+      label: Platform and rendering considerations
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed public API
+    validations:
+      required: true
+  - type: textarea
+    id: accessibility
+    attributes:
+      label: Accessibility and reduced-motion behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: integrity
+    attributes:
+      label: Architecture checks
+      options:
+        - label: The result can be supplied by a server without networking inside JackpotKit.
+          required: true
+        - label: Animation does not determine the outcome.
+          required: true
+        - label: The proposal uses generic rewards and does not require money or wagering.
+          required: true

@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+.turbo/
+.expo/
+.docusaurus/
+.content/
+node_modules/
+coverage/
+dist/
+build/
+lib/
+*.tgz
+*.log
