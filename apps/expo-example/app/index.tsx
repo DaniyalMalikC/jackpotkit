@@ -32,7 +32,7 @@ export default function GalleryScreen() {
           selectable
           style={{ color: '#B7A6FF', fontSize: 13, fontWeight: '800', letterSpacing: 1.2 }}
         >
-          PHASE 2 · REFERENCE GAME
+          PHASE 3 · GESTURE REVEAL
         </Text>
         <Text
           selectable
@@ -41,8 +41,8 @@ export default function GalleryScreen() {
           Game Gallery
         </Text>
         <Text selectable style={{ color: '#D7D0F3', fontSize: 16, lineHeight: 23, maxWidth: 680 }}>
-          Spin Wheel is now an interactive reference implementation. The remaining games stay
-          visibly scoped to their future milestones.
+          Spin Wheel and Scratch Card are playable reference implementations. The remaining games
+          stay visibly scoped to their future milestones.
         </Text>
       </View>
 
@@ -67,9 +67,9 @@ export default function GalleryScreen() {
           Milestone boundary
         </Text>
         <Text selectable style={{ color: '#5E557A', fontSize: 14, lineHeight: 20 }}>
-          Spin Wheel is playable because its headless engine, native renderer, accessibility,
-          controlled/server modes, tests, and documentation ship together. Other cards remain
-          disabled until their own definition of done passes.
+          Each playable game ships its engine, renderer, accessibility, controlled/server modes,
+          tests, and documentation together. Other cards remain disabled until their own definition
+          of done passes.
         </Text>
       </View>
     </ScrollView>

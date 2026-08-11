@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 describe('@jackpotkit/core public entrypoint', () => {
-  it('initializes safely in Node and exposes the intentional Phase 2 runtime API', async () => {
+  it('initializes safely in Node and exposes the intentional Phase 3 runtime API', async () => {
     const core = await import('./index.js');
 
     expect(Object.keys(core).sort()).toEqual(
@@ -20,17 +20,24 @@ describe('@jackpotkit/core public entrypoint', () => {
         'assertRandomValue',
         'assertValidConfiguration',
         'assertValidResult',
+        'assertValidScratchCardConfiguration',
+        'assertValidScratchCardSelection',
+        'assertValidScratchPoint',
+        'assertValidScratchProgress',
         'assertValidSpinWheelSegments',
         'assertValidSpinWheelSelection',
         'calculateSpinWheelDestination',
         'createSpinWheel',
         'createGameEvent',
+        'createScratchCard',
+        'createScratchProgressTracker',
         'createValidationResult',
         'isGameStatus',
         'isRandomValue',
         'nextRandomValue',
         'resolveResult',
         'selectSpinWheelSegment',
+        'validateScratchCardConfiguration',
         'validateSpinWheelSegments',
         'validateSpinWheelSelection',
       ].sort(),

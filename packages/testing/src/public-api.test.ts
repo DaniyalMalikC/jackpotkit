@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 describe('@jackpotkit/testing public entrypoint', () => {
-  it('exposes only intentional Phase 2 runtime helpers', async () => {
+  it('exposes only intentional Phase 3 runtime helpers', async () => {
     const testing = await import('./index.js');
 
     expect(Object.keys(testing).sort()).toEqual(
@@ -10,6 +10,7 @@ describe('@jackpotkit/testing public entrypoint', () => {
         'SequenceRandomSource',
         'createGameResult',
         'createReward',
+        'createScratchCardSelection',
         'createSequenceRandom',
         'createWheelSegments',
       ].sort(),

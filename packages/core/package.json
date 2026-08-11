@@ -37,6 +37,11 @@
       "types": "./dist/spin-wheel/index.d.ts",
       "import": "./dist/spin-wheel/index.js",
       "default": "./dist/spin-wheel/index.js"
+    },
+    "./scratch-card": {
+      "types": "./dist/scratch-card/index.d.ts",
+      "import": "./dist/scratch-card/index.js",
+      "default": "./dist/scratch-card/index.js"
     }
   },
   "scripts": {

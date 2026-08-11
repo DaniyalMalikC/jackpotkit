@@ -3,7 +3,7 @@ export interface GalleryGame {
   readonly emoji: string;
   readonly milestone: string;
   readonly name: string;
-  readonly href?: '/spin-wheel';
+  readonly href?: '/scratch-card' | '/spin-wheel';
 }
 
 export const galleryGames: readonly GalleryGame[] = [
@@ -17,6 +17,7 @@ export const galleryGames: readonly GalleryGame[] = [
   {
     description: 'Gesture-based reveal mechanics with isolated graphics dependencies.',
     emoji: '🎟️',
+    href: '/scratch-card',
     milestone: 'Phase 3',
     name: 'Scratch Card',
   },

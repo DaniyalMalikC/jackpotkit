@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createGameResult } from './create-game-result.js';
 import { createReward } from './create-reward.js';
+import { createScratchCardSelection } from './create-scratch-card-selection.js';
 import { createWheelSegments } from './create-wheel-segments.js';
 
 describe('testing factories', () => {
@@ -69,5 +70,19 @@ describe('testing factories', () => {
 
   it('rejects invalid wheel segment counts', () => {
     expect(() => createWheelSegments(0)).toThrow('count must be a positive integer');
+  });
+
+  it('creates immutable controlled Scratch Card selections', () => {
+    const selection = createScratchCardSelection(
+      { couponCode: 'SAVE20' },
+      { metadata: { source: 'test' } },
+    );
+
+    expect(selection).toEqual({
+      metadata: { source: 'test' },
+      prize: { couponCode: 'SAVE20' },
+    });
+    expect(Object.isFrozen(selection)).toBe(true);
+    expect(Object.isFrozen(selection.metadata)).toBe(true);
   });
 });

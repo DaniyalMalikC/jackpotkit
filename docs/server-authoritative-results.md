@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 5
+sidebar_position: 6
 ---
 
 # Server-authoritative results
@@ -53,5 +53,25 @@ const resultProvider = async () => {
 ```
 
 The component enters `requesting-result`, validates the returned segment ID, calculates the exact destination, and only then starts animation.
+
+Scratch Card follows the same boundary while allowing the user to keep scratching during the request:
+
+```tsx
+const resultProvider = async () => {
+  const response = await api.requestScratchPrize();
+  return { prize: response.prize, metadata: { playId: response.playId } };
+};
+
+<ScratchCard
+  width={320}
+  height={180}
+  resultProvider={resultProvider}
+  onComplete={(result) => acknowledge(result.metadata?.playId)}
+>
+  {(result) => <RewardCard prize={result?.prize} />}
+</ScratchCard>;
+```
+
+The scratch path and percentage are presentation state. Crossing the threshold never chooses or modifies the prize: completion waits for the provider result, and reset invalidates an in-flight request locally. The backend still owns eligibility, idempotency, replay protection, persistence, fulfilment, and authoritative result lookup.
 
 Built-in random sources are intended for demonstrations, ordinary gamification, reproducible testing, and debugging. They are not represented as cryptographically secure, certified, regulator-approved, or inherently fair.

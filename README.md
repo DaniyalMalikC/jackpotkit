@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 2. Spin Wheel is the first complete headless and React Native game. Other games remain roadmap items.
+> **Project status:** Phase 3. Spin Wheel and Scratch Card are available as headless engines and React Native experiences. The dedicated React web package remains a roadmap item.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -22,17 +22,17 @@ JackpotKit has no backend and sends no telemetry by default.
 - Coin Flip
 - Lucky Box
 
-Spin Wheel is available now. The other games remain roadmap items and are not current exports.
+Spin Wheel and Scratch Card are available now. The remaining games are roadmap items and are not current exports.
 
 ## Workspace
 
-| Package                    | Responsibility              | Current status                        |
-| -------------------------- | --------------------------- | ------------------------------------- |
-| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and Spin Wheel engine |
-| `@jackpotkit/react-native` | Native hooks and renderers  | Spin Wheel component and hook         |
-| `@jackpotkit/react`        | React web renderers         | Foundation shell                      |
-| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes               |
-| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories   |
+| Package                    | Responsibility              | Current status                       |
+| -------------------------- | --------------------------- | ------------------------------------ |
+| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and two game engines |
+| `@jackpotkit/react-native` | Native hooks and renderers  | Spin Wheel and Scratch Card          |
+| `@jackpotkit/react`        | React web renderers         | Foundation shell                     |
+| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes              |
+| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories  |
 
 The `@jackpotkit` packages are public on npm. They remain pre-release APIs until the stable-release hardening milestone.
 
@@ -40,6 +40,25 @@ The `@jackpotkit` packages are public on npm. They remain pre-release APIs until
 
 ```bash
 npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
+```
+
+Scratch Card uses an intentionally isolated Skia entrypoint:
+
+```bash
+npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme @shopify/react-native-skia react-native-reanimated react-native-worklets react-native-gesture-handler
+```
+
+```tsx
+import { ScratchCard } from '@jackpotkit/react-native/scratch-card';
+
+<ScratchCard
+  width={320}
+  height={180}
+  result={{ prize: { id: 'points', label: '250 points' } }}
+  onComplete={(result) => handleResult(result.prize)}
+>
+  {(result) => <RewardCard prize={result?.prize} />}
+</ScratchCard>;
 ```
 
 ```tsx
@@ -131,6 +150,8 @@ Animation
 ```
 
 Game logic in `@jackpotkit/core` cannot depend on React, React Native, Expo, Skia, Reanimated, Gesture Handler, or browser globals. Animation must never become the source of truth for sensitive results.
+
+Scratch Card's Skia renderer is available only from `@jackpotkit/react-native/scratch-card`; importing the package root does not load Skia.
 
 ## Applications
 

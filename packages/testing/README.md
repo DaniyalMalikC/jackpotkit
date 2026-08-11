@@ -12,6 +12,7 @@ import {
   MockResultProvider,
   SequenceRandomSource,
   createGameResult,
+  createScratchCardSelection,
   createWheelSegments,
 } from '@jackpotkit/testing';
 
@@ -28,6 +29,10 @@ mock.calls; // 1
 mock.requests; // [{ campaignId: 'test' }]
 
 const segments = createWheelSegments(4, (index) => ({ weight: index + 1 }));
+const scratchSelection = createScratchCardSelection(
+  { id: 'bonus-points', amount: 250 },
+  { metadata: { authority: 'fixture' } },
+);
 ```
 
-The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, and wheel-segment factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.
+The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, wheel-segment, and Scratch Card selection factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.

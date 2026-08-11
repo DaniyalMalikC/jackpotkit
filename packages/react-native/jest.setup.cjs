@@ -1,5 +1,38 @@
 /* global jest */
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('react-native-gesture-handler/jestSetup');
+
+jest.mock('@shopify/react-native-skia', () => {
+  const React = jest.requireActual('react');
+  const { View } = jest.requireActual('react-native');
+  const Canvas = ({ children, style }) => React.createElement(View, { style }, children);
+  const Group = ({ children }) => React.createElement(React.Fragment, null, children);
+  const Empty = () => null;
+
+  return {
+    Canvas,
+    Group,
+    Image: Empty,
+    Paint: Empty,
+    Path: Empty,
+    RoundedRect: Empty,
+    Skia: {
+      PathBuilder: {
+        Make: () => {
+          const builder = {
+            build: () => ({ __typename__: 'Path' }),
+            lineTo: () => builder,
+            moveTo: () => builder,
+          };
+          return builder;
+        },
+      },
+    },
+    useImage: () => null,
+  };
+});
+
 jest.mock('react-native-reanimated', () => {
   const { View } = jest.requireActual('react-native');
   const identity = (value) => value;
@@ -17,8 +50,14 @@ jest.mock('react-native-reanimated', () => {
     cancelAnimation: jest.fn(),
     runOnJS: identity,
     useAnimatedStyle: (updater) => updater(),
+    useEvent: (callback) => callback,
     useReducedMotion: () => false,
-    useSharedValue: (value) => ({ value }),
+    useSharedValue: (value) => ({
+      value,
+      set(nextValue) {
+        this.value = typeof nextValue === 'function' ? nextValue(this.value) : nextValue;
+      },
+    }),
     withTiming: (value, _configuration, callback) => {
       callback?.(true);
       return value;

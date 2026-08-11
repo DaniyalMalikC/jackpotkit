@@ -7,6 +7,8 @@ export interface JackpotThemeColors {
   readonly onPrimary: string;
   readonly border: string;
   readonly pointer: string;
+  readonly scratchAccent: string;
+  readonly scratchCover: string;
   readonly wheelPalette: readonly string[];
 }
 
@@ -33,6 +35,7 @@ export interface JackpotThemeRadii {
 
 export interface JackpotThemeAnimation {
   readonly reducedMotionDuration: number;
+  readonly revealDuration: number;
   readonly spinDuration: number;
   readonly spinRotations: number;
 }
@@ -76,6 +79,8 @@ export const defaultTheme: JackpotTheme = freezeTheme({
     onPrimary: '#FFFFFF',
     border: '#E5E0F1',
     pointer: '#25194D',
+    scratchAccent: '#F3A712',
+    scratchCover: '#77718A',
     wheelPalette: ['#6843D5', '#EB4D8A', '#F3A712', '#18A999', '#3F7CAC', '#9B5DE5'],
   },
   typography: {
@@ -97,6 +102,7 @@ export const defaultTheme: JackpotTheme = freezeTheme({
   },
   animation: {
     reducedMotionDuration: 160,
+    revealDuration: 320,
     spinDuration: 3_000,
     spinRotations: 6,
   },
@@ -125,6 +131,8 @@ export const neonTheme: JackpotTheme = createJackpotTheme({
     onPrimary: '#090617',
     border: '#3B2F61',
     pointer: '#FF3DCE',
+    scratchAccent: '#00F5A0',
+    scratchCover: '#4C3D73',
     wheelPalette: ['#FF3DCE', '#7B61FF', '#00E5FF', '#00F5A0', '#FFE66D', '#FF6B6B'],
   },
 });

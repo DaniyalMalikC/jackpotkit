@@ -28,6 +28,11 @@
     "src/spin-wheel/types.ts",
     "src/spin-wheel/use-spin-wheel.ts",
     "src/spin-wheel/validation.ts",
+    "src/scratch-card/index.ts",
+    "src/scratch-card/scratch-card.tsx",
+    "src/scratch-card/types.ts",
+    "src/scratch-card/use-scratch-card.ts",
+    "src/scratch-card/validation.ts",
     "lib",
     "CHANGELOG.md",
     "LICENSE",
@@ -48,6 +53,12 @@
       "react-native": "./src/spin-wheel/index.ts",
       "import": "./lib/module/spin-wheel/index.js",
       "default": "./lib/module/spin-wheel/index.js"
+    },
+    "./scratch-card": {
+      "types": "./lib/typescript/src/scratch-card/index.d.ts",
+      "react-native": "./src/scratch-card/index.ts",
+      "import": "./lib/module/scratch-card/index.js",
+      "default": "./lib/module/scratch-card/index.js"
     }
   },
   "scripts": {
@@ -63,6 +74,7 @@
     "@jackpotkit/theme": "workspace:^"
   },
   "peerDependencies": {
+    "@shopify/react-native-skia": ">=2.6 <3",
     "react": "^19.2.3",
     "react-native": ">=0.83 <0.87",
     "react-native-gesture-handler": ">=2.32 <4",
@@ -70,10 +82,16 @@
     "react-native-svg": ">=15.15 <16",
     "react-native-worklets": ">=0.10 <0.12"
   },
+  "peerDependenciesMeta": {
+    "@shopify/react-native-skia": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@babel/core": "7.29.7",
     "@react-native/babel-preset": "0.86.2",
     "@react-native/jest-preset": "0.86.2",
+    "@shopify/react-native-skia": "catalog:",
     "@testing-library/react-native": "14.0.1",
     "@types/jest": "29.5.14",
     "@types/react": "catalog:",

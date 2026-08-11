@@ -34,7 +34,7 @@ An outcome never depends on where an animation happens to stop. The pure TypeScr
 
 Subpath exports are added only alongside implemented public features. Wildcard exports are avoided so private implementation files cannot become accidental APIs.
 
-## Phase 1 boundary
+## Core boundary
 
 The core package now owns contracts and small utilities, not a universal runtime or event bus. A game may use the standard statuses and events without being forced into transitions that do not match its interaction model. Consumers inject randomness and result providers; networking and persistence stay outside the library.
 
@@ -53,3 +53,21 @@ Renderer reveals and announces the known result
 ```
 
 Selection weights affect only the first step. The SVG renderer always divides its circle into equal visual slices, so probability cannot accidentally leak into layout geometry.
+
+## Scratch Card reference flow
+
+```text
+Controlled or provider prize
+    ↓
+Core validates and stores the result
+    ↓
+Core grid tracker measures erased coverage
+    ↓
+Gesture Handler supplies pointer paths
+    ↓
+Skia clears only the visual cover
+    ↓
+React Native reveals the already-known result
+```
+
+The reward is ordinary React Native content beneath the cover. Skia is an optional peer used only by the exact `@jackpotkit/react-native/scratch-card` subpath, so the root entrypoint and Spin Wheel do not acquire a Skia runtime dependency.

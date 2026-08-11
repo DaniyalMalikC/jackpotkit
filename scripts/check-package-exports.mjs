@@ -5,8 +5,8 @@ import { pathToFileURL } from 'node:url';
 const repositoryRoot = resolve(import.meta.dirname, '..');
 const packageDirectories = ['core', 'react-native', 'react', 'theme', 'testing'];
 const expectedEntrypoints = {
-  core: ['.', './spin-wheel'],
-  'react-native': ['.', './spin-wheel'],
+  core: ['.', './spin-wheel', './scratch-card'],
+  'react-native': ['.', './spin-wheel', './scratch-card'],
   react: ['.'],
   theme: ['.'],
   testing: ['.'],
@@ -27,10 +27,16 @@ const expectedRuntimeExports = {
     'assertRandomValue',
     'assertValidConfiguration',
     'assertValidResult',
+    'assertValidScratchCardConfiguration',
+    'assertValidScratchCardSelection',
+    'assertValidScratchPoint',
+    'assertValidScratchProgress',
     'assertValidSpinWheelSegments',
     'assertValidSpinWheelSelection',
     'calculateSpinWheelDestination',
     'createGameEvent',
+    'createScratchCard',
+    'createScratchProgressTracker',
     'createValidationResult',
     'createSpinWheel',
     'isGameStatus',
@@ -38,6 +44,7 @@ const expectedRuntimeExports = {
     'nextRandomValue',
     'resolveResult',
     'selectSpinWheelSegment',
+    'validateScratchCardConfiguration',
     'validateSpinWheelSegments',
     'validateSpinWheelSelection',
   ],
@@ -49,6 +56,7 @@ const expectedRuntimeExports = {
     'SequenceRandomSource',
     'createGameResult',
     'createReward',
+    'createScratchCardSelection',
     'createSequenceRandom',
     'createWheelSegments',
   ],
@@ -95,7 +103,7 @@ for (const directory of packageDirectories) {
 
   if (JSON.stringify(actualRuntimeExports) !== JSON.stringify(intentionalRuntimeExports)) {
     throw new Error(
-      `${packageJson.name} runtime exports do not match the Phase 2 allowlist.\n` +
+      `${packageJson.name} runtime exports do not match the Phase 3 allowlist.\n` +
         `Expected: ${intentionalRuntimeExports.join(', ')}\n` +
         `Received: ${actualRuntimeExports.join(', ')}`,
     );
@@ -120,4 +128,24 @@ if (JSON.stringify(spinWheelRuntimeExports) !== JSON.stringify(expectedSpinWheel
   throw new Error('The core Spin Wheel subpath runtime exports do not match its allowlist.');
 }
 
-console.log('All public package export maps and Phase 2 runtime entrypoints are valid.');
+const coreScratchCard = await import(
+  pathToFileURL(join(repositoryRoot, 'packages/core/dist/scratch-card/index.js')).href
+);
+const scratchCardRuntimeExports = Object.keys(coreScratchCard).sort();
+const expectedScratchCardRuntimeExports = [
+  'assertValidScratchCardConfiguration',
+  'assertValidScratchCardSelection',
+  'assertValidScratchPoint',
+  'assertValidScratchProgress',
+  'createScratchCard',
+  'createScratchProgressTracker',
+  'validateScratchCardConfiguration',
+].sort();
+
+if (
+  JSON.stringify(scratchCardRuntimeExports) !== JSON.stringify(expectedScratchCardRuntimeExports)
+) {
+  throw new Error('The core Scratch Card subpath runtime exports do not match its allowlist.');
+}
+
+console.log('All public package export maps and Phase 3 runtime entrypoints are valid.');

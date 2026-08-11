@@ -38,3 +38,34 @@ Supported modes:
 The renderer supports equal-sized responsive SVG segments, custom segment and pointer renderers, default or provider themes, configurable direction/duration/rotations/easing, reduced motion, disabled state, lifecycle callbacks, typed events, screen-reader result announcements, and imperative control.
 
 The selected result is resolved and validated before animation. Animation drift is never used to decide the winner. Client randomness must not be trusted for valuable or security-sensitive rewards.
+
+## Scratch Card
+
+Scratch Card uses an optional Skia peer isolated behind its exact subpath:
+
+```bash
+npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme @shopify/react-native-skia react-native-reanimated react-native-worklets react-native-gesture-handler
+```
+
+```tsx
+import { ScratchCard, type ScratchCardRef } from '@jackpotkit/react-native/scratch-card';
+
+const ref = useRef<ScratchCardRef<Prize>>(null);
+
+<ScratchCard
+  ref={ref}
+  width={320}
+  height={180}
+  result={{ prize }}
+  onComplete={(result) => console.log(result.prize)}
+>
+  {(result) => <RewardCard prize={result?.prize} />}
+</ScratchCard>;
+
+await ref.current?.reveal();
+ref.current?.reset();
+```
+
+The renderer supports solid, image, or custom Skia covers; deterministic coverage thresholds; controlled and application-provided results; ordinary React Native reward content; reduced motion; progress and lifecycle events; screen-reader actions and announcements; and manual reveal/reset. The root entrypoint does not export Scratch Card, so Spin Wheel consumers do not load Skia.
+
+Scratching only reveals a result selected before completion. For valuable rewards, supply and persist the selection from an authoritative backend.

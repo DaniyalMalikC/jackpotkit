@@ -8,6 +8,7 @@ preferWorkspacePackages: true
 strictPeerDependencies: true
 
 allowBuilds:
+  '@shopify/react-native-skia': true
   '@swc/core': true
   core-js: true
   unrs-resolver: true
@@ -15,6 +16,7 @@ allowBuilds:
 catalog:
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.3
+  '@shopify/react-native-skia': 2.6.2
   expo: 57.0.12
   react: 19.2.3
   react-dom: 19.2.3

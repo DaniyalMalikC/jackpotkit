@@ -151,7 +151,7 @@ const { status, result, error, spin, spinTo, reset } = useSpinWheel({
 - Reanimated owns rotation without React state updates on animation frames.
 - Static segment geometry is independent of weighted selection.
 - Active animation is cancelled during reset and unmount.
-- SVG is the only added renderer dependency; Skia remains deferred to Scratch Card.
+- SVG is the only renderer dependency used by Spin Wheel; the optional Skia peer is isolated behind the Scratch Card subpath.
 - Avoid creating a new random source or segment array on every parent render when continuity matters.
 
 ## Testing

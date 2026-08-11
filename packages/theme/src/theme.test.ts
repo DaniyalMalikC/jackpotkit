@@ -4,7 +4,12 @@ import { createJackpotTheme, defaultTheme, neonTheme } from './theme.js';
 
 describe('JackpotKit themes', () => {
   it('provides frozen platform-neutral defaults', () => {
-    expect(defaultTheme.animation).toMatchObject({ spinDuration: 3_000, spinRotations: 6 });
+    expect(defaultTheme.animation).toMatchObject({
+      revealDuration: 320,
+      spinDuration: 3_000,
+      spinRotations: 6,
+    });
+    expect(defaultTheme.colors.scratchCover).toBe('#77718A');
     expect(defaultTheme.colors.wheelPalette).toHaveLength(6);
     expect(Object.isFrozen(defaultTheme)).toBe(true);
     expect(Object.isFrozen(defaultTheme.colors.wheelPalette)).toBe(true);

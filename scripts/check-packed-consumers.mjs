@@ -67,8 +67,9 @@ try {
   writeFileSync(
     join(fixtureRoot, 'smoke.mjs'),
     `import { SeededRandomSource, nextRandomValue, resolveResult } from '@jackpotkit/core';
+import { createScratchCard, createScratchProgressTracker } from '@jackpotkit/core/scratch-card';
 import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
-import { createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import { createScratchCardSelection, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
 import { createJackpotTheme, neonTheme } from '@jackpotkit/theme';
 
 const first = new SeededRandomSource('packed-consumer');
@@ -86,6 +87,14 @@ if (actual !== expected || provider.calls !== 1) throw new Error('Result provide
 const segments = createWheelSegments(3, (index) => ({ weight: index + 1 }));
 const wheel = createSpinWheel({ segments, randomSource: new SequenceRandomSource([0.99]) });
 if (wheel.spin().segmentId !== 'segment-3') throw new Error('Spin Wheel subpath failed.');
+
+const selection = createScratchCardSelection({ id: 'bonus', amount: 250 });
+const card = createScratchCard({ result: selection, threshold: 0.5 });
+const tracker = createScratchProgressTracker({ width: 100, height: 50, brushRadius: 12 });
+card.start();
+card.scratch(tracker.scratchLine({ x: 0, y: 25 }, { x: 100, y: 25 }));
+const scratchResult = card.reveal();
+if (scratchResult.prize?.id !== 'bonus') throw new Error('Scratch Card subpath failed.');
 
 const customTheme = createJackpotTheme({ colors: { primary: '#123456' } }, neonTheme);
 if (customTheme.colors.primary !== '#123456') throw new Error('Theme package failed.');

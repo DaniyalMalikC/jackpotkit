@@ -23,6 +23,10 @@ export default function RootLayout() {
           name="spin-wheel"
           options={{ headerLargeTitle: false, title: 'Spin Wheel' }}
         />
+        <Stack.Screen
+          name="scratch-card"
+          options={{ headerLargeTitle: false, title: 'Scratch Card' }}
+        />
         <Stack.Screen name="+not-found" options={{ headerLargeTitle: false, title: 'Not Found' }} />
       </Stack>
     </GestureHandlerRootView>

@@ -49,7 +49,7 @@ const event = createGameEvent('result-resolved', result);
 
 For rewards with real value, the backend must validate eligibility, choose and persist the outcome, and return that result. JackpotKit does not provide networking, settlement, fulfilment, or a security boundary.
 
-Shared primitives are available from `@jackpotkit/core`; Spin Wheel also has the intentional `@jackpotkit/core/spin-wheel` subpath. Other internal paths are unsupported.
+Shared primitives are available from `@jackpotkit/core`; implemented games also have the intentional `@jackpotkit/core/spin-wheel` and `@jackpotkit/core/scratch-card` subpaths. Other internal paths are unsupported.
 
 ## Spin Wheel
 
@@ -72,3 +72,27 @@ wheel.reset();
 ```
 
 Weights affect selection probability only; every prebuilt visual slice remains equal. Controlled and server results are validated against configured segment IDs before animation.
+
+## Scratch Card
+
+```ts
+import { createScratchCard, createScratchProgressTracker } from '@jackpotkit/core/scratch-card';
+
+const card = createScratchCard({
+  threshold: 0.65,
+  result: { prize: { id: 'points', amount: 250 } },
+});
+
+const tracker = createScratchProgressTracker({
+  width: 320,
+  height: 180,
+  brushRadius: 20,
+});
+
+card.start();
+card.scratch(tracker.scratchLine({ x: 20, y: 40 }, { x: 280, y: 40 }));
+card.reveal();
+card.reset();
+```
+
+Coverage uses a deterministic grid and is independent of Skia, React Native, or frame rate. `startWith()` accepts a consumer-supplied result provider; scratching never chooses or changes the prize.

@@ -1,6 +1,6 @@
 # Changesets
 
-Changesets record release intent for publishable JackpotKit packages. No package is currently published and the `@jackpotkit` scope must be verified before the first release.
+Changesets record release intent for the published JackpotKit packages.
 
 Create a changeset with:
 
@@ -8,4 +8,4 @@ Create a changeset with:
 pnpm changeset
 ```
 
-Versioning and publishing remain manual operations. There is no automated publishing workflow in Phase 0.
+Merges to `main` update the release pull request. Publication is a separate, manually approved GitHub Actions workflow using npm Trusted Publishing; see `docs/releasing.md`.

@@ -11,6 +11,7 @@ describe('game events', () => {
       'result-resolved',
       'animation-start',
       'reveal-start',
+      'progress',
       'complete',
       'reset',
       'error',
