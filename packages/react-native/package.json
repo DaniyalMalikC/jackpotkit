@@ -1,6 +1,6 @@
 {
   "name": "@jackpotkit/react-native",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "React Native renderers and hooks for JackpotKit.",
   "type": "module",
   "sideEffects": false,
