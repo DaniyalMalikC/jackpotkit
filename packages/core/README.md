@@ -49,7 +49,7 @@ const event = createGameEvent('result-resolved', result);
 
 For rewards with real value, the backend must validate eligibility, choose and persist the outcome, and return that result. JackpotKit does not provide networking, settlement, fulfilment, or a security boundary.
 
-Shared primitives are available from `@jackpotkit/core`; implemented games also have the intentional `@jackpotkit/core/spin-wheel`, `@jackpotkit/core/scratch-card`, and `@jackpotkit/core/slot-machine` subpaths. Other internal paths are unsupported.
+Shared primitives are available from `@jackpotkit/core`; implemented games also have the intentional `@jackpotkit/core/spin-wheel`, `@jackpotkit/core/scratch-card`, `@jackpotkit/core/slot-machine`, and `@jackpotkit/core/bingo` subpaths. Other internal paths are unsupported.
 
 ## Spin Wheel
 
@@ -125,3 +125,19 @@ machine.reset();
 ```
 
 The grid is reel-major, and each payline contains one row index per reel. Built-in evaluation reports matching symbol IDs; optional consumer evaluation can add application-specific, non-monetary result metadata.
+
+## Bingo
+
+```ts
+import { SeededRandomSource } from '@jackpotkit/core';
+import { createBingo } from '@jackpotkit/core/bingo';
+
+const bingo = createBingo({ randomSource: new SeededRandomSource('preview') });
+
+bingo.call(27);
+bingo.mark(27);
+bingo.check();
+bingo.reset();
+```
+
+Classic cards use a `5 × 5`, `1–75` layout with column ranges and a center free space. The engine also accepts externally supplied cards, configurable sizes and ranges, random remaining-number draws, mark/unmark, and row, column, diagonal, four-corners, full-board, or custom coordinate patterns. All exposed cards, patterns, results, and state snapshots are immutable.

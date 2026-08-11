@@ -68,9 +68,10 @@ try {
     join(fixtureRoot, 'smoke.mjs'),
     `import { SeededRandomSource, nextRandomValue, resolveResult } from '@jackpotkit/core';
 import { createScratchCard, createScratchProgressTracker } from '@jackpotkit/core/scratch-card';
+import { createBingo } from '@jackpotkit/core/bingo';
 import { createSlotMachine } from '@jackpotkit/core/slot-machine';
 import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
-import { createScratchCardSelection, createSlotSymbols, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import { createBingoBoardFixture, createScratchCardSelection, createSlotSymbols, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
 import { createJackpotTheme, neonTheme } from '@jackpotkit/theme';
 
 const first = new SeededRandomSource('packed-consumer');
@@ -101,6 +102,13 @@ const slotSymbols = createSlotSymbols(2);
 const machine = createSlotMachine({ symbols: slotSymbols, reelCount: 2, rowCount: 1 });
 const slotResult = machine.spinTo({ reels: [['symbol-2'], ['symbol-2']] });
 if (slotResult.winningPaylines[0]?.symbolId !== 'symbol-2') throw new Error('Slot Machine subpath failed.');
+
+const bingo = createBingo({ board: createBingoBoardFixture(3), maxNumber: 9, size: 3 });
+for (const number of [1, 4, 7]) {
+  bingo.call(number);
+  bingo.mark(number);
+}
+if (!bingo.check().completed) throw new Error('Bingo subpath failed.');
 
 const customTheme = createJackpotTheme({ colors: { primary: '#123456' } }, neonTheme);
 if (customTheme.colors.primary !== '#123456') throw new Error('Theme package failed.');

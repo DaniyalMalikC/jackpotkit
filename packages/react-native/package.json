@@ -22,6 +22,12 @@
   "files": [
     "src/index.ts",
     "src/theme-provider.tsx",
+    "src/bingo/bingo-cell.tsx",
+    "src/bingo/bingo.tsx",
+    "src/bingo/index.ts",
+    "src/bingo/types.ts",
+    "src/bingo/use-bingo.ts",
+    "src/bingo/validation.ts",
     "src/spin-wheel/geometry.ts",
     "src/spin-wheel/index.ts",
     "src/spin-wheel/spin-wheel.tsx",
@@ -71,6 +77,12 @@
       "react-native": "./src/slot-machine/index.ts",
       "import": "./lib/module/slot-machine/index.js",
       "default": "./lib/module/slot-machine/index.js"
+    },
+    "./bingo": {
+      "types": "./lib/typescript/src/bingo/index.d.ts",
+      "react-native": "./src/bingo/index.ts",
+      "import": "./lib/module/bingo/index.js",
+      "default": "./lib/module/bingo/index.js"
     }
   },
   "scripts": {

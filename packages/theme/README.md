@@ -16,3 +16,5 @@ Themes contain colors, typography, spacing, radii, and animation defaults. They 
 Scratch Card uses `colors.scratchCover`, `colors.scratchAccent`, and `animation.revealDuration`. Theme overrides still affect presentation only; coverage and prize selection remain core state.
 
 Slot Machine uses `colors.slotBackground`, `colors.slotAccent`, `animation.slotDuration`, and `animation.slotReelDelay`. These tokens control reel presentation and never influence grid selection or payline evaluation.
+
+Bingo uses `colors.bingoFree`, `colors.bingoMarked`, and `animation.bingoMarkDuration`. These tokens style cells and transitions without changing calls, marks, or pattern evaluation.

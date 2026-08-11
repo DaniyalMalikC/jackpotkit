@@ -11,6 +11,7 @@ import { resolveResult } from '@jackpotkit/core';
 import {
   MockResultProvider,
   SequenceRandomSource,
+  createBingoBoardFixture,
   createGameResult,
   createScratchCardSelection,
   createSlotSymbols,
@@ -35,6 +36,7 @@ const scratchSelection = createScratchCardSelection(
   { metadata: { authority: 'fixture' } },
 );
 const symbols = createSlotSymbols(5, (index) => ({ weight: index + 1 }));
+const bingoBoard = createBingoBoardFixture(3);
 ```
 
-The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, wheel-segment, Scratch Card selection, and Slot Machine symbol factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.
+The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, wheel-segment, Scratch Card selection, Slot Machine symbol, and Bingo board factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.

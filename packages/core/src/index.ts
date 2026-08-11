@@ -1,3 +1,4 @@
+export * from './bingo/index.js';
 export * from './errors/index.js';
 export * from './events/index.js';
 export * from './lifecycle/index.js';

@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
 describe('@jackpotkit/core public entrypoint', () => {
-  it('initializes safely in Node and exposes the intentional Phase 4 runtime API', async () => {
+  it('initializes safely in Node and exposes the intentional Phase 5 runtime API', async () => {
     const core = await import('./index.js');
 
     expect(Object.keys(core).sort()).toEqual(
       [
         'AnimationError',
+        'DEFAULT_BINGO_MAX_NUMBER',
+        'DEFAULT_BINGO_MIN_NUMBER',
+        'DEFAULT_BINGO_PATTERNS',
+        'DEFAULT_BINGO_SIZE',
         'GAME_EVENT_TYPES',
         'GAME_STATUSES',
         'GameStateError',
@@ -18,6 +22,9 @@ describe('@jackpotkit/core public entrypoint', () => {
         'ResultProviderError',
         'SeededRandomSource',
         'assertRandomValue',
+        'assertValidBingoBoard',
+        'assertValidBingoConfiguration',
+        'assertValidBingoNumber',
         'assertValidConfiguration',
         'assertValidResult',
         'assertValidScratchCardConfiguration',
@@ -30,6 +37,9 @@ describe('@jackpotkit/core public entrypoint', () => {
         'assertValidSpinWheelSegments',
         'assertValidSpinWheelSelection',
         'calculateSpinWheelDestination',
+        'createBingo',
+        'createBingoBoard',
+        'createBingoPatternDefinitions',
         'createDefaultSlotPaylines',
         'createRandomSlotSelection',
         'createSpinWheel',
@@ -38,6 +48,7 @@ describe('@jackpotkit/core public entrypoint', () => {
         'createScratchProgressTracker',
         'createSlotMachine',
         'createValidationResult',
+        'evaluateBingoPatterns',
         'evaluateSlotPaylines',
         'isGameStatus',
         'isRandomValue',

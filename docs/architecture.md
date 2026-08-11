@@ -89,3 +89,19 @@ Final reel stop reveals and announces the result
 ```
 
 Paylines contain one row index per reel. Reel animation is split into child components with independent shared values, preventing frame updates from becoming parent React state. Custom evaluation can describe rewards or campaign tiers but never changes the resolved grid.
+
+## Bingo reference flow
+
+```text
+Generated or externally supplied card
+    ↓
+Core validates dimensions, ranges, uniqueness, and patterns
+    ↓
+Calls and marks produce immutable state snapshots
+    ↓
+Core evaluates concrete completion coordinates
+    ↓
+React Native renders and announces the current board state
+```
+
+The board is row-major and remains fixed until a new engine is created. Random drawing, rendering, and mark transitions cannot change pattern logic. Applications can persist snapshots and own any authoritative call transport without introducing networking or storage into core.

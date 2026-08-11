@@ -47,6 +47,11 @@
       "types": "./dist/slot-machine/index.d.ts",
       "import": "./dist/slot-machine/index.js",
       "default": "./dist/slot-machine/index.js"
+    },
+    "./bingo": {
+      "types": "./dist/bingo/index.d.ts",
+      "import": "./dist/bingo/index.js",
+      "default": "./dist/bingo/index.js"
     }
   },
   "scripts": {

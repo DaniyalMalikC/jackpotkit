@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 # Server-authoritative results
@@ -86,5 +86,14 @@ const resultProvider = async () => {
 ```
 
 The component validates the grid and evaluates configured paylines before starting any reel. Staggered stopping is presentation only and cannot change the resolved symbols.
+
+Bingo uses a stream of authoritative calls instead of a one-shot result provider:
+
+```tsx
+const nextCall = await api.getNextBingoCall(gameId);
+bingoRef.current?.call(nextCall.number);
+```
+
+The backend owns the shared sequence, game identity, replay protection, and completion policy. JackpotKit validates each number, prevents duplicates, and evaluates the local card. A client-side `draw()` is suitable for previews and local games but cannot establish a valuable win.
 
 Built-in random sources are intended for demonstrations, ordinary gamification, reproducible testing, and debugging. They are not represented as cryptographically secure, certified, regulator-approved, or inherently fair.

@@ -3,7 +3,7 @@ export interface GalleryGame {
   readonly emoji: string;
   readonly milestone: string;
   readonly name: string;
-  readonly href?: '/scratch-card' | '/slot-machine' | '/spin-wheel';
+  readonly href?: '/bingo' | '/scratch-card' | '/slot-machine' | '/spin-wheel';
 }
 
 export const galleryGames: readonly GalleryGame[] = [
@@ -31,6 +31,7 @@ export const galleryGames: readonly GalleryGame[] = [
   {
     description: 'Headless board generation, calling, marking, and pattern detection.',
     emoji: '🔢',
+    href: '/bingo',
     milestone: 'Phase 5',
     name: 'Bingo',
   },

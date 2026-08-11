@@ -5,6 +5,7 @@ import { createJackpotTheme, defaultTheme, neonTheme } from './theme.js';
 describe('JackpotKit themes', () => {
   it('provides frozen platform-neutral defaults', () => {
     expect(defaultTheme.animation).toMatchObject({
+      bingoMarkDuration: 180,
       revealDuration: 320,
       slotDuration: 1_200,
       slotReelDelay: 180,
@@ -12,6 +13,7 @@ describe('JackpotKit themes', () => {
       spinRotations: 6,
     });
     expect(defaultTheme.colors.scratchCover).toBe('#77718A');
+    expect(defaultTheme.colors.bingoMarked).toBe('#6843D5');
     expect(defaultTheme.colors.slotBackground).toBe('#25194D');
     expect(defaultTheme.colors.wheelPalette).toHaveLength(6);
     expect(Object.isFrozen(defaultTheme)).toBe(true);

@@ -5,8 +5,8 @@ import { pathToFileURL } from 'node:url';
 const repositoryRoot = resolve(import.meta.dirname, '..');
 const packageDirectories = ['core', 'react-native', 'react', 'theme', 'testing'];
 const expectedEntrypoints = {
-  core: ['.', './spin-wheel', './scratch-card', './slot-machine'],
-  'react-native': ['.', './spin-wheel', './scratch-card', './slot-machine'],
+  core: ['.', './spin-wheel', './scratch-card', './slot-machine', './bingo'],
+  'react-native': ['.', './spin-wheel', './scratch-card', './slot-machine', './bingo'],
   react: ['.'],
   theme: ['.'],
   testing: ['.'],
@@ -14,6 +14,10 @@ const expectedEntrypoints = {
 const expectedRuntimeExports = {
   core: [
     'AnimationError',
+    'DEFAULT_BINGO_MAX_NUMBER',
+    'DEFAULT_BINGO_MIN_NUMBER',
+    'DEFAULT_BINGO_PATTERNS',
+    'DEFAULT_BINGO_SIZE',
     'GAME_EVENT_TYPES',
     'GAME_STATUSES',
     'GameStateError',
@@ -25,6 +29,9 @@ const expectedRuntimeExports = {
     'ResultProviderError',
     'SeededRandomSource',
     'assertRandomValue',
+    'assertValidBingoBoard',
+    'assertValidBingoConfiguration',
+    'assertValidBingoNumber',
     'assertValidConfiguration',
     'assertValidResult',
     'assertValidScratchCardConfiguration',
@@ -37,6 +44,9 @@ const expectedRuntimeExports = {
     'assertValidSpinWheelSegments',
     'assertValidSpinWheelSelection',
     'calculateSpinWheelDestination',
+    'createBingo',
+    'createBingoBoard',
+    'createBingoPatternDefinitions',
     'createDefaultSlotPaylines',
     'createGameEvent',
     'createRandomSlotSelection',
@@ -45,6 +55,7 @@ const expectedRuntimeExports = {
     'createSlotMachine',
     'createValidationResult',
     'createSpinWheel',
+    'evaluateBingoPatterns',
     'evaluateSlotPaylines',
     'isGameStatus',
     'isRandomValue',
@@ -59,10 +70,12 @@ const expectedRuntimeExports = {
     'validateSpinWheelSelection',
   ],
   'react-native': [
+    'Bingo',
     'JackpotKitProvider',
     'SlotMachine',
     'SpinWheel',
     'useJackpotKitTheme',
+    'useBingo',
     'useSlotMachine',
     'useSpinWheel',
   ],
@@ -71,6 +84,7 @@ const expectedRuntimeExports = {
   testing: [
     'MockResultProvider',
     'SequenceRandomSource',
+    'createBingoBoardFixture',
     'createGameResult',
     'createReward',
     'createScratchCardSelection',
@@ -121,7 +135,7 @@ for (const directory of packageDirectories) {
 
   if (JSON.stringify(actualRuntimeExports) !== JSON.stringify(intentionalRuntimeExports)) {
     throw new Error(
-      `${packageJson.name} runtime exports do not match the Phase 4 allowlist.\n` +
+      `${packageJson.name} runtime exports do not match the Phase 5 allowlist.\n` +
         `Expected: ${intentionalRuntimeExports.join(', ')}\n` +
         `Received: ${actualRuntimeExports.join(', ')}`,
     );
@@ -189,4 +203,26 @@ if (
   throw new Error('The core Slot Machine subpath runtime exports do not match its allowlist.');
 }
 
-console.log('All public package export maps and Phase 4 runtime entrypoints are valid.');
+const coreBingo = await import(
+  pathToFileURL(join(repositoryRoot, 'packages/core/dist/bingo/index.js')).href
+);
+const bingoRuntimeExports = Object.keys(coreBingo).sort();
+const expectedBingoRuntimeExports = [
+  'DEFAULT_BINGO_MAX_NUMBER',
+  'DEFAULT_BINGO_MIN_NUMBER',
+  'DEFAULT_BINGO_PATTERNS',
+  'DEFAULT_BINGO_SIZE',
+  'assertValidBingoBoard',
+  'assertValidBingoConfiguration',
+  'assertValidBingoNumber',
+  'createBingo',
+  'createBingoBoard',
+  'createBingoPatternDefinitions',
+  'evaluateBingoPatterns',
+].sort();
+
+if (JSON.stringify(bingoRuntimeExports) !== JSON.stringify(expectedBingoRuntimeExports)) {
+  throw new Error('The core Bingo subpath runtime exports do not match its allowlist.');
+}
+
+console.log('All public package export maps and Phase 5 runtime entrypoints are valid.');

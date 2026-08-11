@@ -31,6 +31,7 @@ export default function RootLayout() {
           name="slot-machine"
           options={{ headerLargeTitle: false, title: 'Slot Machine' }}
         />
+        <Stack.Screen name="bingo" options={{ headerLargeTitle: false, title: 'Bingo' }} />
         <Stack.Screen name="+not-found" options={{ headerLargeTitle: false, title: 'Not Found' }} />
       </Stack>
     </GestureHandlerRootView>

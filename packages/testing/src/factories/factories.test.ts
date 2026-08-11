@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { createBingoBoardFixture } from './create-bingo-board.js';
 import { createGameResult } from './create-game-result.js';
 import { createReward } from './create-reward.js';
 import { createScratchCardSelection } from './create-scratch-card-selection.js';
@@ -7,6 +8,21 @@ import { createSlotSymbols } from './create-slot-symbols.js';
 import { createWheelSegments } from './create-wheel-segments.js';
 
 describe('testing factories', () => {
+  it('creates immutable deterministic Bingo boards', () => {
+    const board = createBingoBoardFixture(3, { startAt: 10 });
+
+    expect(board).toEqual([
+      [10, 13, 16],
+      [11, 'free', 17],
+      [12, 15, 18],
+    ]);
+    expect(Object.isFrozen(board)).toBe(true);
+    expect(Object.isFrozen(board[0])).toBe(true);
+    expect(() => createBingoBoardFixture(4, { freeSpace: true })).toThrow(
+      'freeSpace requires an odd',
+    );
+  });
+
   it('creates a deterministic game result with overridable fields', () => {
     expect(createGameResult({ data: { winnerId: 'reward-1' } })).toEqual({
       data: { winnerId: 'reward-1' },

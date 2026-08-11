@@ -26,7 +26,7 @@ await ref.current?.spinTo('bonus');
 ref.current?.reset();
 ```
 
-The root entrypoint exports Spin Wheel, Slot Machine, `JackpotKitProvider`, and `useJackpotKitTheme`. Scratch Card remains isolated behind its Skia-specific subpath.
+The root entrypoint exports Spin Wheel, Slot Machine, Bingo, their hooks, `JackpotKitProvider`, and `useJackpotKitTheme`. Scratch Card remains isolated behind its Skia-specific subpath.
 
 Supported modes:
 
@@ -94,3 +94,19 @@ ref.current?.reset();
 The renderer supports weighted random, controlled, and application-provided grids; arbitrary reels and rows; custom paylines and evaluation; staggered Reanimated reels; winning highlights; custom text, emoji, or image renderers; reduced motion; accessibility; themes; lifecycle events; and imperative play/reset.
 
 Every reel animates toward a result already resolved and validated by core. Animation timing never determines the winning symbols.
+
+## Bingo
+
+```tsx
+import { Bingo, type BingoRef } from '@jackpotkit/react-native/bingo';
+
+const ref = useRef<BingoRef>(null);
+
+<Bingo ref={ref} patterns={['row', 'column', 'diagonal']} />;
+
+ref.current?.call(27);
+ref.current?.mark(27);
+ref.current?.reset();
+```
+
+The responsive board supports generated or supplied cards, configurable dimensions, free spaces, deterministic calls, mark/unmark, built-in and custom patterns, custom cell renderers, themes, reduced motion, accessible state and announcements, lifecycle events, and imperative control. Rendering and animation never decide whether a pattern is complete.
