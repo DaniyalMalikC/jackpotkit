@@ -71,3 +71,21 @@ React Native reveals the already-known result
 ```
 
 The reward is ordinary React Native content beneath the cover. Skia is an optional peer used only by the exact `@jackpotkit/react-native/scratch-card` subpath, so the root entrypoint and Spin Wheel do not acquire a Skia runtime dependency.
+
+## Slot Machine reference flow
+
+```text
+Weighted, controlled, or provider symbol-ID grid
+    ↓
+Core validates every reel and row
+    ↓
+Core evaluates configured matching paylines
+    ↓
+Consumer evaluator adds domain-specific metadata
+    ↓
+Independent Reanimated reels display the known grid
+    ↓
+Final reel stop reveals and announces the result
+```
+
+Paylines contain one row index per reel. Reel animation is split into child components with independent shared values, preventing frame updates from becoming parent React state. Custom evaluation can describe rewards or campaign tiers but never changes the resolved grid.

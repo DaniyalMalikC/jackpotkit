@@ -49,7 +49,7 @@ const event = createGameEvent('result-resolved', result);
 
 For rewards with real value, the backend must validate eligibility, choose and persist the outcome, and return that result. JackpotKit does not provide networking, settlement, fulfilment, or a security boundary.
 
-Shared primitives are available from `@jackpotkit/core`; implemented games also have the intentional `@jackpotkit/core/spin-wheel` and `@jackpotkit/core/scratch-card` subpaths. Other internal paths are unsupported.
+Shared primitives are available from `@jackpotkit/core`; implemented games also have the intentional `@jackpotkit/core/spin-wheel`, `@jackpotkit/core/scratch-card`, and `@jackpotkit/core/slot-machine` subpaths. Other internal paths are unsupported.
 
 ## Spin Wheel
 
@@ -96,3 +96,32 @@ card.reset();
 ```
 
 Coverage uses a deterministic grid and is independent of Skia, React Native, or frame rate. `startWith()` accepts a consumer-supplied result provider; scratching never chooses or changes the prize.
+
+## Slot Machine
+
+```ts
+import { SeededRandomSource } from '@jackpotkit/core';
+import { createSlotMachine } from '@jackpotkit/core/slot-machine';
+
+const machine = createSlotMachine({
+  symbols: [
+    { id: 'cherry', weight: 5 },
+    { id: 'star', weight: 1 },
+  ],
+  reelCount: 3,
+  rowCount: 3,
+  randomSource: new SeededRandomSource('preview'),
+  paylines: [
+    [0, 0, 0],
+    [1, 1, 1],
+    [2, 2, 2],
+  ],
+});
+
+machine.spin();
+machine.spinTo(controlledSelection);
+await machine.spinWith(serverResultProvider, request);
+machine.reset();
+```
+
+The grid is reel-major, and each payline contains one row index per reel. Built-in evaluation reports matching symbol IDs; optional consumer evaluation can add application-specific, non-monetary result metadata.

@@ -4,3 +4,4 @@ export {
   type JackpotKitProviderProps,
 } from './theme-provider';
 export * from './spin-wheel/index';
+export * from './slot-machine/index';

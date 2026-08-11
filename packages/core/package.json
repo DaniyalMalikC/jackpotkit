@@ -42,6 +42,11 @@
       "types": "./dist/scratch-card/index.d.ts",
       "import": "./dist/scratch-card/index.js",
       "default": "./dist/scratch-card/index.js"
+    },
+    "./slot-machine": {
+      "types": "./dist/slot-machine/index.d.ts",
+      "import": "./dist/slot-machine/index.js",
+      "default": "./dist/slot-machine/index.js"
     }
   },
   "scripts": {

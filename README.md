@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 3. Spin Wheel and Scratch Card are available as headless engines and React Native experiences. The dedicated React web package remains a roadmap item.
+> **Project status:** Phase 4. Spin Wheel, Scratch Card, and Slot Machine are available as headless engines and React Native experiences. The dedicated React web package remains a roadmap item.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -22,17 +22,17 @@ JackpotKit has no backend and sends no telemetry by default.
 - Coin Flip
 - Lucky Box
 
-Spin Wheel and Scratch Card are available now. The remaining games are roadmap items and are not current exports.
+Spin Wheel, Scratch Card, and Slot Machine are available now. The remaining games are roadmap items and are not current exports.
 
 ## Workspace
 
-| Package                    | Responsibility              | Current status                       |
-| -------------------------- | --------------------------- | ------------------------------------ |
-| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and two game engines |
-| `@jackpotkit/react-native` | Native hooks and renderers  | Spin Wheel and Scratch Card          |
-| `@jackpotkit/react`        | React web renderers         | Foundation shell                     |
-| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes              |
-| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories  |
+| Package                    | Responsibility              | Current status                         |
+| -------------------------- | --------------------------- | -------------------------------------- |
+| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and three game engines |
+| `@jackpotkit/react-native` | Native hooks and renderers  | Three implemented game experiences     |
+| `@jackpotkit/react`        | React web renderers         | Foundation shell                       |
+| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes                |
+| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories    |
 
 The `@jackpotkit` packages are public on npm. They remain pre-release APIs until the stable-release hardening milestone.
 
@@ -59,6 +59,22 @@ import { ScratchCard } from '@jackpotkit/react-native/scratch-card';
 >
   {(result) => <RewardCard prize={result?.prize} />}
 </ScratchCard>;
+```
+
+Slot Machine supports weighted random, controlled, and provider-supplied grids:
+
+```tsx
+import { SlotMachine } from '@jackpotkit/react-native/slot-machine';
+
+<SlotMachine
+  symbols={[
+    { id: 'cherry', label: '🍒', weight: 5 },
+    { id: 'star', label: '⭐', weight: 1 },
+  ]}
+  reelCount={3}
+  rowCount={3}
+  onComplete={(result) => handleGrid(result.data.reels)}
+/>;
 ```
 
 ```tsx

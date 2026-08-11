@@ -10,6 +10,7 @@ describe('game events', () => {
       'result-request',
       'result-resolved',
       'animation-start',
+      'reel-stop',
       'reveal-start',
       'progress',
       'complete',

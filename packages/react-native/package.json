@@ -33,6 +33,12 @@
     "src/scratch-card/types.ts",
     "src/scratch-card/use-scratch-card.ts",
     "src/scratch-card/validation.ts",
+    "src/slot-machine/index.ts",
+    "src/slot-machine/slot-machine.tsx",
+    "src/slot-machine/slot-reel.tsx",
+    "src/slot-machine/types.ts",
+    "src/slot-machine/use-slot-machine.ts",
+    "src/slot-machine/validation.ts",
     "lib",
     "CHANGELOG.md",
     "LICENSE",
@@ -59,6 +65,12 @@
       "react-native": "./src/scratch-card/index.ts",
       "import": "./lib/module/scratch-card/index.js",
       "default": "./lib/module/scratch-card/index.js"
+    },
+    "./slot-machine": {
+      "types": "./lib/typescript/src/slot-machine/index.d.ts",
+      "react-native": "./src/slot-machine/index.ts",
+      "import": "./lib/module/slot-machine/index.js",
+      "default": "./lib/module/slot-machine/index.js"
     }
   },
   "scripts": {

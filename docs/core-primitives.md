@@ -17,7 +17,7 @@ Shared primitives use the root entrypoint:
 import { SeededRandomSource, type GameResult } from '@jackpotkit/core';
 ```
 
-Implemented games add focused public subpaths. Spin Wheel is available from `@jackpotkit/core/spin-wheel` and Scratch Card from `@jackpotkit/core/scratch-card`; other internal paths remain unavailable.
+Implemented games add focused public subpaths: `@jackpotkit/core/spin-wheel`, `@jackpotkit/core/scratch-card`, and `@jackpotkit/core/slot-machine`. Other internal paths remain unavailable.
 
 ## Results and rewards
 

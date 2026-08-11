@@ -62,5 +62,6 @@ jest.mock('react-native-reanimated', () => {
       callback?.(true);
       return value;
     },
+    withDelay: (_delay, animation) => animation,
   };
 });

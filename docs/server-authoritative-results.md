@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 # Server-authoritative results
@@ -73,5 +73,18 @@ const resultProvider = async () => {
 ```
 
 The scratch path and percentage are presentation state. Crossing the threshold never chooses or modifies the prize: completion waits for the provider result, and reset invalidates an in-flight request locally. The backend still owns eligibility, idempotency, replay protection, persistence, fulfilment, and authoritative result lookup.
+
+Slot Machine providers return the entire symbol-ID grid:
+
+```tsx
+const resultProvider = async () => {
+  const response = await api.requestSlotPlay();
+  return { reels: response.reels, metadata: { playId: response.playId } };
+};
+
+<SlotMachine symbols={symbols} reelCount={3} resultProvider={resultProvider} />;
+```
+
+The component validates the grid and evaluates configured paylines before starting any reel. Staggered stopping is presentation only and cannot change the resolved symbols.
 
 Built-in random sources are intended for demonstrations, ordinary gamification, reproducible testing, and debugging. They are not represented as cryptographically secure, certified, regulator-approved, or inherently fair.

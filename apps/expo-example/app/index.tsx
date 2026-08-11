@@ -32,7 +32,7 @@ export default function GalleryScreen() {
           selectable
           style={{ color: '#B7A6FF', fontSize: 13, fontWeight: '800', letterSpacing: 1.2 }}
         >
-          PHASE 3 · GESTURE REVEAL
+          PHASE 4 · RESULT-DRIVEN REELS
         </Text>
         <Text
           selectable
@@ -41,8 +41,8 @@ export default function GalleryScreen() {
           Game Gallery
         </Text>
         <Text selectable style={{ color: '#D7D0F3', fontSize: 16, lineHeight: 23, maxWidth: 680 }}>
-          Spin Wheel and Scratch Card are playable reference implementations. The remaining games
-          stay visibly scoped to their future milestones.
+          Spin Wheel, Scratch Card, and Slot Machine are playable reference implementations. The
+          remaining games stay visibly scoped to their future milestones.
         </Text>
       </View>
 

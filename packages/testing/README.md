@@ -13,6 +13,7 @@ import {
   SequenceRandomSource,
   createGameResult,
   createScratchCardSelection,
+  createSlotSymbols,
   createWheelSegments,
 } from '@jackpotkit/testing';
 
@@ -33,6 +34,7 @@ const scratchSelection = createScratchCardSelection(
   { id: 'bonus-points', amount: 250 },
   { metadata: { authority: 'fixture' } },
 );
+const symbols = createSlotSymbols(5, (index) => ({ weight: index + 1 }));
 ```
 
-The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, wheel-segment, and Scratch Card selection factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.
+The package includes finite or looping random sequences, a call-capturing result provider, and deterministic result, reward, wheel-segment, Scratch Card selection, and Slot Machine symbol factories. It depends only on `@jackpotkit/core` and has no test-runner dependency.

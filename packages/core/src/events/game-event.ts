@@ -4,6 +4,7 @@ export const GAME_EVENT_TYPES = Object.freeze([
   'result-request',
   'result-resolved',
   'animation-start',
+  'reel-stop',
   'reveal-start',
   'progress',
   'complete',

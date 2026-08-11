@@ -5,5 +5,6 @@ export * from './random/index.js';
 export * from './result/index.js';
 export * from './reward/index.js';
 export * from './scratch-card/index.js';
+export * from './slot-machine/index.js';
 export * from './spin-wheel/index.js';
 export * from './validation/index.js';

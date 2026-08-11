@@ -26,7 +26,7 @@ await ref.current?.spinTo('bonus');
 ref.current?.reset();
 ```
 
-The root entrypoint exports the same Spin Wheel API plus `JackpotKitProvider` and `useJackpotKitTheme`.
+The root entrypoint exports Spin Wheel, Slot Machine, `JackpotKitProvider`, and `useJackpotKitTheme`. Scratch Card remains isolated behind its Skia-specific subpath.
 
 Supported modes:
 
@@ -69,3 +69,28 @@ ref.current?.reset();
 The renderer supports solid, image, or custom Skia covers; deterministic coverage thresholds; controlled and application-provided results; ordinary React Native reward content; reduced motion; progress and lifecycle events; screen-reader actions and announcements; and manual reveal/reset. The root entrypoint does not export Scratch Card, so Spin Wheel consumers do not load Skia.
 
 Scratching only reveals a result selected before completion. For valuable rewards, supply and persist the selection from an authoritative backend.
+
+## Slot Machine
+
+```tsx
+import { SlotMachine, type SlotMachineRef } from '@jackpotkit/react-native/slot-machine';
+
+const ref = useRef<SlotMachineRef>(null);
+
+<SlotMachine
+  ref={ref}
+  symbols={symbols}
+  reelCount={3}
+  rowCount={3}
+  paylines={paylines}
+  onComplete={(result) => console.log(result.winningPaylines)}
+/>;
+
+await ref.current?.spin();
+await ref.current?.spinTo(controlledSelection);
+ref.current?.reset();
+```
+
+The renderer supports weighted random, controlled, and application-provided grids; arbitrary reels and rows; custom paylines and evaluation; staggered Reanimated reels; winning highlights; custom text, emoji, or image renderers; reduced motion; accessibility; themes; lifecycle events; and imperative play/reset.
+
+Every reel animates toward a result already resolved and validated by core. Animation timing never determines the winning symbols.

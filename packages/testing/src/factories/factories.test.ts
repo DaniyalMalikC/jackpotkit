@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createGameResult } from './create-game-result.js';
 import { createReward } from './create-reward.js';
 import { createScratchCardSelection } from './create-scratch-card-selection.js';
+import { createSlotSymbols } from './create-slot-symbols.js';
 import { createWheelSegments } from './create-wheel-segments.js';
 
 describe('testing factories', () => {
@@ -84,5 +85,15 @@ describe('testing factories', () => {
     });
     expect(Object.isFrozen(selection)).toBe(true);
     expect(Object.isFrozen(selection.metadata)).toBe(true);
+  });
+
+  it('creates deterministic Slot Machine symbols with overrides', () => {
+    const symbols = createSlotSymbols(2, (index) => ({ weight: index + 1 }));
+    expect(symbols).toEqual([
+      { id: 'symbol-1', label: 'Symbol 1', value: 0, weight: 1 },
+      { id: 'symbol-2', label: 'Symbol 2', value: 1, weight: 2 },
+    ]);
+    expect(Object.isFrozen(symbols)).toBe(true);
+    expect(() => createSlotSymbols(0)).toThrow('count must be a positive integer');
   });
 });

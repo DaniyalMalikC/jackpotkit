@@ -5,8 +5,8 @@ import { pathToFileURL } from 'node:url';
 const repositoryRoot = resolve(import.meta.dirname, '..');
 const packageDirectories = ['core', 'react-native', 'react', 'theme', 'testing'];
 const expectedEntrypoints = {
-  core: ['.', './spin-wheel', './scratch-card'],
-  'react-native': ['.', './spin-wheel', './scratch-card'],
+  core: ['.', './spin-wheel', './scratch-card', './slot-machine'],
+  'react-native': ['.', './spin-wheel', './scratch-card', './slot-machine'],
   react: ['.'],
   theme: ['.'],
   testing: ['.'],
@@ -31,24 +31,41 @@ const expectedRuntimeExports = {
     'assertValidScratchCardSelection',
     'assertValidScratchPoint',
     'assertValidScratchProgress',
+    'assertValidSlotMachineConfiguration',
+    'assertValidSlotMachineSelection',
+    'assertValidSlotSymbols',
     'assertValidSpinWheelSegments',
     'assertValidSpinWheelSelection',
     'calculateSpinWheelDestination',
+    'createDefaultSlotPaylines',
     'createGameEvent',
+    'createRandomSlotSelection',
     'createScratchCard',
     'createScratchProgressTracker',
+    'createSlotMachine',
     'createValidationResult',
     'createSpinWheel',
+    'evaluateSlotPaylines',
     'isGameStatus',
     'isRandomValue',
     'nextRandomValue',
     'resolveResult',
+    'selectSlotSymbol',
     'selectSpinWheelSegment',
     'validateScratchCardConfiguration',
+    'validateSlotMachineConfiguration',
+    'validateSlotSymbols',
     'validateSpinWheelSegments',
     'validateSpinWheelSelection',
   ],
-  'react-native': ['JackpotKitProvider', 'SpinWheel', 'useJackpotKitTheme', 'useSpinWheel'],
+  'react-native': [
+    'JackpotKitProvider',
+    'SlotMachine',
+    'SpinWheel',
+    'useJackpotKitTheme',
+    'useSlotMachine',
+    'useSpinWheel',
+  ],
   react: [],
   theme: ['createJackpotTheme', 'defaultTheme', 'neonTheme'],
   testing: [
@@ -57,6 +74,7 @@ const expectedRuntimeExports = {
     'createGameResult',
     'createReward',
     'createScratchCardSelection',
+    'createSlotSymbols',
     'createSequenceRandom',
     'createWheelSegments',
   ],
@@ -103,7 +121,7 @@ for (const directory of packageDirectories) {
 
   if (JSON.stringify(actualRuntimeExports) !== JSON.stringify(intentionalRuntimeExports)) {
     throw new Error(
-      `${packageJson.name} runtime exports do not match the Phase 3 allowlist.\n` +
+      `${packageJson.name} runtime exports do not match the Phase 4 allowlist.\n` +
         `Expected: ${intentionalRuntimeExports.join(', ')}\n` +
         `Received: ${actualRuntimeExports.join(', ')}`,
     );
@@ -148,4 +166,27 @@ if (
   throw new Error('The core Scratch Card subpath runtime exports do not match its allowlist.');
 }
 
-console.log('All public package export maps and Phase 3 runtime entrypoints are valid.');
+const coreSlotMachine = await import(
+  pathToFileURL(join(repositoryRoot, 'packages/core/dist/slot-machine/index.js')).href
+);
+const slotMachineRuntimeExports = Object.keys(coreSlotMachine).sort();
+const expectedSlotMachineRuntimeExports = [
+  'assertValidSlotMachineConfiguration',
+  'assertValidSlotMachineSelection',
+  'assertValidSlotSymbols',
+  'createDefaultSlotPaylines',
+  'createRandomSlotSelection',
+  'createSlotMachine',
+  'evaluateSlotPaylines',
+  'selectSlotSymbol',
+  'validateSlotMachineConfiguration',
+  'validateSlotSymbols',
+].sort();
+
+if (
+  JSON.stringify(slotMachineRuntimeExports) !== JSON.stringify(expectedSlotMachineRuntimeExports)
+) {
+  throw new Error('The core Slot Machine subpath runtime exports do not match its allowlist.');
+}
+
+console.log('All public package export maps and Phase 4 runtime entrypoints are valid.');

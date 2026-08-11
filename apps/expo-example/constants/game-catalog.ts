@@ -3,7 +3,7 @@ export interface GalleryGame {
   readonly emoji: string;
   readonly milestone: string;
   readonly name: string;
-  readonly href?: '/scratch-card' | '/spin-wheel';
+  readonly href?: '/scratch-card' | '/slot-machine' | '/spin-wheel';
 }
 
 export const galleryGames: readonly GalleryGame[] = [
@@ -24,6 +24,7 @@ export const galleryGames: readonly GalleryGame[] = [
   {
     description: 'Deterministic reels, paylines, and server-controlled destinations.',
     emoji: '🎰',
+    href: '/slot-machine',
     milestone: 'Phase 4',
     name: 'Slot Machine',
   },

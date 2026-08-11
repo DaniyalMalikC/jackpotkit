@@ -68,8 +68,9 @@ try {
     join(fixtureRoot, 'smoke.mjs'),
     `import { SeededRandomSource, nextRandomValue, resolveResult } from '@jackpotkit/core';
 import { createScratchCard, createScratchProgressTracker } from '@jackpotkit/core/scratch-card';
+import { createSlotMachine } from '@jackpotkit/core/slot-machine';
 import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
-import { createScratchCardSelection, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import { createScratchCardSelection, createSlotSymbols, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
 import { createJackpotTheme, neonTheme } from '@jackpotkit/theme';
 
 const first = new SeededRandomSource('packed-consumer');
@@ -95,6 +96,11 @@ card.start();
 card.scratch(tracker.scratchLine({ x: 0, y: 25 }, { x: 100, y: 25 }));
 const scratchResult = card.reveal();
 if (scratchResult.prize?.id !== 'bonus') throw new Error('Scratch Card subpath failed.');
+
+const slotSymbols = createSlotSymbols(2);
+const machine = createSlotMachine({ symbols: slotSymbols, reelCount: 2, rowCount: 1 });
+const slotResult = machine.spinTo({ reels: [['symbol-2'], ['symbol-2']] });
+if (slotResult.winningPaylines[0]?.symbolId !== 'symbol-2') throw new Error('Slot Machine subpath failed.');
 
 const customTheme = createJackpotTheme({ colors: { primary: '#123456' } }, neonTheme);
 if (customTheme.colors.primary !== '#123456') throw new Error('Theme package failed.');
