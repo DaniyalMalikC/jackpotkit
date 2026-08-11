@@ -105,3 +105,7 @@ React Native renders and announces the current board state
 ```
 
 The board is row-major and remains fixed until a new engine is created. Random drawing, rendering, and mark transitions cannot change pattern logic. Applications can persist snapshots and own any authoritative call transport without introducing networking or storage into core.
+
+## Phase 6 one-shot flow
+
+Dice and Coin Flip resolve exact values or a face before transform animation. Lucky Box first records the user's selected box, then independently resolves and validates the winning box before revealing it. In every case, random, controlled, and provider modes converge on the same immutable result; animation can display that result but cannot choose or modify it.

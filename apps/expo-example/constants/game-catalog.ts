@@ -3,7 +3,14 @@ export interface GalleryGame {
   readonly emoji: string;
   readonly milestone: string;
   readonly name: string;
-  readonly href?: '/bingo' | '/scratch-card' | '/slot-machine' | '/spin-wheel';
+  readonly href?:
+    | '/bingo'
+    | '/coin-flip'
+    | '/dice'
+    | '/lucky-box'
+    | '/scratch-card'
+    | '/slot-machine'
+    | '/spin-wheel';
 }
 
 export const galleryGames: readonly GalleryGame[] = [
@@ -38,18 +45,21 @@ export const galleryGames: readonly GalleryGame[] = [
   {
     description: 'Generic multi-die rolls supporting standard and custom side counts.',
     emoji: '🎲',
+    href: '/dice',
     milestone: 'Phase 6',
     name: 'Dice',
   },
   {
     description: 'A two-sided controlled or random reveal with customizable faces.',
     emoji: '🪙',
+    href: '/coin-flip',
     milestone: 'Phase 6',
     name: 'Coin Flip',
   },
   {
     description: 'Reusable pick-and-reveal mechanics for boxes, doors, and gifts.',
     emoji: '🎁',
+    href: '/lucky-box',
     milestone: 'Phase 6',
     name: 'Lucky Box',
   },

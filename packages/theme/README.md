@@ -18,3 +18,5 @@ Scratch Card uses `colors.scratchCover`, `colors.scratchAccent`, and `animation.
 Slot Machine uses `colors.slotBackground`, `colors.slotAccent`, `animation.slotDuration`, and `animation.slotReelDelay`. These tokens control reel presentation and never influence grid selection or payline evaluation.
 
 Bingo uses `colors.bingoFree`, `colors.bingoMarked`, and `animation.bingoMarkDuration`. These tokens style cells and transitions without changing calls, marks, or pattern evaluation.
+
+Dice uses `colors.diceFace`, `colors.dicePip`, and `animation.diceRollDuration`. Coin Flip uses `colors.coinFront`, `colors.coinBack`, and `animation.coinFlipDuration`. Lucky Box uses `colors.luckyBox`, `colors.luckyBoxSelected`, and `animation.luckyBoxRevealDuration`. These tokens remain presentation-only.

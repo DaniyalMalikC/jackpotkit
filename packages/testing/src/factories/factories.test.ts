@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { createBingoBoardFixture } from './create-bingo-board.js';
+import { createCoinFaces } from './create-coin-faces.js';
+import { createDiceFixture } from './create-dice-fixture.js';
 import { createGameResult } from './create-game-result.js';
 import { createReward } from './create-reward.js';
 import { createScratchCardSelection } from './create-scratch-card-selection.js';
+import { createLuckyBoxes } from './create-lucky-boxes.js';
 import { createSlotSymbols } from './create-slot-symbols.js';
 import { createWheelSegments } from './create-wheel-segments.js';
 
@@ -111,5 +114,19 @@ describe('testing factories', () => {
     ]);
     expect(Object.isFrozen(symbols)).toBe(true);
     expect(() => createSlotSymbols(0)).toThrow('count must be a positive integer');
+  });
+
+  it('creates Phase 6 Dice, Coin Flip and Lucky Box fixtures', () => {
+    expect(createDiceFixture(2, 20, (index) => ({ label: `D20 #${index + 1}` }))).toEqual([
+      { id: 'die-1', label: 'D20 #1', sides: 20 },
+      { id: 'die-2', label: 'D20 #2', sides: 20 },
+    ]);
+    expect(createCoinFaces([1, 0]).map((face) => face.value)).toEqual([1, 0]);
+    expect(createLuckyBoxes(2, (index) => ({ reward: index + 10 }))).toEqual([
+      { id: 'box-1', label: 'Box 1', reward: 10 },
+      { id: 'box-2', label: 'Box 2', reward: 11 },
+    ]);
+    expect(() => createDiceFixture(0)).toThrow('count must be a positive integer');
+    expect(() => createLuckyBoxes(0)).toThrow('count must be a positive integer');
   });
 });

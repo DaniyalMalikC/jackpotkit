@@ -1,6 +1,6 @@
 ---
 title: Roadmap
-sidebar_position: 12
+sidebar_position: 15
 ---
 
 # Roadmap
@@ -13,11 +13,11 @@ sidebar_position: 12
 - Phase 3: Scratch Card headless engine, deterministic progress tracking, isolated Skia renderer, gesture reveal, controlled and provider results, accessibility, tests, playground, and documentation.
 - Phase 4: Slot Machine weighted grids, custom paylines and evaluation, controlled and provider destinations, staggered native reels, accessibility, tests, playground, and documentation.
 - Phase 5: Bingo deterministic classic card generation, supplied cards, persistent immutable state, calling, marking, built-in and custom patterns, accessible native board, tests, playground, and documentation.
+- Phase 6: Dice, Coin Flip, and Lucky Box engines, random/controlled/provider outcomes, accessible animated native components, testing factories, playgrounds, and documentation.
 
 ## Planned
 
-1. Phase 6: Dice, Coin Flip, and Lucky Box.
-2. Phase 7: React web renderers.
-3. Phase 8: stable-release hardening and publication readiness.
+1. Phase 7: React web renderers.
+2. Phase 8: stable-release hardening and publication readiness.
 
 Roadmap entries are not available APIs and should not be presented as implemented until their complete definition of done passes.

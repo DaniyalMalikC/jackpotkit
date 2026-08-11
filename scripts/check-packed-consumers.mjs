@@ -69,9 +69,12 @@ try {
     `import { SeededRandomSource, nextRandomValue, resolveResult } from '@jackpotkit/core';
 import { createScratchCard, createScratchProgressTracker } from '@jackpotkit/core/scratch-card';
 import { createBingo } from '@jackpotkit/core/bingo';
+import { createCoinFlip } from '@jackpotkit/core/coin-flip';
+import { createDice } from '@jackpotkit/core/dice';
+import { createLuckyBox } from '@jackpotkit/core/lucky-box';
 import { createSlotMachine } from '@jackpotkit/core/slot-machine';
 import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
-import { createBingoBoardFixture, createScratchCardSelection, createSlotSymbols, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
+import { createBingoBoardFixture, createCoinFaces, createDiceFixture, createLuckyBoxes, createScratchCardSelection, createSlotSymbols, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
 import { createJackpotTheme, neonTheme } from '@jackpotkit/theme';
 
 const first = new SeededRandomSource('packed-consumer');
@@ -109,6 +112,16 @@ for (const number of [1, 4, 7]) {
   bingo.mark(number);
 }
 if (!bingo.check().completed) throw new Error('Bingo subpath failed.');
+
+const dice = createDice({ dice: createDiceFixture(2, 6) });
+if (dice.rollTo({ values: [2, 6] }).total !== 8) throw new Error('Dice subpath failed.');
+
+const coin = createCoinFlip({ faces: createCoinFaces(['day', 'night']) });
+if (coin.flipTo({ faceId: 'tails' }).face.value !== 'night') throw new Error('Coin Flip subpath failed.');
+
+const lucky = createLuckyBox({ boxes: createLuckyBoxes(2, (index) => ({ reward: index })) });
+lucky.select('box-1');
+if (!lucky.revealTo({ boxId: 'box-1' }).won) throw new Error('Lucky Box subpath failed.');
 
 const customTheme = createJackpotTheme({ colors: { primary: '#123456' } }, neonTheme);
 if (customTheme.colors.primary !== '#123456') throw new Error('Theme package failed.');

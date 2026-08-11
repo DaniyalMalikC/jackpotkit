@@ -8,6 +8,12 @@ export interface JackpotThemeColors {
   readonly border: string;
   readonly bingoFree: string;
   readonly bingoMarked: string;
+  readonly coinBack: string;
+  readonly coinFront: string;
+  readonly diceFace: string;
+  readonly dicePip: string;
+  readonly luckyBox: string;
+  readonly luckyBoxSelected: string;
   readonly pointer: string;
   readonly scratchAccent: string;
   readonly scratchCover: string;
@@ -39,6 +45,9 @@ export interface JackpotThemeRadii {
 
 export interface JackpotThemeAnimation {
   readonly bingoMarkDuration: number;
+  readonly coinFlipDuration: number;
+  readonly diceRollDuration: number;
+  readonly luckyBoxRevealDuration: number;
   readonly reducedMotionDuration: number;
   readonly revealDuration: number;
   readonly slotDuration: number;
@@ -87,6 +96,12 @@ export const defaultTheme: JackpotTheme = freezeTheme({
     border: '#E5E0F1',
     bingoFree: '#F3A712',
     bingoMarked: '#6843D5',
+    coinBack: '#6843D5',
+    coinFront: '#F3A712',
+    diceFace: '#FFFFFF',
+    dicePip: '#25194D',
+    luckyBox: '#FFFFFF',
+    luckyBoxSelected: '#F3A712',
     pointer: '#25194D',
     scratchAccent: '#F3A712',
     scratchCover: '#77718A',
@@ -113,6 +128,9 @@ export const defaultTheme: JackpotTheme = freezeTheme({
   },
   animation: {
     bingoMarkDuration: 180,
+    coinFlipDuration: 800,
+    diceRollDuration: 700,
+    luckyBoxRevealDuration: 420,
     reducedMotionDuration: 160,
     revealDuration: 320,
     slotDuration: 1_200,
@@ -146,6 +164,12 @@ export const neonTheme: JackpotTheme = createJackpotTheme({
     border: '#3B2F61',
     bingoFree: '#FFE66D',
     bingoMarked: '#FF3DCE',
+    coinBack: '#7B61FF',
+    coinFront: '#FFE66D',
+    diceFace: '#15102A',
+    dicePip: '#00E5FF',
+    luckyBox: '#15102A',
+    luckyBoxSelected: '#FFE66D',
     pointer: '#FF3DCE',
     scratchAccent: '#00F5A0',
     scratchCover: '#4C3D73',

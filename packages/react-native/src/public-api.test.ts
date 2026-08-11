@@ -5,13 +5,19 @@ describe('@jackpotkit/react-native public entrypoint', () => {
     expect(Object.keys(reactNative).sort()).toEqual(
       [
         'Bingo',
+        'CoinFlip',
+        'Dice',
         'JackpotKitProvider',
+        'LuckyBox',
         'SlotMachine',
         'SpinWheel',
         'useJackpotKitTheme',
         'useBingo',
+        'useCoinFlip',
+        'useDice',
         'useSlotMachine',
         'useSpinWheel',
+        'useLuckyBox',
       ].sort(),
     );
   });

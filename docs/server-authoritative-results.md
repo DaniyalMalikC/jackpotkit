@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 8
+sidebar_position: 11
 ---
 
 # Server-authoritative results
@@ -97,3 +97,5 @@ bingoRef.current?.call(nextCall.number);
 The backend owns the shared sequence, game identity, replay protection, and completion policy. JackpotKit validates each number, prevents duplicates, and evaluates the local card. A client-side `draw()` is suitable for previews and local games but cannot establish a valuable win.
 
 Built-in random sources are intended for demonstrations, ordinary gamification, reproducible testing, and debugging. They are not represented as cryptographically secure, certified, regulator-approved, or inherently fair.
+
+Dice and Coin Flip providers return exact values or a face ID before animation starts. Lucky Box providers return the winning box ID after the user has selected a box; the selected box must never be treated as the authoritative outcome. Returned values and IDs are validated against the active configuration before presentation.

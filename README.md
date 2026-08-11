@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 5. Spin Wheel, Scratch Card, Slot Machine, and Bingo are available as headless engines and React Native experiences. The dedicated React web package remains a roadmap item.
+> **Project status:** Phase 6. All seven planned games are available as headless engines and React Native experiences. The dedicated React web package remains a roadmap item.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -22,17 +22,17 @@ JackpotKit has no backend and sends no telemetry by default.
 - Coin Flip
 - Lucky Box
 
-Spin Wheel, Scratch Card, Slot Machine, and Bingo are available now. The remaining games are roadmap items and are not current exports.
+All seven games are available now from exact core and React Native subpath exports.
 
 ## Workspace
 
-| Package                    | Responsibility              | Current status                        |
-| -------------------------- | --------------------------- | ------------------------------------- |
-| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and four game engines |
-| `@jackpotkit/react-native` | Native hooks and renderers  | Four implemented game experiences     |
-| `@jackpotkit/react`        | React web renderers         | Foundation shell                      |
-| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes               |
-| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories   |
+| Package                    | Responsibility              | Current status                         |
+| -------------------------- | --------------------------- | -------------------------------------- |
+| `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and seven game engines |
+| `@jackpotkit/react-native` | Native hooks and renderers  | Seven implemented game experiences     |
+| `@jackpotkit/react`        | React web renderers         | Foundation shell                       |
+| `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes                |
+| `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories    |
 
 The `@jackpotkit` packages are public on npm. They remain pre-release APIs until the stable-release hardening milestone.
 
@@ -87,6 +87,18 @@ import { Bingo } from '@jackpotkit/react-native/bingo';
   randomSource={new SeededRandomSource('preview')}
   onComplete={(result) => handlePatterns(result.matches)}
 />;
+```
+
+Phase 6 adds quick-play Dice, Coin Flip, and Lucky Box entrypoints:
+
+```tsx
+import { CoinFlip } from '@jackpotkit/react-native/coin-flip';
+import { Dice } from '@jackpotkit/react-native/dice';
+import { LuckyBox } from '@jackpotkit/react-native/lucky-box';
+
+<Dice count={2} sides={6} />;
+<CoinFlip result={{ faceId: 'tails' }} />;
+<LuckyBox boxes={boxes} resultProvider={requestWinningBox} />;
 ```
 
 ```tsx

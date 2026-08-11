@@ -26,7 +26,7 @@ await ref.current?.spinTo('bonus');
 ref.current?.reset();
 ```
 
-The root entrypoint exports Spin Wheel, Slot Machine, Bingo, their hooks, `JackpotKitProvider`, and `useJackpotKitTheme`. Scratch Card remains isolated behind its Skia-specific subpath.
+The root entrypoint exports Spin Wheel, Slot Machine, Bingo, Dice, Coin Flip, Lucky Box, their hooks, `JackpotKitProvider`, and `useJackpotKitTheme`. Scratch Card remains isolated behind its Skia-specific subpath.
 
 Supported modes:
 
@@ -110,3 +110,17 @@ ref.current?.reset();
 ```
 
 The responsive board supports generated or supplied cards, configurable dimensions, free spaces, deterministic calls, mark/unmark, built-in and custom patterns, custom cell renderers, themes, reduced motion, accessible state and announcements, lifecycle events, and imperative control. Rendering and animation never decide whether a pattern is complete.
+
+## Dice, Coin Flip, and Lucky Box
+
+```tsx
+import { CoinFlip } from '@jackpotkit/react-native/coin-flip';
+import { Dice } from '@jackpotkit/react-native/dice';
+import { LuckyBox } from '@jackpotkit/react-native/lucky-box';
+
+<Dice count={2} sides={6} result={{ values: [2, 6] }} />;
+<CoinFlip resultProvider={requestFace} />;
+<LuckyBox boxes={boxes} onComplete={(result) => console.log(result.won)} />;
+```
+
+Each game supports random, controlled, and application-provided outcomes; custom renderers; transform-based animation; reduced motion; themes; lifecycle events; accessibility announcements; and imperative reset/play APIs. Dice resolves every die value before rolling. Coin Flip requires exactly two faces. Lucky Box keeps the user's selection separate from the winning box and only exposes its optional reward when they match.

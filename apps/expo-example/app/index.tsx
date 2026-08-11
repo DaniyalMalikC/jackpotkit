@@ -32,7 +32,7 @@ export default function GalleryScreen() {
           selectable
           style={{ color: '#B7A6FF', fontSize: 13, fontWeight: '800', letterSpacing: 1.2 }}
         >
-          PHASE 5 · PERSISTENT BINGO STATE
+          PHASE 6 · QUICK-PLAY GAMES
         </Text>
         <Text
           selectable
@@ -41,8 +41,8 @@ export default function GalleryScreen() {
           Game Gallery
         </Text>
         <Text selectable style={{ color: '#D7D0F3', fontSize: 16, lineHeight: 23, maxWidth: 680 }}>
-          Spin Wheel, Scratch Card, Slot Machine, and Bingo are playable reference implementations.
-          The remaining games stay visibly scoped to their future milestones.
+          All seven planned games are now playable reference implementations. Explore deterministic,
+          controlled, and mocked server outcomes across native and web.
         </Text>
       </View>
 

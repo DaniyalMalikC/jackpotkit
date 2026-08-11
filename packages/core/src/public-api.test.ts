@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 describe('@jackpotkit/core public entrypoint', () => {
-  it('initializes safely in Node and exposes the intentional Phase 5 runtime API', async () => {
+  it('initializes safely in Node and exposes the intentional Phase 6 runtime API', async () => {
     const core = await import('./index.js');
 
     expect(Object.keys(core).sort()).toEqual(
@@ -11,6 +11,7 @@ describe('@jackpotkit/core public entrypoint', () => {
         'DEFAULT_BINGO_MIN_NUMBER',
         'DEFAULT_BINGO_PATTERNS',
         'DEFAULT_BINGO_SIZE',
+        'DEFAULT_COIN_FACES',
         'GAME_EVENT_TYPES',
         'GAME_STATUSES',
         'GameStateError',
@@ -22,10 +23,17 @@ describe('@jackpotkit/core public entrypoint', () => {
         'ResultProviderError',
         'SeededRandomSource',
         'assertRandomValue',
+        'assertSelectableLuckyBox',
         'assertValidBingoBoard',
         'assertValidBingoConfiguration',
         'assertValidBingoNumber',
+        'assertValidCoinFaces',
+        'assertValidCoinFlipSelection',
         'assertValidConfiguration',
+        'assertValidDiceDefinitions',
+        'assertValidDiceSelection',
+        'assertValidLuckyBoxSelection',
+        'assertValidLuckyBoxes',
         'assertValidResult',
         'assertValidScratchCardConfiguration',
         'assertValidScratchCardSelection',
@@ -40,7 +48,11 @@ describe('@jackpotkit/core public entrypoint', () => {
         'createBingo',
         'createBingoBoard',
         'createBingoPatternDefinitions',
+        'createCoinFlip',
         'createDefaultSlotPaylines',
+        'createDice',
+        'createDiceDefinitions',
+        'createLuckyBox',
         'createRandomSlotSelection',
         'createSpinWheel',
         'createGameEvent',

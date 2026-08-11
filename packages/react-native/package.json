@@ -28,6 +28,20 @@
     "src/bingo/types.ts",
     "src/bingo/use-bingo.ts",
     "src/bingo/validation.ts",
+    "src/coin-flip/coin-flip.tsx",
+    "src/coin-flip/index.ts",
+    "src/coin-flip/types.ts",
+    "src/coin-flip/use-coin-flip.ts",
+    "src/dice/dice.tsx",
+    "src/dice/index.ts",
+    "src/dice/types.ts",
+    "src/dice/use-dice.ts",
+    "src/dice/validation.ts",
+    "src/internal/use-one-shot-game.ts",
+    "src/lucky-box/index.ts",
+    "src/lucky-box/lucky-box.tsx",
+    "src/lucky-box/types.ts",
+    "src/lucky-box/use-lucky-box.ts",
     "src/spin-wheel/geometry.ts",
     "src/spin-wheel/index.ts",
     "src/spin-wheel/spin-wheel.tsx",
@@ -83,6 +97,24 @@
       "react-native": "./src/bingo/index.ts",
       "import": "./lib/module/bingo/index.js",
       "default": "./lib/module/bingo/index.js"
+    },
+    "./dice": {
+      "types": "./lib/typescript/src/dice/index.d.ts",
+      "react-native": "./src/dice/index.ts",
+      "import": "./lib/module/dice/index.js",
+      "default": "./lib/module/dice/index.js"
+    },
+    "./coin-flip": {
+      "types": "./lib/typescript/src/coin-flip/index.d.ts",
+      "react-native": "./src/coin-flip/index.ts",
+      "import": "./lib/module/coin-flip/index.js",
+      "default": "./lib/module/coin-flip/index.js"
+    },
+    "./lucky-box": {
+      "types": "./lib/typescript/src/lucky-box/index.d.ts",
+      "react-native": "./src/lucky-box/index.ts",
+      "import": "./lib/module/lucky-box/index.js",
+      "default": "./lib/module/lucky-box/index.js"
     }
   },
   "scripts": {

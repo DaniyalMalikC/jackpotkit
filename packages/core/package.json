@@ -52,6 +52,21 @@
       "types": "./dist/bingo/index.d.ts",
       "import": "./dist/bingo/index.js",
       "default": "./dist/bingo/index.js"
+    },
+    "./dice": {
+      "types": "./dist/dice/index.d.ts",
+      "import": "./dist/dice/index.js",
+      "default": "./dist/dice/index.js"
+    },
+    "./coin-flip": {
+      "types": "./dist/coin-flip/index.d.ts",
+      "import": "./dist/coin-flip/index.js",
+      "default": "./dist/coin-flip/index.js"
+    },
+    "./lucky-box": {
+      "types": "./dist/lucky-box/index.d.ts",
+      "import": "./dist/lucky-box/index.js",
+      "default": "./dist/lucky-box/index.js"
     }
   },
   "scripts": {

@@ -5,8 +5,26 @@ import { pathToFileURL } from 'node:url';
 const repositoryRoot = resolve(import.meta.dirname, '..');
 const packageDirectories = ['core', 'react-native', 'react', 'theme', 'testing'];
 const expectedEntrypoints = {
-  core: ['.', './spin-wheel', './scratch-card', './slot-machine', './bingo'],
-  'react-native': ['.', './spin-wheel', './scratch-card', './slot-machine', './bingo'],
+  core: [
+    '.',
+    './spin-wheel',
+    './scratch-card',
+    './slot-machine',
+    './bingo',
+    './dice',
+    './coin-flip',
+    './lucky-box',
+  ],
+  'react-native': [
+    '.',
+    './spin-wheel',
+    './scratch-card',
+    './slot-machine',
+    './bingo',
+    './dice',
+    './coin-flip',
+    './lucky-box',
+  ],
   react: ['.'],
   theme: ['.'],
   testing: ['.'],
@@ -18,6 +36,7 @@ const expectedRuntimeExports = {
     'DEFAULT_BINGO_MIN_NUMBER',
     'DEFAULT_BINGO_PATTERNS',
     'DEFAULT_BINGO_SIZE',
+    'DEFAULT_COIN_FACES',
     'GAME_EVENT_TYPES',
     'GAME_STATUSES',
     'GameStateError',
@@ -29,10 +48,17 @@ const expectedRuntimeExports = {
     'ResultProviderError',
     'SeededRandomSource',
     'assertRandomValue',
+    'assertSelectableLuckyBox',
     'assertValidBingoBoard',
     'assertValidBingoConfiguration',
     'assertValidBingoNumber',
+    'assertValidCoinFaces',
+    'assertValidCoinFlipSelection',
     'assertValidConfiguration',
+    'assertValidDiceDefinitions',
+    'assertValidDiceSelection',
+    'assertValidLuckyBoxSelection',
+    'assertValidLuckyBoxes',
     'assertValidResult',
     'assertValidScratchCardConfiguration',
     'assertValidScratchCardSelection',
@@ -47,8 +73,12 @@ const expectedRuntimeExports = {
     'createBingo',
     'createBingoBoard',
     'createBingoPatternDefinitions',
+    'createCoinFlip',
     'createDefaultSlotPaylines',
+    'createDice',
+    'createDiceDefinitions',
     'createGameEvent',
+    'createLuckyBox',
     'createRandomSlotSelection',
     'createScratchCard',
     'createScratchProgressTracker',
@@ -71,11 +101,17 @@ const expectedRuntimeExports = {
   ],
   'react-native': [
     'Bingo',
+    'CoinFlip',
+    'Dice',
     'JackpotKitProvider',
+    'LuckyBox',
     'SlotMachine',
     'SpinWheel',
     'useJackpotKitTheme',
     'useBingo',
+    'useCoinFlip',
+    'useDice',
+    'useLuckyBox',
     'useSlotMachine',
     'useSpinWheel',
   ],
@@ -85,7 +121,10 @@ const expectedRuntimeExports = {
     'MockResultProvider',
     'SequenceRandomSource',
     'createBingoBoardFixture',
+    'createCoinFaces',
+    'createDiceFixture',
     'createGameResult',
+    'createLuckyBoxes',
     'createReward',
     'createScratchCardSelection',
     'createSlotSymbols',
@@ -135,7 +174,7 @@ for (const directory of packageDirectories) {
 
   if (JSON.stringify(actualRuntimeExports) !== JSON.stringify(intentionalRuntimeExports)) {
     throw new Error(
-      `${packageJson.name} runtime exports do not match the Phase 5 allowlist.\n` +
+      `${packageJson.name} runtime exports do not match the Phase 6 allowlist.\n` +
         `Expected: ${intentionalRuntimeExports.join(', ')}\n` +
         `Received: ${actualRuntimeExports.join(', ')}`,
     );
@@ -225,4 +264,34 @@ if (JSON.stringify(bingoRuntimeExports) !== JSON.stringify(expectedBingoRuntimeE
   throw new Error('The core Bingo subpath runtime exports do not match its allowlist.');
 }
 
-console.log('All public package export maps and Phase 5 runtime entrypoints are valid.');
+const phaseSixSubpaths = {
+  dice: [
+    'assertValidDiceDefinitions',
+    'assertValidDiceSelection',
+    'createDice',
+    'createDiceDefinitions',
+  ],
+  'coin-flip': [
+    'DEFAULT_COIN_FACES',
+    'assertValidCoinFaces',
+    'assertValidCoinFlipSelection',
+    'createCoinFlip',
+  ],
+  'lucky-box': [
+    'assertSelectableLuckyBox',
+    'assertValidLuckyBoxSelection',
+    'assertValidLuckyBoxes',
+    'createLuckyBox',
+  ],
+};
+
+for (const [subpath, expected] of Object.entries(phaseSixSubpaths)) {
+  const module = await import(
+    pathToFileURL(join(repositoryRoot, `packages/core/dist/${subpath}/index.js`)).href
+  );
+  if (JSON.stringify(Object.keys(module).sort()) !== JSON.stringify(expected.sort())) {
+    throw new Error(`The core ${subpath} subpath runtime exports do not match its allowlist.`);
+  }
+}
+
+console.log('All public package export maps and Phase 6 runtime entrypoints are valid.');
