@@ -1,6 +1,6 @@
 {
   "name": "@jackpotkit/theme",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Platform-neutral theme contracts and presets for JackpotKit.",
   "type": "module",
   "sideEffects": false,
