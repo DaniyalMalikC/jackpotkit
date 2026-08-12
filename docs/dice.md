@@ -33,6 +33,18 @@ import { Dice } from '@jackpotkit/react-native/dice';
 
 The component supports `renderDie`, responsive width, duration/easing, themes, disabled state, reduced motion, lifecycle callbacks, typed events, visible totals, and screen-reader announcements. Custom dice must preserve readable values, labels, contrast, and non-color-only state.
 
+## React web
+
+```tsx
+import { Dice } from '@jackpotkit/react/dice';
+
+<Dice count={2} sides={6} result={{ values: [2, 6] }} />;
+```
+
+The independent web component and `useDice` hook preserve the same core outcomes and lifecycle.
+Dice motion uses CSS transforms, default controls are semantic buttons, and `easing` accepts a CSS
+transition timing function.
+
 ## Testing and authority
 
 `@jackpotkit/testing` exports `createDiceFixture` and deterministic random sources. Assert exact values and totals, not animation timing. Client rolls are appropriate for ordinary games and previews; valuable outcomes must come from an authoritative provider.

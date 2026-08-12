@@ -5,7 +5,7 @@ sidebar_position: 6
 
 # Slot Machine
 
-Slot Machine resolves a complete symbol grid before any reel moves. The pure TypeScript engine owns weighted selection, controlled and provider destinations, payline matching, and consumer-defined evaluation. React Native only animates the known grid and highlights the evaluated result.
+Slot Machine resolves a complete symbol grid before any reel moves. The pure TypeScript engine owns weighted selection, controlled and provider destinations, payline matching, and consumer-defined evaluation. Platform renderers only animate the known grid and highlight the evaluated result.
 
 ## Installation
 
@@ -37,6 +37,18 @@ const symbols = [
   onComplete={(result) => saveResult(result.data.reels)}
 />;
 ```
+
+## React web
+
+```tsx
+import { SlotMachine } from '@jackpotkit/react/slot-machine';
+
+<SlotMachine symbols={symbols} reelCount={3} rowCount={3} />;
+```
+
+The web renderer resolves the same reel-major core grid before applying staggered CSS transforms.
+It exposes the same hook, imperative play/reset API, custom symbol callback, winning paylines,
+reduced-motion behavior, and lifecycle events without native dependencies.
 
 The grid is reel-major: `reels[reelIndex][rowIndex]`. A payline contains one row index per reel, so `[0, 1, 2]` describes a descending diagonal across three reels.
 

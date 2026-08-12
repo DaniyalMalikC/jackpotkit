@@ -42,6 +42,7 @@ function pack(directory) {
 
 try {
   const coreArchive = pack('core');
+  const reactArchive = pack('react');
   const themeArchive = pack('theme');
   const testingArchive = pack('testing');
 
@@ -58,8 +59,11 @@ try {
       '--no-fund',
       '--no-package-lock',
       coreArchive,
+      reactArchive,
       themeArchive,
       testingArchive,
+      'react@19.2.3',
+      'react-dom@19.2.3',
     ],
     fixtureRoot,
   );
@@ -76,6 +80,15 @@ import { createSlotMachine } from '@jackpotkit/core/slot-machine';
 import { createSpinWheel } from '@jackpotkit/core/spin-wheel';
 import { createBingoBoardFixture, createCoinFaces, createDiceFixture, createLuckyBoxes, createScratchCardSelection, createSlotSymbols, createWheelSegments, MockResultProvider, SequenceRandomSource, createGameResult } from '@jackpotkit/testing';
 import { createJackpotTheme, neonTheme } from '@jackpotkit/theme';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { Bingo } from '@jackpotkit/react/bingo';
+import { CoinFlip } from '@jackpotkit/react/coin-flip';
+import { Dice } from '@jackpotkit/react/dice';
+import { LuckyBox } from '@jackpotkit/react/lucky-box';
+import { ScratchCard } from '@jackpotkit/react/scratch-card';
+import { SlotMachine } from '@jackpotkit/react/slot-machine';
+import { SpinWheel } from '@jackpotkit/react/spin-wheel';
 
 const first = new SeededRandomSource('packed-consumer');
 const second = new SeededRandomSource('packed-consumer');
@@ -125,11 +138,26 @@ if (!lucky.revealTo({ boxId: 'box-1' }).won) throw new Error('Lucky Box subpath 
 
 const customTheme = createJackpotTheme({ colors: { primary: '#123456' } }, neonTheme);
 if (customTheme.colors.primary !== '#123456') throw new Error('Theme package failed.');
+
+const webRenderers = [
+  React.createElement(SpinWheel, { segments, size: 180 }),
+  React.createElement(Dice, { count: 2, width: 240 }),
+  React.createElement(CoinFlip, { size: 120 }),
+  React.createElement(LuckyBox, { boxes: createLuckyBoxes(3), width: 240 }),
+  React.createElement(SlotMachine, { symbols: slotSymbols, reelCount: 2, rowCount: 1, width: 240 }),
+  React.createElement(ScratchCard, { height: 100, result: selection, width: 200 }, 'Prize'),
+  React.createElement(Bingo, { board: createBingoBoardFixture(3), maxNumber: 9, size: 3, width: 240 }),
+];
+for (const renderer of webRenderers) {
+  if (renderToString(renderer).length === 0) throw new Error('React SSR renderer produced no markup.');
+}
 `,
   );
 
   run(process.execPath, ['smoke.mjs'], fixtureRoot);
-  console.log('Packed core, theme, and testing packages install and run in an isolated consumer.');
+  console.log(
+    'Packed core, React, theme, and testing packages install, SSR-render, and run in an isolated consumer.',
+  );
 } finally {
   rmSync(fixtureRoot, { force: true, recursive: true });
 }

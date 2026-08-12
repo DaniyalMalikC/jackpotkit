@@ -42,6 +42,21 @@ const selection = {
 
 The children are ordinary React Native content, not Skia nodes. They can include text, images, layout, and accessible controls appropriate for the revealed state.
 
+## React web
+
+```tsx
+import { ScratchCard } from '@jackpotkit/react/scratch-card';
+
+<ScratchCard width={320} height={180} result={selection}>
+  {(result) => <RewardCard prize={result?.prize} />}
+</ScratchCard>;
+```
+
+The web renderer uses Canvas erasure, Pointer Events, and the same deterministic core progress
+tracker. Image covers use a browser URL string (`cover={{ type: 'image', source: '/cover.png' }}`).
+The visible Reveal button provides a keyboard alternative to scratching. Canvas and image globals
+are touched only after mount, preserving SSR-safe imports.
+
 ## Headless engine
 
 The core entrypoint has no React, native, Skia, DOM, or networking dependency:

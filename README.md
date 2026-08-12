@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 6. All seven planned games are available as headless engines and React Native experiences. The dedicated React web package remains a roadmap item.
+> **Project status:** Phase 7. All seven planned games are available as headless engines, React Native experiences, and independent React web renderers.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -22,7 +22,7 @@ JackpotKit has no backend and sends no telemetry by default.
 - Coin Flip
 - Lucky Box
 
-All seven games are available now from exact core and React Native subpath exports.
+All seven games are available now from exact core, React Native, and React web subpath exports.
 
 ## Workspace
 
@@ -30,7 +30,7 @@ All seven games are available now from exact core and React Native subpath expor
 | -------------------------- | --------------------------- | -------------------------------------- |
 | `@jackpotkit/core`         | Pure TypeScript mechanics   | Core primitives and seven game engines |
 | `@jackpotkit/react-native` | Native hooks and renderers  | Seven implemented game experiences     |
-| `@jackpotkit/react`        | React web renderers         | Foundation shell                       |
+| `@jackpotkit/react`        | React web hooks/renderers   | Seven implemented game experiences     |
 | `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes                |
 | `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories    |
 
@@ -117,6 +117,28 @@ export function RewardWheel() {
 }
 ```
 
+## React web quick start
+
+```bash
+npm install @jackpotkit/react @jackpotkit/core @jackpotkit/theme react react-dom
+```
+
+```tsx
+import { SpinWheel } from '@jackpotkit/react/spin-wheel';
+
+<SpinWheel
+  segments={[
+    { id: 'points', label: '100 points', weight: 4 },
+    { id: 'badge', label: 'Bonus badge', weight: 1 },
+  ]}
+  onComplete={(result) => handleResult(result.segmentId)}
+/>;
+```
+
+The web package has no React Native aliases or native peers. It uses CSS transforms, SVG, Canvas,
+and Pointer Events, remains safe to import during SSR, and exposes every game through an exact
+subpath such as `@jackpotkit/react/dice` or `@jackpotkit/react/scratch-card`.
+
 ## Headless example
 
 ```ts
@@ -196,7 +218,7 @@ Scratch Card's Skia renderer is available only from `@jackpotkit/react-native/sc
 ## Applications
 
 - `apps/expo-example`: responsive Expo Router gallery shell.
-- `apps/web-example`: Vite proof that core resolves without native assumptions.
+- `apps/web-example`: interactive Vite gallery for all seven React web renderers.
 - `apps/docs`: Docusaurus documentation shell backed by root `docs/` content.
 
 ## Contributing and security

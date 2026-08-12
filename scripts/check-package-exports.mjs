@@ -25,7 +25,16 @@ const expectedEntrypoints = {
     './coin-flip',
     './lucky-box',
   ],
-  react: ['.'],
+  react: [
+    '.',
+    './spin-wheel',
+    './scratch-card',
+    './slot-machine',
+    './bingo',
+    './dice',
+    './coin-flip',
+    './lucky-box',
+  ],
   theme: ['.'],
   testing: ['.'],
 };
@@ -115,7 +124,24 @@ const expectedRuntimeExports = {
     'useSlotMachine',
     'useSpinWheel',
   ],
-  react: [],
+  react: [
+    'Bingo',
+    'CoinFlip',
+    'Dice',
+    'JackpotKitProvider',
+    'LuckyBox',
+    'ScratchCard',
+    'SlotMachine',
+    'SpinWheel',
+    'useBingo',
+    'useCoinFlip',
+    'useDice',
+    'useJackpotKitTheme',
+    'useLuckyBox',
+    'useScratchCard',
+    'useSlotMachine',
+    'useSpinWheel',
+  ],
   theme: ['createJackpotTheme', 'defaultTheme', 'neonTheme'],
   testing: [
     'MockResultProvider',
@@ -294,4 +320,23 @@ for (const [subpath, expected] of Object.entries(phaseSixSubpaths)) {
   }
 }
 
-console.log('All public package export maps and Phase 6 runtime entrypoints are valid.');
+const reactSubpaths = {
+  'spin-wheel': ['SpinWheel', 'useSpinWheel'],
+  'scratch-card': ['ScratchCard', 'useScratchCard'],
+  'slot-machine': ['SlotMachine', 'useSlotMachine'],
+  bingo: ['Bingo', 'useBingo'],
+  dice: ['Dice', 'useDice'],
+  'coin-flip': ['CoinFlip', 'useCoinFlip'],
+  'lucky-box': ['LuckyBox', 'useLuckyBox'],
+};
+
+for (const [subpath, expected] of Object.entries(reactSubpaths)) {
+  const module = await import(
+    pathToFileURL(join(repositoryRoot, `packages/react/dist/${subpath}/index.js`)).href
+  );
+  if (JSON.stringify(Object.keys(module).sort()) !== JSON.stringify(expected.sort())) {
+    throw new Error(`The React ${subpath} subpath runtime exports do not match its allowlist.`);
+  }
+}
+
+console.log('All public package export maps and Phase 7 runtime entrypoints are valid.');

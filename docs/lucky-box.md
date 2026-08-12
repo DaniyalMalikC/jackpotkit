@@ -41,4 +41,16 @@ Users select an enabled box and activate Reveal. `renderBox` supports custom vis
 
 The responsive grid supports custom columns, themes, duration/easing, disabled state, reduced motion, lifecycle callbacks, screen-reader state, and result announcements. Reset invalidates pending provider work and active animation.
 
+## React web
+
+```tsx
+import { LuckyBox } from '@jackpotkit/react/lucky-box';
+
+<LuckyBox boxes={boxes} result={{ boxId: 'gold' }} />;
+```
+
+The web grid uses native selection buttons and CSS transform motion. `renderBox`, `useLuckyBox`,
+imperative play/reset methods, result-provider behavior, disabled boxes, themes, and lifecycle events
+remain aligned with the React Native surface while the implementation stays independent.
+
 `@jackpotkit/testing` exports `createLuckyBoxes`. For rewards with value, the backend must own eligibility, result choice, persistence, and replay protection; the chosen UI box is not an authority boundary.

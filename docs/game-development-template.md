@@ -1,6 +1,6 @@
 ---
 title: Game development template
-sidebar_position: 16
+sidebar_position: 17
 ---
 
 # Game development template

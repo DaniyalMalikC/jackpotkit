@@ -38,6 +38,19 @@ ref.current?.check();
 ref.current?.reset();
 ```
 
+## React web
+
+```tsx
+import { Bingo, type BingoRef } from '@jackpotkit/react/bingo';
+
+<Bingo ref={ref} patterns={['row', 'column', 'diagonal']} />;
+```
+
+The web board uses a responsive CSS grid and native buttons, so called cells are keyboard-operable
+without recreating button semantics. Core still owns calls, marks, immutable snapshots, and pattern
+completion. The package exposes the same hook and imperative operations without importing native
+code.
+
 The default is a classic `5 × 5` card using numbers `1–75`, column-specific ranges, a center free space, and row, column, and diagonal completion patterns.
 
 ## Headless engine

@@ -1,39 +1,82 @@
-import { SeededRandomSource, createGameEvent, nextRandomValue } from '@jackpotkit/core';
+import { Bingo } from '@jackpotkit/react/bingo';
+import { CoinFlip } from '@jackpotkit/react/coin-flip';
+import { Dice } from '@jackpotkit/react/dice';
+import { LuckyBox } from '@jackpotkit/react/lucky-box';
+import { ScratchCard } from '@jackpotkit/react/scratch-card';
+import { SlotMachine } from '@jackpotkit/react/slot-machine';
+import { SpinWheel } from '@jackpotkit/react/spin-wheel';
 
-const randomSource = new SeededRandomSource('jackpotkit-web-example');
-const previewValues = Array.from({ length: 3 }, () => nextRandomValue(randomSource));
-const readyEvent = createGameEvent('ready', { surface: 'web' }, { timestamp: 0 });
+const segments = [
+  { id: 'points', label: '100 points', color: '#6843D5', weight: 4 },
+  { id: 'badge', label: 'Badge', color: '#EB4D8A', weight: 2 },
+  { id: 'bonus', label: 'Bonus', color: '#18A999', weight: 1 },
+];
+const symbols = [
+  { id: 'cherry', label: '🍒', weight: 4 },
+  { id: 'star', label: '⭐', weight: 2 },
+  { id: 'gift', label: '🎁', weight: 1 },
+];
+const boxes = [
+  { id: 'violet', label: 'Violet' },
+  { id: 'gold', label: 'Gold' },
+  { id: 'mint', label: 'Mint' },
+];
 
 export function App() {
   return (
     <main className="page-shell">
       <section className="hero">
-        <p className="eyebrow">PHASE 1 · SHARED PRIMITIVES</p>
-        <h1>Deterministic mechanics, without native assumptions.</h1>
+        <p className="eyebrow">PHASE 7 · REACT WEB RENDERERS</p>
+        <h1>Seven game experiences. Zero native assumptions.</h1>
         <p className="lede">
-          This Vite application uses <code>@jackpotkit/core</code> without React Native, Expo,
-          platform initialization, or native dependencies.
+          Every result is resolved by <code>@jackpotkit/core</code>. React renders accessible web
+          controls with SVG, Canvas, Pointer Events, and transform-based motion.
         </p>
       </section>
 
-      <section aria-labelledby="workspace-title" className="workspace-card">
-        <div>
-          <p className="section-label">Core smoke test</p>
-          <h2 id="workspace-title">The same seed produces the same sequence</h2>
+      <section aria-labelledby="gallery-title" className="gallery-section">
+        <div className="section-heading">
+          <p className="section-label">Interactive package smoke test</p>
+          <h2 id="gallery-title">React renderer gallery</h2>
         </div>
-        <ul aria-label="Deterministic random values">
-          {previewValues.map((value, index) => (
-            <li key={index}>
-              <span aria-hidden="true">{index + 1}</span>
-              {value.toFixed(8)}
-            </li>
-          ))}
-        </ul>
-        <p className="note">
-          Lifecycle event: <code>{readyEvent.type}</code>. Seeded randomness is reproducible, not
-          cryptographically secure. Valuable outcomes must come from an authoritative server.
-        </p>
+        <div className="game-grid">
+          <article className="game-card game-card-wide">
+            <h3>Spin Wheel</h3>
+            <SpinWheel segments={segments} size={250} />
+          </article>
+          <article className="game-card">
+            <h3>Dice</h3>
+            <Dice count={2} width={260} />
+          </article>
+          <article className="game-card">
+            <h3>Coin Flip</h3>
+            <CoinFlip size={132} />
+          </article>
+          <article className="game-card">
+            <h3>Lucky Box</h3>
+            <LuckyBox boxes={boxes} columns={3} width={300} />
+          </article>
+          <article className="game-card game-card-wide">
+            <h3>Slot Machine</h3>
+            <SlotMachine reelCount={3} rowCount={2} symbols={symbols} width={380} />
+          </article>
+          <article className="game-card">
+            <h3>Scratch Card</h3>
+            <ScratchCard height={150} result={{ prize: '250 points' }} width={270}>
+              <div className="prize">250 points</div>
+            </ScratchCard>
+          </article>
+          <article className="game-card game-card-bingo">
+            <h3>Bingo</h3>
+            <Bingo size={3} maxNumber={30} width={300} />
+          </article>
+        </div>
       </section>
+
+      <p className="authority-note">
+        Client randomness is for ordinary gamification and previews. Valuable outcomes must be
+        selected and persisted by an authoritative server.
+      </p>
     </main>
   );
 }

@@ -39,4 +39,16 @@ Use `renderFace` for branded artwork. `useCoinFlip` supplies a headless React Na
 
 The transform-based animation honors system reduced motion and configurable duration/easing. The control reports busy and disabled state, the revealed face is visible text, and completion is announced. A custom renderer remains responsible for readable labels and contrast.
 
+## React web
+
+```tsx
+import { CoinFlip } from '@jackpotkit/react/coin-flip';
+
+<CoinFlip result={{ faceId: 'tails' }} onComplete={(result) => save(result.faceId)} />;
+```
+
+The web component uses a perspective CSS transform and ordinary React face renderers. It retains
+the same controlled/provider modes, `useCoinFlip` lifecycle, imperative methods, visible result,
+and reduced-motion behavior without loading React Native.
+
 `@jackpotkit/testing` exports `createCoinFaces`. Random client flips are not proof of entitlement; use `resultProvider` for valuable outcomes.

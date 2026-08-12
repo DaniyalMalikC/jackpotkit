@@ -1,6 +1,6 @@
 ---
 title: Contributing
-sidebar_position: 14
+sidebar_position: 15
 ---
 
 # Contributing

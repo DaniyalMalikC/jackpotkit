@@ -47,7 +47,7 @@ Core validates the segment ID
     ↓
 Core calculates the exact destination angle
     ↓
-React Native animates a shared rotation value
+The platform renderer animates the known rotation
     ↓
 Renderer reveals and announces the known result
 ```
@@ -70,7 +70,7 @@ Skia clears only the visual cover
 React Native reveals the already-known result
 ```
 
-The reward is ordinary React Native content beneath the cover. Skia is an optional peer used only by the exact `@jackpotkit/react-native/scratch-card` subpath, so the root entrypoint and Spin Wheel do not acquire a Skia runtime dependency.
+The reward is ordinary React content beneath the cover. React Native uses an optional Skia peer isolated behind its exact Scratch Card subpath; React web uses Canvas and Pointer Events without affecting core.
 
 ## Slot Machine reference flow
 
@@ -101,7 +101,7 @@ Calls and marks produce immutable state snapshots
     ↓
 Core evaluates concrete completion coordinates
     ↓
-React Native renders and announces the current board state
+The platform renderer exposes and announces the current board state
 ```
 
 The board is row-major and remains fixed until a new engine is created. Random drawing, rendering, and mark transitions cannot change pattern logic. Applications can persist snapshots and own any authoritative call transport without introducing networking or storage into core.
@@ -109,3 +109,7 @@ The board is row-major and remains fixed until a new engine is created. Random d
 ## Phase 6 one-shot flow
 
 Dice and Coin Flip resolve exact values or a face before transform animation. Lucky Box first records the user's selected box, then independently resolves and validates the winning box before revealing it. In every case, random, controlled, and provider modes converge on the same immutable result; animation can display that result but cannot choose or modify it.
+
+## Phase 7 web boundary
+
+`@jackpotkit/react` imports the same core engines and theme contracts but never imports or aliases the React Native package. DOM APIs are confined to mounted effects and Pointer Event handlers, so module initialization and server rendering remain safe. Exact subpaths preserve tree shaking, while SVG, Canvas, CSS transforms, and semantic HTML provide browser-native presentation.

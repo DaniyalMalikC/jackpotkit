@@ -1,6 +1,6 @@
 ---
 title: Roadmap
-sidebar_position: 15
+sidebar_position: 16
 ---
 
 # Roadmap
@@ -14,10 +14,12 @@ sidebar_position: 15
 - Phase 4: Slot Machine weighted grids, custom paylines and evaluation, controlled and provider destinations, staggered native reels, accessibility, tests, playground, and documentation.
 - Phase 5: Bingo deterministic classic card generation, supplied cards, persistent immutable state, calling, marking, built-in and custom patterns, accessible native board, tests, playground, and documentation.
 - Phase 6: Dice, Coin Flip, and Lucky Box engines, random/controlled/provider outcomes, accessible animated native components, testing factories, playgrounds, and documentation.
+- Phase 7: independent React web components and hooks for all seven games, exact subpaths, SVG,
+  Canvas and Pointer Events, CSS transform motion, reduced-motion support, Vite gallery, tests, and
+  isolated SSR/package validation.
 
 ## Planned
 
-1. Phase 7: React web renderers.
-2. Phase 8: stable-release hardening and publication readiness.
+1. Phase 8: stable-release hardening and publication readiness.
 
 Roadmap entries are not available APIs and should not be presented as implemented until their complete definition of done passes.

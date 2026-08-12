@@ -34,6 +34,19 @@ const segments = [
 <SpinWheel segments={segments} onComplete={(result) => saveResult(result.segmentId)} />;
 ```
 
+## React web
+
+```tsx
+import { SpinWheel } from '@jackpotkit/react/spin-wheel';
+
+<SpinWheel segments={segments} onComplete={(result) => saveResult(result.segmentId)} />;
+```
+
+The web renderer uses the same core destination calculation, responsive SVG slices, semantic HTML
+controls, and CSS rotation. Web `easing` is a CSS transition timing function string; custom segment
+and pointer renderers return ordinary React nodes. It honors `prefers-reduced-motion` and is safe to
+import during SSR.
+
 ## Headless API
 
 The engine has no React, React Native, Expo, DOM, or animation dependency:
