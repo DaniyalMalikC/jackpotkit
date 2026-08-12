@@ -1,6 +1,6 @@
 {
   "name": "@jackpotkit/testing",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Deterministic testing utilities for JackpotKit consumers.",
   "type": "module",
   "sideEffects": false,
