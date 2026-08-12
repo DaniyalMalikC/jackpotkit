@@ -1,5 +1,13 @@
 # @jackpotkit/core
 
+## 1.0.0
+
+### Major Changes
+
+- 4800f2b: Declare the stable 1.0 public API candidate and add Phase 8 release hardening: package-type analysis,
+  dependency and privacy allowlists, automated web accessibility auditing, migration and compatibility
+  policy, dependency review, release-readiness gates, and hardened trusted publication validation.
+
 ## 0.3.0
 
 ### Minor Changes
