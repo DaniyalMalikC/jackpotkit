@@ -1,6 +1,6 @@
 ---
 title: Roadmap
-sidebar_position: 16
+sidebar_position: 17
 ---
 
 # Roadmap
@@ -20,6 +20,7 @@ sidebar_position: 16
 
 ## Planned
 
-1. Phase 8: stable-release hardening and publication readiness.
+1. Phase 8: stable-release candidate review, device/browser accessibility verification, dependency
+   triage, version pull request approval, and trusted publication.
 
 Roadmap entries are not available APIs and should not be presented as implemented until their complete definition of done passes.

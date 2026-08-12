@@ -47,8 +47,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run complete validation
-        run: pnpm validate
+      - name: Run stable-release readiness checks
+        run: pnpm release:check
 
       - name: Publish packages and create releases
         uses: changesets/action@v1

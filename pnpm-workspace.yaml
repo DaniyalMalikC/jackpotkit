@@ -7,6 +7,10 @@ linkWorkspacePackages: true
 preferWorkspacePackages: true
 strictPeerDependencies: true
 
+overrides:
+  serialize-javascript: 7.1.0
+  webpack: 5.109.2
+
 allowBuilds:
   '@shopify/react-native-skia': true
   '@swc/core': true

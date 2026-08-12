@@ -44,11 +44,11 @@ A game contribution must ultimately include:
 1. Core types and a pure engine.
 2. Validation and typed errors.
 3. Deterministic unit tests.
-4. A React Native hook and renderer.
+4. React Native and React web hooks and renderers.
 5. Controlled and server-authoritative result support where applicable.
-6. Reset, disabled, accessibility, and reduced-motion behavior.
-7. An Expo example and documentation.
-8. Deliberate public exports and a Changeset.
+6. Reset, disabled, accessibility, and reduced-motion behavior on both platforms.
+7. Expo and Vite examples plus complete documentation.
+8. Deliberate public exports, package-type analysis, and a Changeset.
 
 See [the game development template](./docs/game-development-template.md) for expected organization.
 
@@ -57,6 +57,10 @@ See [the game development template](./docs/game-development-template.md) for exp
 Changesets maintains a draft version pull request on `main`. npm publication runs separately through the manually approved `Publish` workflow and npm Trusted Publishing; contributors must never add an npm write token to the repository.
 
 See [the release guide](./docs/releasing.md) for the complete sequence.
+
+Public APIs follow [the versioning and migration policy](./docs/versioning.md). Breaking changes
+must include a migration section and cannot be hidden inside refactors, dependency upgrades, or
+renderer rewrites.
 
 ## Conduct and security
 

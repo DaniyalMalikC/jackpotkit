@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 7. All seven planned games are available as headless engines, React Native experiences, and independent React web renderers.
+> **Project status:** Phase 8 release candidate. All seven planned games are implemented across core, React Native, and React web. The packages remain pre-1.0 until the stable-release review and approved publication complete.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -185,15 +185,19 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm check:consumers
+pnpm check:api
+pnpm check:dependencies
 pnpm check:exports
 pnpm check:packs
+pnpm check:privacy
+pnpm release:check
 ```
 
 ## Releases
 
 Every publishable package change requires a Changeset. Merges to `main` update a draft release pull request; npm publication is a separate, manually approved workflow that uses npm Trusted Publishing rather than a long-lived write token.
 
-See [the release guide](./docs/releasing.md) for the release sequence and one-time repository configuration.
+See [the versioning and migration policy](./docs/versioning.md), [release-readiness checklist](./docs/release-readiness.md), and [release guide](./docs/releasing.md).
 
 ## Architecture
 

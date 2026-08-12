@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 12
+sidebar_position: 13
 ---
 
 # Server-authoritative results
