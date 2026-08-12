@@ -1,5 +1,19 @@
 # @jackpotkit/core
 
+## 0.3.0
+
+### Minor Changes
+
+- d06983a: Add Phase 6 Dice, Coin Flip, and Lucky Box engines; exact random, controlled, and provider results; accessible animated React Native components and hooks; theme tokens; deterministic testing factories; Expo playgrounds; and public documentation.
+
+## 0.2.0
+
+### Minor Changes
+
+- fde1224: Add the Phase 5 Bingo engine, seeded classic card generation, supplied cards, immutable calls and marks, built-in and custom pattern detection, accessible React Native board and hook, theme tokens, testing fixture, Expo playground, and public documentation.
+- 70b5583: Add the Phase 4 Slot Machine engine, weighted grids, custom paylines and evaluation, controlled and provider destinations, staggered React Native reels, theme tokens, testing factory, Expo playground, and public documentation.
+- d0535f0: Add the Phase 3 Scratch Card engine, deterministic progress tracker, isolated Skia React Native renderer and hook, theme tokens, testing factory, Expo playground, and public documentation.
+
 ## 0.1.0
 
 ### Minor Changes
