@@ -1,5 +1,11 @@
 # @jackpotkit/core
 
+## 0.3.0
+
+### Minor Changes
+
+- d06983a: Add Phase 6 Dice, Coin Flip, and Lucky Box engines; exact random, controlled, and provider results; accessible animated React Native components and hooks; theme tokens; deterministic testing factories; Expo playgrounds; and public documentation.
+
 ## 0.2.0
 
 ### Minor Changes

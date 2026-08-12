@@ -1,6 +1,6 @@
 {
   "name": "@jackpotkit/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Pure TypeScript game mechanics for JackpotKit.",
   "type": "module",
   "sideEffects": false,
