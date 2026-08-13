@@ -4,9 +4,11 @@ The Phase 0 package shells were initially published to npm at version `0.0.0`. P
 
 ## Unreleased
 
+## 1.0.0 - 2026-08-12
+
 - Established the Phase 0 monorepo, package shells, application shells, validation, CI, and governance files.
 - Corrected the public package documentation and repository metadata after the initial npm publication.
 - Added manually approved npm Trusted Publishing and automated Changesets release pull requests.
 - Implemented all seven React Native and React web experiences through Phase 7.
 - Added the Phase 8 stable API, accessibility, dependency, privacy, migration, package-type, and
-  release-readiness review gates for the `1.0.0` candidate.
+  release-readiness review gates for the stable `1.0.0` release.

@@ -2,7 +2,7 @@
 
 Open-source game mechanics and animated components for React Native and React.
 
-> **Project status:** Phase 8 release candidate. All seven planned games are implemented across core, React Native, and React web. The packages remain pre-1.0 until the stable-release review and approved publication complete.
+> **Project status:** Stable `1.0.0`. All seven launch games are available across core, React Native, and React web.
 
 JackpotKit is designed for promotional, loyalty, reward, educational, and gamification experiences. It separates pure game outcomes from platform state, rendering, and animation so applications can safely display random, controlled, or server-authoritative results.
 
@@ -12,7 +12,7 @@ JackpotKit does not implement payments, deposits, withdrawals, wagering wallets,
 
 JackpotKit has no backend and sends no telemetry by default.
 
-## Planned launch games
+## Included games
 
 - Spin Wheel
 - Scratch Card
@@ -34,7 +34,7 @@ All seven games are available now from exact core, React Native, and React web s
 | `@jackpotkit/theme`        | Theme contracts and presets | Default and neon themes                |
 | `@jackpotkit/testing`      | Consumer testing utilities  | Deterministic helpers and factories    |
 
-The `@jackpotkit` packages are public on npm. They remain pre-release APIs until the stable-release hardening milestone.
+The five `@jackpotkit` packages are published on npm with stable `1.0.0` APIs. See the [versioning and migration policy](./docs/versioning.md) before upgrading across major versions.
 
 ## React Native quick start
 

@@ -17,10 +17,13 @@ sidebar_position: 17
 - Phase 7: independent React web components and hooks for all seven games, exact subpaths, SVG,
   Canvas and Pointer Events, CSS transform motion, reduced-motion support, Vite gallery, tests, and
   isolated SSR/package validation.
+- Phase 8: stable API review, automated accessibility checks, dependency and privacy audits,
+  package compatibility analysis, release-readiness documentation, approved version pull request,
+  trusted npm publication, provenance, tags, and GitHub Releases for `1.0.0`.
 
-## Planned
+## Next
 
-1. Phase 8: stable-release candidate review, device/browser accessibility verification, dependency
-   triage, version pull request approval, and trusted publication.
+No additional implementation phase is committed. Post-`1.0.0` work focuses on maintenance,
+consumer feedback, documentation, compatibility updates, and carefully reviewed feature proposals.
 
-Roadmap entries are not available APIs and should not be presented as implemented until their complete definition of done passes.
+Future roadmap entries are not available APIs and should not be presented as implemented until their complete definition of done passes.

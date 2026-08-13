@@ -11,7 +11,7 @@ sidebar_position: 1
 
 Open-source game mechanics and animated components for React Native and React.
 
-**Current status:** Phase 8 release candidate. Spin Wheel, Scratch Card, Slot Machine, Bingo, Dice, Coin Flip, and Lucky Box are implemented as headless engines plus accessible React Native and React web hooks and components. Stable publication still requires the documented human release gates.
+**Current status:** Stable `1.0.0`. Spin Wheel, Scratch Card, Slot Machine, Bingo, Dice, Coin Flip, and Lucky Box are published as headless engines plus accessible React Native and React web hooks and components.
 
 </div>
 
@@ -31,6 +31,6 @@ The library uses generic concepts such as rewards, results, values, points, item
 - `@jackpotkit/theme`
 - `@jackpotkit/testing`
 
-All five packages are published. `@jackpotkit/core` contains shared primitives and all seven planned game engines. `@jackpotkit/react-native` contains their native hooks, renderers, providers, and imperative APIs. `@jackpotkit/react` contains independent web implementations for every game. `@jackpotkit/theme` contains platform-neutral themes, while `@jackpotkit/testing` contains deterministic consumer helpers.
+All five packages are published at stable `1.0.0`. `@jackpotkit/core` contains shared primitives and all seven launch game engines. `@jackpotkit/react-native` contains their native hooks, renderers, providers, and imperative APIs. `@jackpotkit/react` contains independent web implementations for every game. `@jackpotkit/theme` contains platform-neutral themes, while `@jackpotkit/testing` contains deterministic consumer helpers.
 
 Start with [React web renderers](./react-web.md), [Spin Wheel](./spin-wheel.md), [Scratch Card](./scratch-card.md), [Slot Machine](./slot-machine.md), [Bingo](./bingo.md), [Dice](./dice.md), [Coin Flip](./coin-flip.md), [Lucky Box](./lucky-box.md), or [Core primitives](./core-primitives.md). Review the [API stability contract](./api-review.md) and [server-authoritative result boundary](./server-authoritative-results.md) before integrating rewards with real value.
