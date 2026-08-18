@@ -35,4 +35,19 @@ describe('Dice', () => {
     expect(renderDie).toHaveBeenCalled();
     act(() => reference.current?.reset());
   });
+
+  it('renders conventional pips for a D6', async () => {
+    await render(<Dice faceStyle="pips" reduceMotion result={{ values: [5] }} />);
+
+    await act(async () => {
+      fireEvent.press(screen.getByLabelText('Roll dice'));
+      await Promise.resolve();
+    });
+
+    expect(screen.getByLabelText('D6: 5')).toBeVisible();
+    expect(
+      screen.getAllByTestId('jackpotkit-die-pip', { includeHiddenElements: true }),
+    ).toHaveLength(5);
+    expect(screen.getByText('Total: 5')).toBeVisible();
+  });
 });

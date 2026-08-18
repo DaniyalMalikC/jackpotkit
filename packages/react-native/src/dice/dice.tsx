@@ -18,6 +18,7 @@ import { AccessibilityInfo, Pressable, Text, useWindowDimensions, View } from 'r
 import Animated, {
   Easing,
   cancelAnimation,
+  interpolate,
   runOnJS,
   useAnimatedStyle,
   useReducedMotion,
@@ -37,6 +38,15 @@ interface PendingDiceAnimation {
   readonly result: DiceResult;
 }
 
+const PIP_CELLS: Readonly<Record<number, readonly number[]>> = {
+  1: [4],
+  2: [0, 8],
+  3: [0, 4, 8],
+  4: [0, 2, 6, 8],
+  5: [0, 2, 4, 6, 8],
+  6: [0, 2, 3, 5, 6, 8],
+};
+
 function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.ForwardedRef<DiceRef>) {
   const {
     accessibilityLabel = 'Dice',
@@ -44,6 +54,7 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
     dice,
     duration,
     easing = Easing.out(Easing.cubic),
+    faceStyle = 'numbers',
     reduceMotion,
     renderDie,
     sides,
@@ -70,15 +81,22 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
   );
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion === true || systemReducedMotion;
-  const rotation = useSharedValue(0);
+  const rollProgress = useSharedValue(0);
   const operationRef = useRef(0);
   const mountedRef = useRef(true);
   const pendingRef = useRef<PendingDiceAnimation | undefined>(undefined);
   const [rolling, setRolling] = useState(false);
   const [values, setValues] = useState<readonly number[]>(definitions.map(() => 1));
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotateX: `${rotation.value}deg` }, { rotateY: `${rotation.value * 0.75}deg` }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    const progress = rollProgress.value;
+    return {
+      transform: [
+        { translateY: interpolate(progress, [0, 0.34, 0.78, 1], [0, -14, 3, 0]) },
+        { rotateZ: `${progress * 720}deg` },
+        { scale: interpolate(progress, [0, 0.34, 0.78, 1], [1, 0.94, 1.04, 1]) },
+      ],
+    };
+  });
 
   const finishAnimation = useCallback(
     (operation: number) => {
@@ -111,16 +129,24 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
 
       return new Promise<typeof result>((resolve, reject) => {
         pendingRef.current = { operation, reject, resolve, result };
-        rotation.set(0);
-        rotation.set(
-          withTiming(720, { duration: animationDuration, easing }, (finished) => {
+        rollProgress.set(0);
+        rollProgress.set(
+          withTiming(1, { duration: animationDuration, easing }, (finished) => {
             if (!finished) return;
             runOnJS(finishAnimation)(operation);
           }),
         );
       });
     },
-    [controller, duration, easing, finishAnimation, rotation, shouldReduceMotion, theme.animation],
+    [
+      controller,
+      duration,
+      easing,
+      finishAnimation,
+      rollProgress,
+      shouldReduceMotion,
+      theme.animation,
+    ],
   );
   const roll = useCallback(
     async (selection?: Parameters<typeof controller.play>[0]) => {
@@ -131,16 +157,16 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
   );
   const reset = useCallback(() => {
     operationRef.current += 1;
-    cancelAnimation(rotation);
+    cancelAnimation(rollProgress);
     pendingRef.current?.reject(
       new AnimationError('Dice was reset before its animation completed.'),
     );
     pendingRef.current = undefined;
-    rotation.set(0);
+    rollProgress.set(0);
     setRolling(false);
     setValues(definitions.map(() => 1));
     controller.reset();
-  }, [controller, definitions, rotation]);
+  }, [controller, definitions, rollProgress]);
 
   useImperativeHandle(
     ref,
@@ -186,24 +212,64 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
                     alignItems: 'center',
                     backgroundColor: theme.colors.diceFace,
                     borderColor: theme.colors.border,
-                    borderRadius: theme.radii.md,
+                    borderRadius: faceStyle === 'pips' ? dieSize * 0.2 : theme.radii.md,
                     borderWidth: 2,
                     height: dieSize,
                     justifyContent: 'center',
                     width: dieSize,
                   }}
                 >
-                  <Text
-                    selectable
-                    style={{
-                      color: theme.colors.dicePip,
-                      fontFamily: theme.typography.fontFamily,
-                      fontSize: theme.typography.titleSize * 1.5,
-                      fontWeight: '900',
-                    }}
-                  >
-                    {value}
-                  </Text>
+                  {faceStyle === 'pips' && die.sides === 6 ? (
+                    <View
+                      accessibilityElementsHidden
+                      importantForAccessibility="no-hide-descendants"
+                      style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        height: '68%',
+                        width: '68%',
+                      }}
+                    >
+                      {Array.from({ length: 9 }, (_, cell) => {
+                        const visible = PIP_CELLS[value]?.includes(cell) === true;
+                        return (
+                          <View
+                            key={cell}
+                            style={{
+                              alignItems: 'center',
+                              height: '33.333%',
+                              justifyContent: 'center',
+                              width: '33.333%',
+                            }}
+                          >
+                            {visible ? (
+                              <View
+                                style={{
+                                  backgroundColor: theme.colors.dicePip,
+                                  borderRadius: dieSize,
+                                  height: dieSize * 0.13,
+                                  width: dieSize * 0.13,
+                                }}
+                                testID="jackpotkit-die-pip"
+                              />
+                            ) : null}
+                          </View>
+                        );
+                      })}
+                    </View>
+                  ) : (
+                    <Text
+                      selectable
+                      style={{
+                        color: theme.colors.dicePip,
+                        fontFamily: theme.typography.fontFamily,
+                        fontSize: theme.typography.titleSize * 1.5,
+                        fontWeight: '900',
+                      }}
+                    >
+                      {value}
+                    </Text>
+                  )}
                 </View>
               )}
             </Animated.View>

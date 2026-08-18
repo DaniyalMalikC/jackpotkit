@@ -4,7 +4,7 @@ import {
   type CoinFlipResult,
   type CoinFlipSelection,
 } from '@jackpotkit/core';
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 
 import { actionButtonStyle } from '../internal/styles.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
@@ -21,6 +21,7 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
     accessibilityLabel = 'Coin Flip',
     duration,
     easing = 'cubic-bezier(0.22, 1, 0.36, 1)',
+    faceStyle = 'flat',
     faces,
     reduceMotion,
     renderFace,
@@ -35,7 +36,8 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
   const coinFaces = (faces ?? DEFAULT_COIN_FACES) as readonly CoinFace<TValue>[];
   const [faceId, setFaceId] = useState(coinFaces[0]?.id ?? 'heads');
   const [flipping, setFlipping] = useState(false);
-  const [turns, setTurns] = useState(0);
+  const [rotation, setRotation] = useState(0);
+  const restingRotationRef = useRef(0);
   const shouldReduceMotion = useReducedMotion(reduceMotion);
   const { cancel, wait } = useAnimationWaiter('Coin Flip');
   const animationDuration = shouldReduceMotion
@@ -46,14 +48,19 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
       controller.startAnimation(result);
       setFlipping(true);
       setFaceId(result.faceId);
-      setTurns((value) => value + 3);
+      const landingRotation = result.faceId === coinFaces[0]?.id ? 0 : 180;
+      const startingRotation = restingRotationRef.current;
+      const destinationOffset = (landingRotation - startingRotation + 360) % 360;
+      setRotation(startingRotation + (shouldReduceMotion ? 0 : 4 * 360) + destinationOffset);
+      restingRotationRef.current = landingRotation;
       await wait(animationDuration);
       setFlipping(false);
+      setRotation(landingRotation);
       controller.reveal(result);
       controller.complete(result);
       return result;
     },
-    [animationDuration, controller, wait],
+    [animationDuration, coinFaces, controller, shouldReduceMotion, wait],
   );
   const flip = useCallback(
     async (selection?: CoinFlipSelection) => animate(await controller.play(selection)),
@@ -63,11 +70,11 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
     cancel('Coin Flip was reset before its animation completed.');
     setFaceId(coinFaces[0]?.id ?? 'heads');
     setFlipping(false);
-    setTurns(0);
+    setRotation(0);
+    restingRotationRef.current = 0;
     controller.reset();
   }, [cancel, coinFaces, controller]);
   useImperativeHandle(ref, () => ({ flip: () => flip(), flipTo: flip, reset }), [flip, reset]);
-  const currentFace = coinFaces.find((face) => face.id === faceId) ?? coinFaces[0];
   const disabled = props.disabled === true || flipping || controller.status === 'requesting-result';
   return (
     <div
@@ -81,43 +88,112 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
         ...style,
       }}
     >
-      <div style={{ perspective: 800 }}>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          height: size + 32,
+          justifyContent: 'center',
+          perspective: size * 5,
+          width: size + 32,
+        }}
+      >
         <div
           style={{
-            transform: `rotateY(${turns * 360}deg)`,
-            transition: `transform ${animationDuration}ms ${easing}`,
+            height: size,
+            position: 'relative',
+            transform: `rotateY(${rotation}deg)`,
+            transition: flipping ? `transform ${animationDuration}ms ${easing}` : 'none',
             transformStyle: 'preserve-3d',
+            WebkitTransformStyle: 'preserve-3d',
+            width: size,
           }}
         >
-          {currentFace === undefined
-            ? null
-            : (renderFace?.({ active: true, face: currentFace, flipping, theme }) ?? (
-                <div
-                  aria-label={`Coin face: ${currentFace.label ?? currentFace.id}`}
-                  style={{
-                    alignItems: 'center',
-                    background:
-                      currentFace.id === coinFaces[0]?.id
-                        ? theme.colors.coinFront
-                        : theme.colors.coinBack,
-                    border: `3px solid ${theme.colors.border}`,
-                    borderRadius: '50%',
-                    color:
-                      currentFace.id === coinFaces[0]?.id
-                        ? theme.colors.dicePip
-                        : theme.colors.onPrimary,
-                    display: 'flex',
-                    fontFamily: theme.typography.fontFamily,
-                    fontSize: theme.typography.titleSize,
-                    fontWeight: 900,
-                    height: size,
-                    justifyContent: 'center',
-                    width: size,
-                  }}
-                >
-                  {currentFace.label ?? currentFace.id}
-                </div>
-              ))}
+          {coinFaces.map((face, index) => {
+            const active = face.id === faceId;
+            const background = index === 0 ? theme.colors.coinFront : theme.colors.coinBack;
+            const color = index === 0 ? theme.colors.dicePip : theme.colors.onPrimary;
+            const label = face.label ?? face.id;
+            return (
+              <div
+                aria-hidden={!active}
+                key={face.id}
+                style={{
+                  backfaceVisibility: 'hidden',
+                  height: size,
+                  inset: 0,
+                  position: 'absolute',
+                  transform: index === 0 ? undefined : 'rotateY(180deg)',
+                  WebkitBackfaceVisibility: 'hidden',
+                  visibility: !flipping && !active ? 'hidden' : 'visible',
+                  width: size,
+                }}
+              >
+                {renderFace?.({ active, face, flipping, theme }) ?? (
+                  <div
+                    aria-label={`Coin face: ${label}`}
+                    style={{
+                      alignItems: 'center',
+                      background,
+                      border: `${faceStyle === 'embossed' ? Math.max(4, size * 0.045) : 3}px solid ${faceStyle === 'embossed' ? color : theme.colors.border}`,
+                      borderRadius: '50%',
+                      boxShadow:
+                        faceStyle === 'embossed'
+                          ? `inset 0 0 0 ${Math.max(4, size * 0.035)}px rgb(255 255 255 / 28%), 0 12px 24px rgb(37 25 77 / 28%)`
+                          : undefined,
+                      color,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      fontFamily: theme.typography.fontFamily,
+                      fontSize: theme.typography.titleSize,
+                      fontWeight: 900,
+                      height: size,
+                      justifyContent: 'center',
+                      width: size,
+                    }}
+                  >
+                    {faceStyle === 'embossed' ? (
+                      <span
+                        data-jackpotkit-coin-rim=""
+                        style={{
+                          alignItems: 'center',
+                          border: `${Math.max(2, size * 0.018)}px solid currentColor`,
+                          borderRadius: '50%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          height: '76%',
+                          justifyContent: 'center',
+                          width: '76%',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: size * 0.3,
+                            lineHeight: 1,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {label.slice(0, 1)}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: Math.max(10, size * 0.085),
+                            letterSpacing: 1.2,
+                            opacity: flipping ? 0 : 1,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {label}
+                        </span>
+                      </span>
+                    ) : (
+                      <span style={{ opacity: flipping ? 0 : 1 }}>{label}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
       <button

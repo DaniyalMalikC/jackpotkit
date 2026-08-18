@@ -32,23 +32,37 @@ Configuration rejects anything other than two unique non-empty face IDs. A resul
 ```tsx
 import { CoinFlip } from '@jackpotkit/react-native/coin-flip';
 
-<CoinFlip result={{ faceId: 'tails' }} onComplete={(result) => save(result.faceId)} />;
+<CoinFlip
+  faceStyle="embossed"
+  result={{ faceId: 'tails' }}
+  onComplete={(result) => save(result.faceId)}
+/>;
 ```
 
-Use `renderFace` for branded artwork. `useCoinFlip` supplies a headless React Native lifecycle, and `CoinFlipRef` exposes `flip()`, `flipTo(selection)`, and `reset()`.
+Use `faceStyle="flat"` for the backwards-compatible minimal face or `faceStyle="embossed"` for a
+dimensional two-sided coin with a raised rim and face mark. Use `renderFace` for branded artwork;
+a custom renderer takes precedence over the built-in face style. `useCoinFlip` supplies a headless
+React Native lifecycle, and `CoinFlipRef` exposes `flip()`, `flipTo(selection)`, and `reset()`.
 
-The transform-based animation honors system reduced motion and configurable duration/easing. The control reports busy and disabled state, the revealed face is visible text, and completion is announced. A custom renderer remains responsible for readable labels and contrast.
+The transform-based animation uses separate front and back faces with hidden backfaces, plus a
+lift, flip, and settle trajectory. It honors system reduced motion and configurable duration/easing.
+The control reports busy and disabled state, the revealed face is visible text, and completion is
+announced. A custom renderer remains responsible for readable labels and contrast.
 
 ## React web
 
 ```tsx
 import { CoinFlip } from '@jackpotkit/react/coin-flip';
 
-<CoinFlip result={{ faceId: 'tails' }} onComplete={(result) => save(result.faceId)} />;
+<CoinFlip
+  faceStyle="embossed"
+  result={{ faceId: 'tails' }}
+  onComplete={(result) => save(result.faceId)}
+/>;
 ```
 
-The web component uses a perspective CSS transform and ordinary React face renderers. It retains
-the same controlled/provider modes, `useCoinFlip` lifecycle, imperative methods, visible result,
-and reduced-motion behavior without loading React Native.
+The web component supports the same `flat` and `embossed` face styles with a genuine two-sided
+perspective transform. It retains the same controlled/provider modes, `useCoinFlip` lifecycle,
+imperative methods, visible result, and reduced-motion behavior without loading React Native.
 
 `@jackpotkit/testing` exports `createCoinFaces`. Random client flips are not proof of entitlement; use `resultProvider` for valuable outcomes.

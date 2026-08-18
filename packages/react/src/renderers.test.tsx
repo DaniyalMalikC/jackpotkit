@@ -32,9 +32,12 @@ describe('React web renderers', () => {
     expect(await screen.findByText('Total: 6')).toBeDefined();
     dice.unmount();
 
-    const coin = render(<CoinFlip duration={0} result={{ faceId: 'heads' }} />);
+    const coin = render(
+      <CoinFlip duration={0} faceStyle="embossed" result={{ faceId: 'heads' }} />,
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Flip coin' }));
     expect(await screen.findByText('Result: Heads')).toBeDefined();
+    expect(coin.container.querySelectorAll('[data-jackpotkit-coin-rim]')).toHaveLength(2);
     coin.unmount();
 
     const lucky = render(
@@ -89,6 +92,16 @@ describe('React web renderers', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Reveal card' }));
     expect(await screen.findByText('Prize revealed')).toBeDefined();
+  });
+
+  it('renders a D6 with pips and leaves its result upright', async () => {
+    const dice = render(<Dice duration={0} faceStyle="pips" result={{ values: [5] }} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Roll dice' }));
+
+    expect(await screen.findByText('Total: 5')).toBeDefined();
+    const face = screen.getByLabelText('D6: 5');
+    expect(dice.container.querySelectorAll('[data-jackpotkit-die-pip]')).toHaveLength(5);
+    expect(face.parentElement?.style.transform).toBe('');
   });
 
   it('uses native buttons for keyboard-operable Bingo cells', () => {

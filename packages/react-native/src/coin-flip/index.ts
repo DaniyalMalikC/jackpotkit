@@ -5,6 +5,7 @@ export type {
   CoinFlipCallbacks,
   CoinFlipEvent,
   CoinFlipEventPayload,
+  CoinFaceStyle,
   CoinFlipProps,
   CoinFlipRef,
   UseCoinFlipOptions,

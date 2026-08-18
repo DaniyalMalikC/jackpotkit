@@ -4,6 +4,7 @@ export type {
   DiceCallbacks,
   DiceEvent,
   DiceEventPayload,
+  DiceFaceStyle,
   DiceProps,
   DiceRef,
   DieRenderInfo,

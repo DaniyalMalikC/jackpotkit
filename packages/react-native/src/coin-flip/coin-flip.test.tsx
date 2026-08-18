@@ -39,4 +39,21 @@ describe('CoinFlip', () => {
     await expect(result).resolves.toMatchObject({ faceId: 'no' });
     act(() => reference.current?.reset());
   });
+
+  it('renders a two-sided embossed coin and lands on the controlled face', async () => {
+    await render(
+      <CoinFlip faceStyle="embossed" reduceMotion result={{ faceId: 'tails' }} size={140} />,
+    );
+
+    await act(async () => {
+      fireEvent.press(screen.getByLabelText('Flip coin'));
+      await Promise.resolve();
+    });
+
+    expect(screen.getByLabelText('Coin face: Tails')).toBeVisible();
+    expect(
+      screen.getAllByTestId('jackpotkit-coin-rim', { includeHiddenElements: true }),
+    ).toHaveLength(2);
+    expect(screen.getByText('Result: Tails')).toBeVisible();
+  });
 });

@@ -61,6 +61,8 @@ export interface DieRenderInfo {
   readonly theme: JackpotTheme;
 }
 
+export type DiceFaceStyle = 'numbers' | 'pips';
+
 export interface DiceProps<TRequest = void> extends UseDiceOptions<TRequest> {
   readonly accessibilityLabel?: string;
   readonly duration?: number;
@@ -69,6 +71,8 @@ export interface DiceProps<TRequest = void> extends UseDiceOptions<TRequest> {
   readonly renderDie?: (info: DieRenderInfo) => ReactNode;
   readonly style?: StyleProp<ViewStyle>;
   readonly theme?: JackpotThemeOverride;
+  /** `pips` renders conventional dots for D6 dice and a beveled number for other dice. */
+  readonly faceStyle?: DiceFaceStyle;
   readonly width?: number;
 }
 

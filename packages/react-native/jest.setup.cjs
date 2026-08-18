@@ -48,6 +48,16 @@ jest.mock('react-native-reanimated', () => {
       out: identity,
     },
     cancelAnimation: jest.fn(),
+    interpolate: (value, input, output) => {
+      if (value <= input[0]) return output[0];
+      for (let index = 1; index < input.length; index += 1) {
+        if (value <= input[index]) {
+          const progress = (value - input[index - 1]) / (input[index] - input[index - 1]);
+          return output[index - 1] + (output[index] - output[index - 1]) * progress;
+        }
+      }
+      return output[output.length - 1];
+    },
     runOnJS: identity,
     useAnimatedStyle: (updater) => updater(),
     useEvent: (callback) => callback,

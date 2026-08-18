@@ -19,6 +19,7 @@ import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
   cancelAnimation,
+  interpolate,
   runOnJS,
   useAnimatedStyle,
   useReducedMotion,
@@ -45,6 +46,7 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
     accessibilityLabel = 'Coin Flip',
     duration,
     easing = Easing.out(Easing.cubic),
+    faceStyle = 'flat',
     faces,
     reduceMotion,
     renderFace,
@@ -64,13 +66,28 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
   const [faceId, setFaceId] = useState(coinFaces[0]?.id ?? 'heads');
   const [flipping, setFlipping] = useState(false);
   const rotation = useSharedValue(0);
+  const motionProgress = useSharedValue(0);
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion === true || systemReducedMotion;
   const operationRef = useRef(0);
+  const restingRotationRef = useRef(0);
   const mountedRef = useRef(true);
   const pendingRef = useRef<PendingCoinAnimation<TValue> | undefined>(undefined);
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ perspective: 800 }, { rotateY: `${rotation.value}deg` }],
+  const animatedStyle = useAnimatedStyle(() => {
+    const progress = motionProgress.value;
+    return {
+      transform: [
+        { translateY: interpolate(progress, [0, 0.42, 0.82, 1], [0, -24, 4, 0]) },
+        { rotateZ: `${interpolate(progress, [0, 0.42, 0.82, 1], [0, 4, -2, 0])}deg` },
+        { scale: interpolate(progress, [0, 0.42, 0.82, 1], [1, 0.96, 1.02, 1]) },
+      ],
+    };
+  });
+  const frontFaceStyle = useAnimatedStyle(() => ({
+    transform: [{ perspective: size * 5 }, { rotateY: `${rotation.value}deg` }],
+  }));
+  const backFaceStyle = useAnimatedStyle(() => ({
+    transform: [{ perspective: size * 5 }, { rotateY: `${rotation.value + 180}deg` }],
   }));
   const finishAnimation = useCallback(
     (operation: number) => {
@@ -97,16 +114,25 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
       controller.startAnimation(result);
       setFlipping(true);
       setFaceId(result.faceId);
+      const landingRotation = result.faceId === coinFaces[0]?.id ? 0 : 180;
+      const startingRotation = restingRotationRef.current;
+      const destinationOffset = (landingRotation - startingRotation + 360) % 360;
+      const destinationRotation =
+        startingRotation + (shouldReduceMotion ? 0 : 4 * 360) + destinationOffset;
+      restingRotationRef.current = landingRotation;
+      const animationDuration = shouldReduceMotion
+        ? theme.animation.reducedMotionDuration
+        : (duration ?? theme.animation.coinFlipDuration);
       return new Promise<typeof result>((resolve, reject) => {
         pendingRef.current = { operation, reject, resolve, result };
-        rotation.set(0);
+        rotation.set(startingRotation);
+        motionProgress.set(0);
+        motionProgress.set(withTiming(1, { duration: animationDuration, easing }));
         rotation.set(
           withTiming(
-            1_080,
+            destinationRotation,
             {
-              duration: shouldReduceMotion
-                ? theme.animation.reducedMotionDuration
-                : (duration ?? theme.animation.coinFlipDuration),
+              duration: animationDuration,
               easing,
             },
             (finished) => {
@@ -117,7 +143,17 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
         );
       });
     },
-    [controller, duration, easing, finishAnimation, rotation, shouldReduceMotion, theme.animation],
+    [
+      coinFaces,
+      controller,
+      duration,
+      easing,
+      finishAnimation,
+      motionProgress,
+      rotation,
+      shouldReduceMotion,
+      theme.animation,
+    ],
   );
   const flip = useCallback(
     async (selection?: Parameters<typeof controller.play>[0]) => {
@@ -129,16 +165,19 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
   );
   const reset = useCallback(() => {
     operationRef.current += 1;
+    cancelAnimation(motionProgress);
     cancelAnimation(rotation);
     pendingRef.current?.reject(
       new AnimationError('Coin Flip was reset before its animation completed.'),
     );
     pendingRef.current = undefined;
+    motionProgress.set(0);
     rotation.set(0);
+    restingRotationRef.current = 0;
     setFaceId(coinFaces[0]?.id ?? 'heads');
     setFlipping(false);
     controller.reset();
-  }, [coinFaces, controller, rotation]);
+  }, [coinFaces, controller, motionProgress, rotation]);
   useImperativeHandle(
     ref,
     () => ({ flip: () => flip(), flipTo: (selection) => flip(selection), reset }),
@@ -155,7 +194,6 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
     },
     [],
   );
-  const currentFace = coinFaces.find((face) => face.id === faceId) ?? coinFaces[0];
   const busy =
     flipping || controller.status === 'playing' || controller.status === 'requesting-result';
   const disabled = props.disabled === true || busy;
@@ -164,42 +202,119 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
       accessibilityLabel={accessibilityLabel}
       style={[{ alignItems: 'center', gap: theme.spacing.md }, style]}
     >
-      <Animated.View style={animatedStyle}>
-        {currentFace !== undefined &&
-          (renderFace?.({ active: true, face: currentFace, flipping, theme }) ?? (
-            <View
-              accessibilityLabel={`Coin face: ${currentFace.label ?? currentFace.id}`}
-              style={{
-                alignItems: 'center',
-                backgroundColor:
-                  currentFace.id === coinFaces[0]?.id
-                    ? theme.colors.coinFront
-                    : theme.colors.coinBack,
-                borderColor: theme.colors.border,
-                borderRadius: size / 2,
-                borderWidth: 3,
-                height: size,
-                justifyContent: 'center',
-                width: size,
-              }}
-            >
-              <Text
-                selectable
-                style={{
-                  color:
-                    currentFace.id === coinFaces[0]?.id
-                      ? theme.colors.dicePip
-                      : theme.colors.onPrimary,
-                  fontFamily: theme.typography.fontFamily,
-                  fontSize: theme.typography.titleSize,
-                  fontWeight: '900',
-                }}
+      <View
+        pointerEvents="none"
+        style={{
+          alignItems: 'center',
+          height: size + 48,
+          justifyContent: 'center',
+          width: size + 48,
+          zIndex: 0,
+        }}
+      >
+        <Animated.View style={[{ height: size, width: size }, animatedStyle]}>
+          {coinFaces.map((face, index) => {
+            const active = face.id === faceId;
+            const backgroundColor = index === 0 ? theme.colors.coinFront : theme.colors.coinBack;
+            const contentColor = index === 0 ? theme.colors.dicePip : theme.colors.onPrimary;
+            const label = face.label ?? face.id;
+            return (
+              <Animated.View
+                accessibilityElementsHidden={!active}
+                importantForAccessibility={active ? 'auto' : 'no-hide-descendants'}
+                key={face.id}
+                style={[
+                  {
+                    backfaceVisibility: 'hidden',
+                    height: size,
+                    left: 0,
+                    opacity: !flipping && !active ? 0 : 1,
+                    position: 'absolute',
+                    top: 0,
+                    width: size,
+                  },
+                  index === 0 ? frontFaceStyle : backFaceStyle,
+                ]}
               >
-                {currentFace.label ?? currentFace.id}
-              </Text>
-            </View>
-          ))}
-      </Animated.View>
+                {renderFace?.({ active, face, flipping, theme }) ?? (
+                  <View
+                    accessibilityLabel={`Coin face: ${label}`}
+                    style={{
+                      alignItems: 'center',
+                      backgroundColor,
+                      borderColor: faceStyle === 'embossed' ? contentColor : theme.colors.border,
+                      borderRadius: size / 2,
+                      borderWidth: faceStyle === 'embossed' ? Math.max(4, size * 0.045) : 3,
+                      boxShadow:
+                        faceStyle === 'embossed'
+                          ? '0 12px 24px rgba(37, 25, 77, 0.28), inset 0 0 0 5px rgba(255, 255, 255, 0.28)'
+                          : undefined,
+                      height: size,
+                      justifyContent: 'center',
+                      width: size,
+                    }}
+                  >
+                    {faceStyle === 'embossed' ? (
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          borderColor: contentColor,
+                          borderRadius: size / 2,
+                          borderWidth: Math.max(2, size * 0.018),
+                          height: size * 0.76,
+                          justifyContent: 'center',
+                          width: size * 0.76,
+                        }}
+                        testID="jackpotkit-coin-rim"
+                      >
+                        <Text
+                          selectable
+                          style={{
+                            color: contentColor,
+                            fontFamily: theme.typography.fontFamily,
+                            fontSize: size * 0.3,
+                            fontWeight: '900',
+                            lineHeight: size * 0.34,
+                          }}
+                        >
+                          {label.slice(0, 1).toUpperCase()}
+                        </Text>
+                        <Text
+                          selectable
+                          style={{
+                            color: contentColor,
+                            fontFamily: theme.typography.fontFamily,
+                            fontSize: Math.max(10, size * 0.085),
+                            fontWeight: '900',
+                            letterSpacing: 1.2,
+                            opacity: flipping ? 0 : 1,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {label}
+                        </Text>
+                      </View>
+                    ) : (
+                      <Text
+                        selectable
+                        style={{
+                          color: contentColor,
+                          fontFamily: theme.typography.fontFamily,
+                          fontSize: theme.typography.titleSize,
+                          fontWeight: '900',
+                          opacity: flipping ? 0 : 1,
+                        }}
+                      >
+                        {label}
+                      </Text>
+                    )}
+                  </View>
+                )}
+              </Animated.View>
+            );
+          })}
+        </Animated.View>
+      </View>
       <Pressable
         accessibilityLabel={busy ? 'Coin flipping' : 'Flip coin'}
         accessibilityRole="button"
@@ -212,6 +327,7 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
           opacity: disabled ? 0.65 : pressed ? 0.8 : 1,
           paddingHorizontal: theme.spacing.xl,
           paddingVertical: theme.spacing.sm + 4,
+          zIndex: 1,
         })}
       >
         <Text

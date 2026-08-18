@@ -118,9 +118,9 @@ import { CoinFlip } from '@jackpotkit/react-native/coin-flip';
 import { Dice } from '@jackpotkit/react-native/dice';
 import { LuckyBox } from '@jackpotkit/react-native/lucky-box';
 
-<Dice count={2} sides={6} result={{ values: [2, 6] }} />;
-<CoinFlip resultProvider={requestFace} />;
+<Dice count={2} sides={6} faceStyle="pips" result={{ values: [2, 6] }} />;
+<CoinFlip faceStyle="embossed" resultProvider={requestFace} />;
 <LuckyBox boxes={boxes} onComplete={(result) => console.log(result.won)} />;
 ```
 
-Each game supports random, controlled, and application-provided outcomes; custom renderers; transform-based animation; reduced motion; themes; lifecycle events; accessibility announcements; and imperative reset/play APIs. Dice resolves every die value before rolling. Coin Flip requires exactly two faces. Lucky Box keeps the user's selection separate from the winning box and only exposes its optional reward when they match.
+Each game supports random, controlled, and application-provided outcomes; custom renderers; transform-based animation; reduced motion; themes; lifecycle events; accessibility announcements; and imperative reset/play APIs. Dice resolves every die value before rolling and supports `faceStyle="numbers"` numeric faces or `faceStyle="pips"` conventional D6 pips. Coin Flip requires exactly two faces and supports `faceStyle="flat"` or `faceStyle="embossed"`. Lucky Box keeps the user's selection separate from the winning box and only exposes its optional reward when they match.

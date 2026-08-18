@@ -150,6 +150,7 @@ export function DicePlayground() {
   const [mode, setMode] = useState<ResultMode>('random');
   const [themeName, setThemeName] = useState<ThemeName>('default');
   const [custom, setCustom] = useState<'standard' | 'custom'>('standard');
+  const [diceFaceStyle, setDiceFaceStyle] = useState<'numbers' | 'pips'>('pips');
   const [motion, setMotion] = useState<'animated' | 'reduced'>('animated');
   const theme = themeName === 'neon' ? neonTheme : defaultTheme;
   const selection = useMemo<DiceSelection>(
@@ -216,6 +217,7 @@ export function DicePlayground() {
             ref={reference}
             sides={sides}
             theme={theme}
+            faceStyle={diceFaceStyle}
             width={componentWidth}
             {...(custom === 'custom' ? { renderDie } : {})}
             {...(mode === 'controlled'
@@ -259,6 +261,15 @@ export function DicePlayground() {
           value={mode}
         />
         <Control
+          label="Face style"
+          onChange={(value) => {
+            reset();
+            setDiceFaceStyle(value);
+          }}
+          options={['numbers', 'pips']}
+          value={diceFaceStyle}
+        />
+        <Control
           label="Renderer"
           onChange={setCustom}
           options={['standard', 'custom']}
@@ -291,18 +302,19 @@ export function CoinFlipPlayground() {
   const { width: windowWidth } = useWindowDimensions();
   const coinSize = Math.min(160, Math.max(120, windowWidth - 116));
   const [mode, setMode] = useState<ResultMode>('random');
-  const [faceMode, setFaceMode] = useState<'classic' | 'custom'>('classic');
+  const [faceContent, setFaceContent] = useState<'custom' | 'standard'>('standard');
+  const [coinFaceStyle, setCoinFaceStyle] = useState<'embossed' | 'flat'>('embossed');
   const [themeName, setThemeName] = useState<ThemeName>('default');
   const [motion, setMotion] = useState<'animated' | 'reduced'>('animated');
   const theme = themeName === 'neon' ? neonTheme : defaultTheme;
-  const controlled: CoinFlipSelection = { faceId: faceMode === 'custom' ? 'moon' : 'tails' };
+  const controlled: CoinFlipSelection = { faceId: faceContent === 'custom' ? 'moon' : 'tails' };
   const provider = useCallback(async (): Promise<CoinFlipSelection> => {
     await new Promise((resolve) => setTimeout(resolve, 250));
     return {
-      faceId: faceMode === 'custom' ? 'sun' : 'heads',
+      faceId: faceContent === 'custom' ? 'sun' : 'heads',
       metadata: { authority: 'mock-server' },
     };
-  }, [faceMode]);
+  }, [faceContent]);
   const renderFace = useCallback(
     ({ face, theme: faceTheme }: CoinFaceRenderInfo<string>) => (
       <View
@@ -331,7 +343,7 @@ export function CoinFlipPlayground() {
       <Header
         eyebrow="TWO FACES · CONTROLLED DESTINATION"
         title="Coin Flip playground"
-        body="Use classic heads and tails or define exactly two custom values. The destination is resolved before the flip begins."
+        body="Use standard heads and tails or define exactly two custom values. The destination is resolved before the flip begins."
       />
       <Section>
         <View
@@ -344,12 +356,13 @@ export function CoinFlipPlayground() {
           }}
         >
           <CoinFlip<string>
-            key={faceMode}
+            faceStyle={coinFaceStyle}
+            key={faceContent}
             reduceMotion={motion === 'reduced'}
             ref={reference}
             size={coinSize}
             theme={theme}
-            {...(faceMode === 'custom' ? { faces: customFaces, renderFace } : {})}
+            {...(faceContent === 'custom' ? { faces: customFaces, renderFace } : {})}
             {...(mode === 'controlled'
               ? { result: controlled }
               : mode === 'server'
@@ -364,13 +377,22 @@ export function CoinFlipPlayground() {
           Developer controls
         </Text>
         <Control
-          label="Faces"
+          label="Face content"
           onChange={(value) => {
             reset();
-            setFaceMode(value);
+            setFaceContent(value);
           }}
-          options={['classic', 'custom']}
-          value={faceMode}
+          options={['standard', 'custom']}
+          value={faceContent}
+        />
+        <Control
+          label="Face style"
+          onChange={(value) => {
+            reset();
+            setCoinFaceStyle(value);
+          }}
+          options={['flat', 'embossed']}
+          value={coinFaceStyle}
         />
         <Control
           label="Result"

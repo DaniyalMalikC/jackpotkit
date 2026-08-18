@@ -5,6 +5,7 @@ import { LuckyBox } from '@jackpotkit/react/lucky-box';
 import { ScratchCard } from '@jackpotkit/react/scratch-card';
 import { SlotMachine } from '@jackpotkit/react/slot-machine';
 import { SpinWheel } from '@jackpotkit/react/spin-wheel';
+import { useState } from 'react';
 
 const segments = [
   { id: 'points', label: '100 points', color: '#6843D5' },
@@ -23,6 +24,9 @@ const boxes = [
 ];
 
 export function App() {
+  const [diceFaceStyle, setDiceFaceStyle] = useState<'numbers' | 'pips'>('pips');
+  const [coinFaceStyle, setCoinFaceStyle] = useState<'embossed' | 'flat'>('embossed');
+
   return (
     <main className="page-shell">
       <section className="hero">
@@ -46,11 +50,37 @@ export function App() {
           </article>
           <article className="game-card">
             <h3>Dice</h3>
-            <Dice count={2} width={260} />
+            <div aria-label="Dice face style" className="face-style-control" role="group">
+              {(['numbers', 'pips'] as const).map((faceStyle) => (
+                <button
+                  aria-pressed={diceFaceStyle === faceStyle}
+                  className="face-style-button"
+                  key={faceStyle}
+                  onClick={() => setDiceFaceStyle(faceStyle)}
+                  type="button"
+                >
+                  {faceStyle === 'pips' ? 'Pips' : 'Numbers'}
+                </button>
+              ))}
+            </div>
+            <Dice count={2} faceStyle={diceFaceStyle} width={260} />
           </article>
           <article className="game-card">
             <h3>Coin Flip</h3>
-            <CoinFlip size={132} />
+            <div aria-label="Coin face style" className="face-style-control" role="group">
+              {(['flat', 'embossed'] as const).map((faceStyle) => (
+                <button
+                  aria-pressed={coinFaceStyle === faceStyle}
+                  className="face-style-button"
+                  key={faceStyle}
+                  onClick={() => setCoinFaceStyle(faceStyle)}
+                  type="button"
+                >
+                  {faceStyle === 'embossed' ? 'Embossed' : 'Flat'}
+                </button>
+              ))}
+            </div>
+            <CoinFlip faceStyle={coinFaceStyle} size={132} />
           </article>
           <article className="game-card">
             <h3>Lucky Box</h3>

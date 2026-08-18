@@ -119,6 +119,33 @@ h2 {
   color: #31264f;
   font-size: 1.05rem;
 }
+.face-style-control {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #f0ecfa;
+}
+.face-style-button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 9px;
+  color: #4d4269;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+.face-style-button[aria-pressed='true'] {
+  color: #fff;
+  background: #6843d5;
+}
+.face-style-button:focus-visible {
+  outline: 3px solid #b7a6ff;
+  outline-offset: 2px;
+}
 .game-card-wide {
   min-height: 390px;
 }

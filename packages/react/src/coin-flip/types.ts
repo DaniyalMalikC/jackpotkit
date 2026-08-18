@@ -57,11 +57,14 @@ export interface CoinFaceRenderInfo<TValue = unknown> {
   readonly flipping: boolean;
   readonly theme: JackpotTheme;
 }
+export type CoinFaceStyle = 'embossed' | 'flat';
 export interface CoinFlipProps<TValue = unknown, TRequest = void>
   extends UseCoinFlipOptions<TValue, TRequest>, WebPresentationProps {
   readonly accessibilityLabel?: string;
   readonly duration?: number;
   readonly easing?: WebEasing;
+  /** `embossed` renders a dimensional coin with a raised rim and face mark. */
+  readonly faceStyle?: CoinFaceStyle;
   readonly reduceMotion?: boolean;
   readonly renderFace?: (info: CoinFaceRenderInfo<TValue>) => ReactNode;
   readonly size?: number;
