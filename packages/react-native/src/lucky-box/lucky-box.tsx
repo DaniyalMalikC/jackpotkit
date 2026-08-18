@@ -1,4 +1,4 @@
-import { AnimationError, GameStateError } from '@jackpotkit/core';
+import { AnimationError, GameStateError, type LuckyBoxResult } from '@jackpotkit/core';
 import { createJackpotTheme } from '@jackpotkit/theme';
 import {
   forwardRef,
@@ -23,6 +23,13 @@ import Animated, {
 import { useJackpotKitTheme } from '../theme-provider';
 import type { LuckyBoxProps, LuckyBoxRef } from './types';
 import { useLuckyBoxController } from './use-lucky-box';
+
+interface PendingLuckyBoxAnimation<TReward> {
+  readonly operation: number;
+  readonly reject: (error: unknown) => void;
+  readonly resolve: (result: LuckyBoxResult<TReward>) => void;
+  readonly result: LuckyBoxResult<TReward>;
+}
 
 function LuckyBoxInner<TReward = unknown, TRequest = void>(
   props: LuckyBoxProps<TReward, TRequest>,
@@ -57,20 +64,41 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
   const shouldReduceMotion = reduceMotion === true || systemReducedMotion;
   const operationRef = useRef(0);
   const mountedRef = useRef(true);
-  const pendingRef = useRef<{ reject(error: unknown): void } | undefined>(undefined);
+  const pendingRef = useRef<PendingLuckyBoxAnimation<TReward> | undefined>(undefined);
   const [revealing, setRevealing] = useState(false);
   const [displayResult, setDisplayResult] = useState<Awaited<ReturnType<typeof controller.play>>>();
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: 1 + progress.value * 0.08 }, { rotateZ: `${progress.value * 3}deg` }],
   }));
+  const finishAnimation = useCallback(
+    (operation: number) => {
+      const pending = pendingRef.current;
+      if (pending === undefined || pending.operation !== operation || !mountedRef.current) {
+        return;
+      }
+
+      pendingRef.current = undefined;
+      setRevealing(false);
+      controller.reveal(pending.result);
+      controller.complete(pending.result);
+      AccessibilityInfo.announceForAccessibility(
+        pending.result.won
+          ? `You won ${pending.result.winningBox.label ?? pending.result.winningBox.id}.`
+          : `Not a winner. Winning box: ${pending.result.winningBox.label ?? pending.result.winningBox.id}.`,
+      );
+      pending.resolve(pending.result);
+    },
+    [controller],
+  );
+
   const animate = useCallback(
-    (result: Awaited<ReturnType<typeof controller.play>>) => {
+    (result: LuckyBoxResult<TReward>) => {
       const operation = ++operationRef.current;
       controller.startAnimation(result);
       setDisplayResult(result);
       setRevealing(true);
       return new Promise<typeof result>((resolve, reject) => {
-        pendingRef.current = { reject };
+        pendingRef.current = { operation, reject, resolve, result };
         progress.set(0);
         progress.set(
           withTiming(
@@ -83,25 +111,13 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
             },
             (finished) => {
               if (!finished) return;
-              runOnJS(() => {
-                if (!mountedRef.current || operation !== operationRef.current) return;
-                pendingRef.current = undefined;
-                setRevealing(false);
-                controller.reveal(result);
-                controller.complete(result);
-                AccessibilityInfo.announceForAccessibility(
-                  result.won
-                    ? `You won ${result.winningBox.label ?? result.winningBox.id}.`
-                    : `Not a winner. Winning box: ${result.winningBox.label ?? result.winningBox.id}.`,
-                );
-                resolve(result);
-              })();
+              runOnJS(finishAnimation)(operation);
             },
           ),
         );
       });
     },
-    [controller, duration, easing, progress, shouldReduceMotion, theme.animation],
+    [controller, duration, easing, finishAnimation, progress, shouldReduceMotion, theme.animation],
   );
   const reveal = useCallback(
     async (selection?: Parameters<typeof controller.play>[0]) => {

@@ -7,14 +7,14 @@ import { SlotMachine } from '@jackpotkit/react/slot-machine';
 import { SpinWheel } from '@jackpotkit/react/spin-wheel';
 
 const segments = [
-  { id: 'points', label: '100 points', color: '#6843D5', weight: 4 },
-  { id: 'badge', label: 'Badge', color: '#EB4D8A', weight: 2 },
-  { id: 'bonus', label: 'Bonus', color: '#18A999', weight: 1 },
+  { id: 'points', label: '100 points', color: '#6843D5' },
+  { id: 'badge', label: 'Badge', color: '#EB4D8A' },
+  { id: 'bonus', label: 'Bonus', color: '#18A999' },
 ];
 const symbols = [
-  { id: 'cherry', label: '🍒', weight: 4 },
-  { id: 'star', label: '⭐', weight: 2 },
-  { id: 'gift', label: '🎁', weight: 1 },
+  { id: 'cherry', label: '🍒' },
+  { id: 'star', label: '⭐' },
+  { id: 'gift', label: '🎁' },
 ];
 const boxes = [
   { id: 'violet', label: 'Violet' },

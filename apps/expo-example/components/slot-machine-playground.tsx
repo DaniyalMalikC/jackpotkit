@@ -9,10 +9,11 @@ import { SlotMachine, type SlotMachineRef } from '@jackpotkit/react-native/slot-
 import { defaultTheme, neonTheme } from '@jackpotkit/theme';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
 
 type ResultMode = 'random' | 'controlled' | 'server';
 type PaylineMode = 'straight' | 'diagonal';
+type ProbabilityMode = 'equal' | 'weighted';
 type ThemeName = 'default' | 'neon';
 
 interface Evaluation {
@@ -27,7 +28,7 @@ interface OptionControlProps<TValue extends string | number> {
   readonly format?: (value: TValue) => string;
 }
 
-const symbols: readonly SlotSymbol<string>[] = [
+const allSymbols: readonly SlotSymbol<string>[] = [
   { id: 'cherry', label: '🍒', value: 'Cherry', weight: 5 },
   { id: 'lemon', label: '🍋', value: 'Lemon', weight: 4 },
   { id: 'grape', label: '🍇', value: 'Grape', weight: 3 },
@@ -90,7 +91,7 @@ function createWinningSelection(
       Array.from({ length: rowCount }, (_, rowIndex) =>
         rowIndex === 0
           ? symbolId
-          : (symbols[(reelIndex + rowIndex) % symbols.length]?.id ?? 'cherry'),
+          : (allSymbols[(reelIndex + rowIndex) % allSymbols.length]?.id ?? 'cherry'),
       ),
     ),
   };
@@ -98,16 +99,27 @@ function createWinningSelection(
 
 export default function SlotMachinePlayground() {
   const machineRef = useRef<SlotMachineRef<string, Evaluation>>(null);
+  const { width: windowWidth } = useWindowDimensions();
   const [reelCount, setReelCount] = useState(3);
   const [rowCount, setRowCount] = useState(3);
   const [duration, setDuration] = useState(1_200);
   const [mode, setMode] = useState<ResultMode>('random');
   const [paylineMode, setPaylineMode] = useState<PaylineMode>('straight');
+  const [probabilityMode, setProbabilityMode] = useState<ProbabilityMode>('equal');
   const [themeName, setThemeName] = useState<ThemeName>('default');
   const [reduceMotion, setReduceMotion] = useState(false);
   const [status, setStatus] = useState<GameStatus>('ready');
   const [lastResult, setLastResult] = useState<SlotMachineResult<string, Evaluation>>();
   const theme = themeName === 'neon' ? neonTheme : defaultTheme;
+  const machineWidth = Math.min(460, Math.max(220, windowWidth - 76));
+  const symbols = useMemo(
+    () =>
+      allSymbols.map((symbol) => ({
+        ...symbol,
+        weight: probabilityMode === 'equal' ? 1 : (symbol.weight ?? 1),
+      })),
+    [probabilityMode],
+  );
   const straightPaylines = useMemo<readonly SlotPayline[]>(
     () =>
       Array.from({ length: rowCount }, (_, row) => Array.from({ length: reelCount }, () => row)),
@@ -170,8 +182,8 @@ export default function SlotMachinePlayground() {
           Slot Machine playground
         </Text>
         <Text selectable style={{ color: '#D7D0F3', fontSize: 15, lineHeight: 22 }}>
-          Compare random, controlled, and mocked server grids while changing reels, rows, paylines,
-          and animation timing.
+          Equal symbol chances are the default. Compare them with an explicit weighted demo while
+          changing reels, rows, paylines, and result modes.
         </Text>
       </View>
 
@@ -205,6 +217,7 @@ export default function SlotMachinePlayground() {
           rowCount={rowCount}
           symbols={symbols}
           theme={theme}
+          width={machineWidth}
           {...(mode === 'controlled'
             ? { result: controlledResult }
             : mode === 'server'
@@ -266,6 +279,13 @@ export default function SlotMachinePlayground() {
           onChange={changeSetting(setDuration)}
           options={[600, 1_200, 2_000]}
           value={duration}
+        />
+        <OptionControl
+          format={(value) => (value === 'equal' ? 'Equal chance' : 'Weighted demo')}
+          label="Probability"
+          onChange={changeSetting(setProbabilityMode)}
+          options={['equal', 'weighted']}
+          value={probabilityMode}
         />
         <OptionControl
           label="Result mode"

@@ -3,6 +3,7 @@ import {
   DEFAULT_COIN_FACES,
   GameStateError,
   type CoinFace,
+  type CoinFlipResult,
 } from '@jackpotkit/core';
 import { createJackpotTheme } from '@jackpotkit/theme';
 import {
@@ -28,6 +29,13 @@ import Animated, {
 import { useJackpotKitTheme } from '../theme-provider';
 import type { CoinFlipProps, CoinFlipRef } from './types';
 import { useCoinFlipController } from './use-coin-flip';
+
+interface PendingCoinAnimation<TValue> {
+  readonly operation: number;
+  readonly reject: (error: unknown) => void;
+  readonly resolve: (result: CoinFlipResult<TValue>) => void;
+  readonly result: CoinFlipResult<TValue>;
+}
 
 function CoinFlipInner<TValue = unknown, TRequest = void>(
   props: CoinFlipProps<TValue, TRequest>,
@@ -60,18 +68,37 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
   const shouldReduceMotion = reduceMotion === true || systemReducedMotion;
   const operationRef = useRef(0);
   const mountedRef = useRef(true);
-  const pendingRef = useRef<{ reject(error: unknown): void } | undefined>(undefined);
+  const pendingRef = useRef<PendingCoinAnimation<TValue> | undefined>(undefined);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ perspective: 800 }, { rotateY: `${rotation.value}deg` }],
   }));
+  const finishAnimation = useCallback(
+    (operation: number) => {
+      const pending = pendingRef.current;
+      if (pending === undefined || pending.operation !== operation || !mountedRef.current) {
+        return;
+      }
+
+      pendingRef.current = undefined;
+      setFlipping(false);
+      controller.reveal(pending.result);
+      controller.complete(pending.result);
+      AccessibilityInfo.announceForAccessibility(
+        `Coin result: ${pending.result.face.label ?? pending.result.face.id}.`,
+      );
+      pending.resolve(pending.result);
+    },
+    [controller],
+  );
+
   const animate = useCallback(
-    (result: Awaited<ReturnType<typeof controller.play>>) => {
+    (result: CoinFlipResult<TValue>) => {
       const operation = ++operationRef.current;
       controller.startAnimation(result);
       setFlipping(true);
       setFaceId(result.faceId);
       return new Promise<typeof result>((resolve, reject) => {
-        pendingRef.current = { reject };
+        pendingRef.current = { operation, reject, resolve, result };
         rotation.set(0);
         rotation.set(
           withTiming(
@@ -84,23 +111,13 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
             },
             (finished) => {
               if (!finished) return;
-              runOnJS(() => {
-                if (!mountedRef.current || operation !== operationRef.current) return;
-                pendingRef.current = undefined;
-                setFlipping(false);
-                controller.reveal(result);
-                controller.complete(result);
-                AccessibilityInfo.announceForAccessibility(
-                  `Coin result: ${result.face.label ?? result.face.id}.`,
-                );
-                resolve(result);
-              })();
+              runOnJS(finishAnimation)(operation);
             },
           ),
         );
       });
     },
-    [controller, duration, easing, rotation, shouldReduceMotion, theme.animation],
+    [controller, duration, easing, finishAnimation, rotation, shouldReduceMotion, theme.animation],
   );
   const flip = useCallback(
     async (selection?: Parameters<typeof controller.play>[0]) => {

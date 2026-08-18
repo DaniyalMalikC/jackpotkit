@@ -69,6 +69,24 @@ const config = tseslint.config(
       ],
     },
   },
+  {
+    files: ['packages/react-native/src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.name='runOnJS'] > ArrowFunctionExpression",
+          message:
+            'Pass a JavaScript-thread callback reference to runOnJS; locally defined worklet callbacks can crash the native runtime.',
+        },
+        {
+          selector: "CallExpression[callee.name='runOnJS'] > FunctionExpression",
+          message:
+            'Pass a JavaScript-thread callback reference to runOnJS; locally defined worklet callbacks can crash the native runtime.',
+        },
+      ],
+    },
+  },
   prettier,
 );
 

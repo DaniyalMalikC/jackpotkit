@@ -4,6 +4,11 @@ The Phase 0 package shells were initially published to npm at version `0.0.0`. P
 
 ## Unreleased
 
+- Fixed a native Hermes/Worklets crash when Dice, Coin Flip, or Lucky Box animations completed.
+- Made the Expo and web galleries use equal-probability outcomes by default, while retaining an
+  explicit weighted-probability demonstration in the Expo playgrounds.
+- Constrained Expo game dimensions to the available nested-card width on compact screens.
+
 ## 1.0.0 - 2026-08-12
 
 - Established the Phase 0 monorepo, package shells, application shells, validation, CI, and governance files.

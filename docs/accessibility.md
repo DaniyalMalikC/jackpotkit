@@ -37,6 +37,9 @@ Before a stable release, verify the current examples with:
 Record the tested OS, browser or device, assistive technology, package commit, and any accepted
 limitations in the release pull request. A serious regression blocks stable publication.
 
+The [1.0.0 post-publication verification record](./release-verification-1.0.0.md) preserves the first
+stable audit results without treating automated engine coverage as a completed manual review.
+
 ## Consumer responsibility
 
 Custom labels, renderers, images, themes, and result copy can change accessibility. Consumers must

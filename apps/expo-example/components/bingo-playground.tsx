@@ -10,7 +10,7 @@ import { Bingo, type BingoCellRenderInfo, type BingoRef } from '@jackpotkit/reac
 import { defaultTheme, neonTheme } from '@jackpotkit/theme';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
 
 type BoardMode = 'generated' | 'supplied';
 type PatternMode = 'classic' | 'corners' | 'blackout';
@@ -84,6 +84,8 @@ function createSuppliedBoard(size: number): BingoBoard {
 
 export default function BingoPlayground() {
   const bingoRef = useRef<BingoRef>(null);
+  const { width: windowWidth } = useWindowDimensions();
+  const boardWidth = Math.min(520, Math.max(220, windowWidth - 76));
   const [size, setSize] = useState(5);
   const [boardMode, setBoardMode] = useState<BoardMode>('generated');
   const [patternMode, setPatternMode] = useState<PatternMode>('classic');
@@ -217,6 +219,7 @@ export default function BingoPlayground() {
           {...(customCells ? { renderCell } : {})}
           size={size}
           theme={theme}
+          width={boardWidth}
         />
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
           <Pressable

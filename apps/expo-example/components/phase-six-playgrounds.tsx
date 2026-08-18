@@ -17,7 +17,7 @@ import {
 } from '@jackpotkit/react-native/lucky-box';
 import { defaultTheme, neonTheme } from '@jackpotkit/theme';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
 
 type ResultMode = 'random' | 'controlled' | 'server';
 type ThemeName = 'default' | 'neon';
@@ -143,6 +143,8 @@ function ResetButton({ onPress }: { readonly onPress: () => void }) {
 
 export function DicePlayground() {
   const reference = useRef<DiceRef>(null);
+  const { width: windowWidth } = useWindowDimensions();
+  const componentWidth = Math.min(460, Math.max(200, windowWidth - 116));
   const [count, setCount] = useState(2);
   const [sides, setSides] = useState(6);
   const [mode, setMode] = useState<ResultMode>('random');
@@ -214,6 +216,7 @@ export function DicePlayground() {
             ref={reference}
             sides={sides}
             theme={theme}
+            width={componentWidth}
             {...(custom === 'custom' ? { renderDie } : {})}
             {...(mode === 'controlled'
               ? { result: selection }
@@ -285,6 +288,8 @@ const customFaces = [
 
 export function CoinFlipPlayground() {
   const reference = useRef<CoinFlipRef<string>>(null);
+  const { width: windowWidth } = useWindowDimensions();
+  const coinSize = Math.min(160, Math.max(120, windowWidth - 116));
   const [mode, setMode] = useState<ResultMode>('random');
   const [faceMode, setFaceMode] = useState<'classic' | 'custom'>('classic');
   const [themeName, setThemeName] = useState<ThemeName>('default');
@@ -342,6 +347,7 @@ export function CoinFlipPlayground() {
             key={faceMode}
             reduceMotion={motion === 'reduced'}
             ref={reference}
+            size={coinSize}
             theme={theme}
             {...(faceMode === 'custom' ? { faces: customFaces, renderFace } : {})}
             {...(mode === 'controlled'
@@ -401,6 +407,8 @@ const luckyBoxes: readonly LuckyBoxItem<string>[] = [
 
 export function LuckyBoxPlayground() {
   const reference = useRef<LuckyBoxRef<string>>(null);
+  const { width: windowWidth } = useWindowDimensions();
+  const componentWidth = Math.min(520, Math.max(200, windowWidth - 116));
   const [mode, setMode] = useState<ResultMode>('random');
   const [themeName, setThemeName] = useState<ThemeName>('default');
   const [renderer, setRenderer] = useState<'standard' | 'custom'>('standard');
@@ -423,7 +431,7 @@ export function LuckyBoxPlayground() {
           justifyContent: 'center',
           minHeight: 96,
           padding: 10,
-          width: 130,
+          width: (componentWidth - boxTheme.spacing.sm) / 2,
         }}
       >
         <Text selectable style={{ fontSize: 28 }}>
@@ -441,7 +449,7 @@ export function LuckyBoxPlayground() {
         </Text>
       </View>
     ),
-    [],
+    [componentWidth],
   );
   const reset = () => reference.current?.reset();
   return (
@@ -467,6 +475,7 @@ export function LuckyBoxPlayground() {
             reduceMotion={motion === 'reduced'}
             ref={reference}
             theme={theme}
+            width={componentWidth}
             {...(renderer === 'custom' ? { renderBox } : {})}
             {...(mode === 'controlled'
               ? { result: controlled }

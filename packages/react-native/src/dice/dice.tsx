@@ -1,4 +1,9 @@
-import { AnimationError, GameStateError, createDiceDefinitions } from '@jackpotkit/core';
+import {
+  AnimationError,
+  GameStateError,
+  createDiceDefinitions,
+  type DiceResult,
+} from '@jackpotkit/core';
 import { createJackpotTheme } from '@jackpotkit/theme';
 import {
   forwardRef,
@@ -24,6 +29,13 @@ import { useJackpotKitTheme } from '../theme-provider';
 import type { DiceProps, DiceRef } from './types';
 import { useDiceController } from './use-dice';
 import { assertDiceComponentConfiguration } from './validation';
+
+interface PendingDiceAnimation {
+  readonly operation: number;
+  readonly reject: (error: unknown) => void;
+  readonly resolve: (result: DiceResult) => void;
+  readonly result: DiceResult;
+}
 
 function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.ForwardedRef<DiceRef>) {
   const {
@@ -61,15 +73,34 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
   const rotation = useSharedValue(0);
   const operationRef = useRef(0);
   const mountedRef = useRef(true);
-  const pendingRef = useRef<{ reject(error: unknown): void } | undefined>(undefined);
+  const pendingRef = useRef<PendingDiceAnimation | undefined>(undefined);
   const [rolling, setRolling] = useState(false);
   const [values, setValues] = useState<readonly number[]>(definitions.map(() => 1));
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ rotateX: `${rotation.value}deg` }, { rotateY: `${rotation.value * 0.75}deg` }],
   }));
 
+  const finishAnimation = useCallback(
+    (operation: number) => {
+      const pending = pendingRef.current;
+      if (pending === undefined || pending.operation !== operation || !mountedRef.current) {
+        return;
+      }
+
+      pendingRef.current = undefined;
+      setRolling(false);
+      controller.reveal(pending.result);
+      controller.complete(pending.result);
+      AccessibilityInfo.announceForAccessibility(
+        `Dice result ${pending.result.values.join(', ')}. Total ${pending.result.total}.`,
+      );
+      pending.resolve(pending.result);
+    },
+    [controller],
+  );
+
   const animate = useCallback(
-    (result: Awaited<ReturnType<typeof controller.play>>) => {
+    (result: DiceResult) => {
       const operation = ++operationRef.current;
       controller.startAnimation(result);
       setRolling(true);
@@ -79,27 +110,17 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
         : (duration ?? theme.animation.diceRollDuration);
 
       return new Promise<typeof result>((resolve, reject) => {
-        pendingRef.current = { reject };
+        pendingRef.current = { operation, reject, resolve, result };
         rotation.set(0);
         rotation.set(
           withTiming(720, { duration: animationDuration, easing }, (finished) => {
             if (!finished) return;
-            runOnJS(() => {
-              if (!mountedRef.current || operation !== operationRef.current) return;
-              pendingRef.current = undefined;
-              setRolling(false);
-              controller.reveal(result);
-              controller.complete(result);
-              AccessibilityInfo.announceForAccessibility(
-                `Dice result ${result.values.join(', ')}. Total ${result.total}.`,
-              );
-              resolve(result);
-            })();
+            runOnJS(finishAnimation)(operation);
           }),
         );
       });
     },
-    [controller, duration, easing, rotation, shouldReduceMotion, theme.animation],
+    [controller, duration, easing, finishAnimation, rotation, shouldReduceMotion, theme.animation],
   );
   const roll = useCallback(
     async (selection?: Parameters<typeof controller.play>[0]) => {

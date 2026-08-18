@@ -3,9 +3,10 @@ import { JackpotKitProvider, SpinWheel, type SpinWheelRef } from '@jackpotkit/re
 import { defaultTheme, neonTheme } from '@jackpotkit/theme';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
 
 type ResultMode = 'random' | 'controlled' | 'server';
+type ProbabilityMode = 'equal' | 'weighted';
 type ThemeName = 'default' | 'neon';
 
 const allSegments = [
@@ -75,15 +76,25 @@ function OptionControl<TValue extends string | number>({
 
 export function SpinWheelPlayground() {
   const wheelRef = useRef<SpinWheelRef<number>>(null);
+  const { width: windowWidth } = useWindowDimensions();
   const [segmentCount, setSegmentCount] = useState(6);
   const [duration, setDuration] = useState(1_600);
   const [rotations, setRotations] = useState(4);
   const [mode, setMode] = useState<ResultMode>('random');
+  const [probabilityMode, setProbabilityMode] = useState<ProbabilityMode>('equal');
   const [themeName, setThemeName] = useState<ThemeName>('default');
   const [reduceMotion, setReduceMotion] = useState(false);
   const [status, setStatus] = useState<GameStatus>('ready');
   const [lastResult, setLastResult] = useState<SpinWheelResult<number>>();
-  const segments = useMemo(() => allSegments.slice(0, segmentCount), [segmentCount]);
+  const segments = useMemo(
+    () =>
+      allSegments.slice(0, segmentCount).map((segment) => ({
+        ...segment,
+        weight: probabilityMode === 'equal' ? 1 : segment.weight,
+      })),
+    [probabilityMode, segmentCount],
+  );
+  const wheelSize = Math.min(420, Math.max(200, windowWidth - 72));
   const controlledResult = useMemo(
     () => ({ segmentId: (segments.at(-1) ?? allSegments[0]).id }),
     [segments],
@@ -138,8 +149,8 @@ export function SpinWheelPlayground() {
           Spin Wheel playground
         </Text>
         <Text selectable style={{ color: '#D7D0F3', fontSize: 15, lineHeight: 22 }}>
-          Probability weights choose the result; every visible slice stays equal. Try random,
-          controlled, and mocked server-authoritative modes.
+          Equal chances are the default. Switch to weighted probability to demonstrate independent
+          result odds while every visible slice remains the same size.
         </Text>
       </View>
 
@@ -177,6 +188,7 @@ export function SpinWheelPlayground() {
             reduceMotion={reduceMotion}
             rotations={rotations}
             segments={segments}
+            size={wheelSize}
             {...(mode === 'controlled' ? { result: controlledResult } : {})}
             {...(mode === 'server' ? { resultProvider } : {})}
           />
@@ -243,6 +255,13 @@ export function SpinWheelPlayground() {
           onChange={changeSetting(setRotations)}
           options={[2, 4, 6]}
           value={rotations}
+        />
+        <OptionControl
+          format={(value) => (value === 'equal' ? 'Equal chance' : 'Weighted demo')}
+          label="Probability"
+          onChange={changeSetting(setProbabilityMode)}
+          options={['equal', 'weighted']}
+          value={probabilityMode}
         />
         <OptionControl
           label="Result mode"

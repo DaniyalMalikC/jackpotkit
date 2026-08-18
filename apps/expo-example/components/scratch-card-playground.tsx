@@ -84,7 +84,7 @@ function OptionControl<TValue extends string | number>({
 export default function ScratchCardPlayground() {
   const cardRef = useRef<ScratchCardRef<Prize>>(null);
   const { width: windowWidth } = useWindowDimensions();
-  const cardWidth = Math.min(420, Math.max(260, windowWidth - 72));
+  const cardWidth = Math.min(420, Math.max(220, windowWidth - 76));
   const cardHeight = Math.round(cardWidth * 0.56);
   const [threshold, setThreshold] = useState(0.65);
   const [brushRadius, setBrushRadius] = useState(22);

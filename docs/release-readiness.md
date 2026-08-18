@@ -7,6 +7,10 @@ sidebar_position: 22
 
 Phase 8 separates repository-verifiable gates from external release approval.
 
+`1.0.0` has now been published. Its [post-publication verification record](./release-verification-1.0.0.md)
+documents the completed checks, the defects found during clean-consumer testing, and the human
+checks that remain open.
+
 ## Automated gates
 
 `pnpm release:check` performs the frozen project validation and release-status review. CI verifies:
