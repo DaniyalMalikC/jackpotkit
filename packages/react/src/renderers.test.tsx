@@ -102,7 +102,8 @@ describe('React web renderers', () => {
         Gold prize
       </ScratchCard>,
     );
-    expect(scratch.container.querySelector('[data-jackpotkit-scratch-ticket]')).not.toBeNull();
+    expect(scratch.container.querySelector('[data-jackpotkit-scratch-surface]')).not.toBeNull();
+    expect(scratch.container.textContent).not.toContain('Lucky reveal');
     expect(gradient.addColorStop).toHaveBeenCalledTimes(4);
     fireEvent.click(screen.getByRole('button', { name: 'Reveal card' }));
     expect(await screen.findByText('Prize revealed')).toBeDefined();

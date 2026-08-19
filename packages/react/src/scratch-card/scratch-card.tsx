@@ -215,102 +215,65 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
       }}
     >
       <div
-        data-jackpotkit-scratch-ticket=""
+        data-jackpotkit-scratch-surface=""
         style={{
-          background: theme.colors.text,
           border: `1px solid ${theme.colors.border}`,
-          borderRadius: borderRadius + 8,
-          boxShadow: '0 14px 30px rgba(37, 25, 77, 0.18)',
-          padding: 10,
+          borderRadius,
+          boxShadow: '0 10px 24px rgba(37, 25, 77, 0.14)',
+          height,
+          overflow: 'hidden',
+          position: 'relative',
+          width,
         }}
       >
         <div
           style={{
             alignItems: 'center',
-            color: theme.colors.onPrimary,
+            background: theme.colors.surface,
+            color: theme.colors.text,
             display: 'flex',
-            fontFamily: theme.typography.fontFamily,
-            fontSize: 11,
-            fontWeight: 800,
-            justifyContent: 'space-between',
-            letterSpacing: '0.08em',
-            padding: '0 4px 8px',
-            textTransform: 'uppercase',
+            height: '100%',
+            justifyContent: 'center',
+            width: '100%',
           }}
         >
-          <span>Lucky reveal</span>
-          <span>{Math.round(controller.progress * 100)}%</span>
+          {content}
         </div>
-        <div style={{ borderRadius, height, overflow: 'hidden', position: 'relative', width }}>
+        {renderCover === undefined ? null : (
           <div
+            aria-hidden="true"
             style={{
-              alignItems: 'center',
-              background: theme.colors.surface,
-              color: theme.colors.text,
-              display: 'flex',
-              height: '100%',
-              justifyContent: 'center',
-              width: '100%',
-            }}
-          >
-            {content}
-          </div>
-          {renderCover === undefined ? null : (
-            <div
-              aria-hidden="true"
-              style={{
-                inset: 0,
-                opacity: coverVisible ? 1 : 0,
-                pointerEvents: 'none',
-                position: 'absolute',
-                transition: `opacity ${animationDuration}ms ease`,
-              }}
-            >
-              {renderCover({ height, theme, width })}
-            </div>
-          )}
-          <canvas
-            aria-label={`${Math.round(controller.progress * 100)} percent scratched`}
-            height={height}
-            onPointerCancel={stopScratch}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={stopScratch}
-            ref={canvasRef}
-            data-jackpotkit-scratch-canvas=""
-            style={{
-              cursor: disabled ? 'not-allowed' : 'crosshair',
-              height,
               inset: 0,
               opacity: coverVisible ? 1 : 0,
+              pointerEvents: 'none',
               position: 'absolute',
-              touchAction: 'none',
               transition: `opacity ${animationDuration}ms ease`,
-              width,
             }}
-            width={width}
-          />
-        </div>
-        <div
-          aria-hidden="true"
+          >
+            {renderCover({ height, theme, width })}
+          </div>
+        )}
+        <canvas
+          aria-label={`${Math.round(controller.progress * 100)} percent scratched`}
+          height={height}
+          onPointerCancel={stopScratch}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={stopScratch}
+          ref={canvasRef}
+          data-jackpotkit-scratch-canvas=""
           style={{
-            background: 'rgba(255,255,255,0.18)',
-            borderRadius: 999,
-            height: 4,
-            marginTop: 8,
-            overflow: 'hidden',
+            cursor: disabled ? 'not-allowed' : 'crosshair',
+            height,
+            inset: 0,
+            opacity: coverVisible ? 1 : 0,
+            position: 'absolute',
+            touchAction: 'none',
+            transition: `opacity ${animationDuration}ms ease`,
+            width,
           }}
-        >
-          <div
-            style={{
-              background: theme.colors.scratchAccent,
-              borderRadius: 999,
-              height: '100%',
-              transition: `width ${shouldReduceMotion ? 0 : 120}ms ease-out`,
-              width: `${Math.round(controller.progress * 100)}%`,
-            }}
-          />
-        </div>
+          width={width}
+        />
       </div>
       <button
         disabled={disabled || !coverVisible}
