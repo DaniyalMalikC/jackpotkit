@@ -12,6 +12,27 @@ const boxes = [
 ];
 
 describe('LuckyBox', () => {
+  it('keeps graphical selection transforms valid when selection is cleared', async () => {
+    const reference = createRef<LuckyBoxRef<string>>();
+    await render(<LuckyBox boxes={boxes} faceStyle="gift-boxes" ref={reference} />);
+
+    await act(async () => {
+      fireEvent.press(screen.getByLabelText('Box one'));
+      await Promise.resolve();
+    });
+    expect(screen.getByTestId('jackpotkit-lucky-gift-visual-Box one')).toHaveStyle({
+      transform: [{ translateY: -3 }],
+    });
+
+    await act(async () => {
+      reference.current?.reset();
+      await Promise.resolve();
+    });
+    expect(screen.getByTestId('jackpotkit-lucky-gift-visual-Box one')).toHaveStyle({
+      transform: [{ translateY: 0 }],
+    });
+  });
+
   it('selects independently from a controlled winning box', async () => {
     const onComplete = jest.fn();
     await render(

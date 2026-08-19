@@ -88,9 +88,10 @@ function GiftBoxFace({
       <View
         style={{
           height: 92,
-          transform: selected ? [{ translateY: -3 }] : undefined,
+          transform: [{ translateY: selected ? -3 : 0 }],
           width: giftWidth,
         }}
+        testID={`jackpotkit-lucky-gift-visual-${label}`}
       >
         <Animated.Text
           selectable={false}
