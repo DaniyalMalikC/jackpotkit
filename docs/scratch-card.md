@@ -53,9 +53,12 @@ import { ScratchCard } from '@jackpotkit/react/scratch-card';
 ```
 
 The web renderer uses Canvas erasure, Pointer Events, and the same deterministic core progress
-tracker. Image covers use a browser URL string (`cover={{ type: 'image', source: '/cover.png' }}`).
-The visible Reveal button provides a keyboard alternative to scratching. Canvas and image globals
-are touched only after mount, preserving SSR-safe imports.
+tracker. Its foil texture is decorative, while the visible rough-edged erasure and percentage both
+come from the same persisted gesture path. Re-renders and late-loading image covers replay that path
+instead of painting over earlier scratches. Image covers use a browser URL string
+(`cover={{ type: 'image', source: '/cover.png' }}`). The visible Reveal button provides a keyboard
+alternative to scratching. Canvas and image globals are touched only after mount, preserving
+SSR-safe imports.
 
 ## Headless engine
 
@@ -148,7 +151,10 @@ For a custom Skia cover, return Skia drawing nodes from `renderCover`:
 />
 ```
 
-The scratch path is applied with the `clear` blend mode to the isolated cover layer. It never mutates the hidden React Native reward content.
+The scratch path is applied with the `clear` blend mode to the isolated cover layer. A broad center
+stroke plus two narrower, offset fringe strokes create a worn foil edge without changing the
+coverage radius used by the deterministic tracker. It never mutates the hidden React Native reward
+content.
 
 ## Hook and imperative API
 

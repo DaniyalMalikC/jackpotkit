@@ -177,61 +177,119 @@ export default function ScratchCardPlayground() {
           </Text>
         </View>
 
-        <ScratchCard
-          ref={cardRef}
-          accessibilityLabels={{
-            result: (result) => `Revealed ${result.prize?.label ?? 'reward'}`,
-            reveal: 'Reveal the example Scratch Card',
+        <View
+          style={{
+            backgroundColor: '#25194D',
+            borderColor: theme.colors.border,
+            borderCurve: 'continuous',
+            borderRadius: 24,
+            borderWidth: 1,
+            boxShadow: '0 14px 28px rgba(37, 25, 77, 0.2)',
+            gap: 9,
+            padding: 10,
           }}
-          autoReveal={autoReveal}
-          brushRadius={brushRadius}
-          cover={{ type: 'solid', color: theme.colors.scratchCover }}
-          height={cardHeight}
-          onComplete={handleComplete}
-          onProgress={setProgress}
-          onStatusChange={setStatus}
-          reduceMotion={reduceMotion}
-          {...(coverName === 'stripes'
-            ? {
-                renderCover: ({ height, width }) => (
-                  <Group opacity={0.7}>
-                    {Array.from({ length: 7 }, (_, index) => (
-                      <RoundedRect
-                        color={index % 2 === 0 ? theme.colors.scratchAccent : theme.colors.primary}
-                        height={height}
-                        key={index}
-                        r={0}
-                        width={width / 7}
-                        x={(index * width) / 7}
-                        y={0}
-                      />
-                    ))}
-                  </Group>
-                ),
-              }
-            : {})}
-          threshold={threshold}
-          theme={theme}
-          width={cardWidth}
-          {...(mode === 'controlled' ? { result: controlledResult } : { resultProvider })}
         >
-          {(result) => (
-            <View style={{ alignItems: 'center', gap: 8, padding: 16 }}>
-              <Text
-                selectable
-                style={{ color: theme.colors.mutedText, fontSize: 13, fontWeight: '800' }}
-              >
-                {result === undefined ? 'RESOLVING PRIZE' : result.prize?.label}
-              </Text>
-              <Text
-                selectable
-                style={{ color: theme.colors.primary, fontSize: 30, fontWeight: '900' }}
-              >
-                {result?.prize?.value ?? '•••'}
-              </Text>
-            </View>
-          )}
-        </ScratchCard>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 4,
+            }}
+          >
+            <Text
+              selectable
+              style={{
+                color: '#FFFFFF',
+                fontSize: 11,
+                fontWeight: '900',
+                letterSpacing: 1.1,
+              }}
+            >
+              LUCKY REVEAL
+            </Text>
+            <Text
+              selectable
+              style={{ color: '#FFFFFF', fontSize: 11, fontWeight: '900', letterSpacing: 0.6 }}
+            >
+              {Math.round(progress * 100)}%
+            </Text>
+          </View>
+          <ScratchCard
+            ref={cardRef}
+            accessibilityLabels={{
+              result: (result) => `Revealed ${result.prize?.label ?? 'reward'}`,
+              reveal: 'Reveal the example Scratch Card',
+            }}
+            autoReveal={autoReveal}
+            brushRadius={brushRadius}
+            cover={{ type: 'solid', color: theme.colors.scratchCover }}
+            height={cardHeight}
+            onComplete={handleComplete}
+            onProgress={setProgress}
+            onStatusChange={setStatus}
+            reduceMotion={reduceMotion}
+            {...(coverName === 'stripes'
+              ? {
+                  renderCover: ({ height, width }) => (
+                    <Group opacity={0.7}>
+                      {Array.from({ length: 7 }, (_, index) => (
+                        <RoundedRect
+                          color={
+                            index % 2 === 0 ? theme.colors.scratchAccent : theme.colors.primary
+                          }
+                          height={height}
+                          key={index}
+                          r={0}
+                          width={width / 7}
+                          x={(index * width) / 7}
+                          y={0}
+                        />
+                      ))}
+                    </Group>
+                  ),
+                }
+              : {})}
+            threshold={threshold}
+            theme={theme}
+            width={cardWidth}
+            {...(mode === 'controlled' ? { result: controlledResult } : { resultProvider })}
+          >
+            {(result) => (
+              <View style={{ alignItems: 'center', gap: 8, padding: 16 }}>
+                <Text
+                  selectable
+                  style={{ color: theme.colors.mutedText, fontSize: 13, fontWeight: '800' }}
+                >
+                  {result === undefined ? 'RESOLVING PRIZE' : result.prize?.label}
+                </Text>
+                <Text
+                  selectable
+                  style={{ color: theme.colors.primary, fontSize: 30, fontWeight: '900' }}
+                >
+                  {result?.prize?.value ?? '•••'}
+                </Text>
+              </View>
+            )}
+          </ScratchCard>
+          <View
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.18)',
+              borderRadius: 999,
+              height: 4,
+              overflow: 'hidden',
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: theme.colors.scratchAccent,
+                borderRadius: 999,
+                height: 4,
+                width: `${Math.round(progress * 100)}%`,
+              }}
+            />
+          </View>
+        </View>
 
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           <Pressable

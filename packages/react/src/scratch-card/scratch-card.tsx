@@ -18,6 +18,12 @@ import { actionButtonStyle } from '../internal/styles.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
 import { useReducedMotion } from '../internal/use-reduced-motion.js';
 import { useResolvedTheme } from '../internal/use-resolved-theme.js';
+import {
+  drawScratchCover,
+  eraseScratchSegment,
+  prepareScratchCanvas,
+  type ScratchSegment,
+} from './canvas-renderer.js';
 import type { ScratchCardProps, ScratchCardRef } from './types.js';
 import { useScratchCardController } from './use-scratch-card.js';
 
@@ -47,7 +53,9 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
     [brushRadius, height, width],
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const coverImageRef = useRef<HTMLImageElement | undefined>(undefined);
   const lastPointRef = useRef<ScratchPoint | undefined>(undefined);
+  const scratchSegmentsRef = useRef<ScratchSegment[]>([]);
   const scratchingRef = useRef(false);
   const revealingRef = useRef(false);
   const [coverVisible, setCoverVisible] = useState(true);
@@ -57,33 +65,49 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
   const animationDuration = shouldReduceMotion
     ? theme.animation.reducedMotionDuration
     : (revealDuration ?? theme.animation.revealDuration);
-  useEffect(() => {
+  const coverColor =
+    cover.type === 'solid'
+      ? (cover.color ?? theme.colors.scratchCover)
+      : (cover.fallbackColor ?? theme.colors.scratchCover);
+  const coverSource = cover.type === 'image' ? cover.source : undefined;
+  const coverCrossOrigin = cover.type === 'image' ? cover.crossOrigin : undefined;
+  const paintCover = useCallback(() => {
     const canvas = canvasRef.current;
     if (canvas === null) return;
-    const context = canvas.getContext('2d');
+    const context = prepareScratchCanvas(canvas, width, height);
     if (context === null) return;
-    context.globalCompositeOperation = 'source-over';
-    context.clearRect(0, 0, width, height);
-    const fallback =
-      cover.type === 'solid'
-        ? (cover.color ?? theme.colors.scratchCover)
-        : (cover.fallbackColor ?? theme.colors.scratchCover);
-    context.fillStyle = fallback;
-    context.fillRect(0, 0, width, height);
-    if (cover.type === 'image' && typeof Image !== 'undefined') {
+    drawScratchCover(context, {
+      accentColor: theme.colors.scratchAccent,
+      coverColor,
+      height,
+      width,
+    });
+    if (coverImageRef.current !== undefined) {
+      context.globalCompositeOperation = 'source-over';
+      context.globalAlpha = 1;
+      context.drawImage(coverImageRef.current, 0, 0, width, height);
+    }
+    for (const segment of scratchSegmentsRef.current) {
+      eraseScratchSegment(context, segment, brushRadius);
+    }
+  }, [brushRadius, coverColor, height, theme.colors.scratchAccent, width]);
+  useEffect(() => {
+    coverImageRef.current = undefined;
+    paintCover();
+    if (coverSource !== undefined && typeof Image !== 'undefined') {
       const image = new Image();
-      if (cover.crossOrigin !== undefined) image.crossOrigin = cover.crossOrigin;
+      if (coverCrossOrigin !== undefined) image.crossOrigin = coverCrossOrigin;
       image.addEventListener(
         'load',
         () => {
-          context.globalCompositeOperation = 'source-over';
-          context.drawImage(image, 0, 0, width, height);
+          coverImageRef.current = image;
+          paintCover();
         },
         { once: true },
       );
-      image.src = cover.source;
+      image.src = coverSource;
     }
-  }, [cover, height, resetVersion, theme.colors.scratchCover, width]);
+  }, [coverCrossOrigin, coverSource, paintCover, resetVersion]);
   const getPoint = useCallback(
     (event: ReactPointerEvent<HTMLCanvasElement>): ScratchPoint => {
       const rect = event.currentTarget.getBoundingClientRect();
@@ -115,15 +139,14 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
       const canvas = canvasRef.current;
       const context = canvas?.getContext('2d');
       const previous = lastPointRef.current ?? point;
+      const segment = {
+        from: previous,
+        seed: scratchSegmentsRef.current.length + 1,
+        to: point,
+      };
+      scratchSegmentsRef.current.push(segment);
       if (context !== null && context !== undefined) {
-        context.globalCompositeOperation = 'destination-out';
-        context.lineCap = 'round';
-        context.lineJoin = 'round';
-        context.lineWidth = brushRadius * 2;
-        context.beginPath();
-        context.moveTo(previous.x, previous.y);
-        context.lineTo(point.x, point.y);
-        context.stroke();
+        eraseScratchSegment(context, segment, brushRadius);
       }
       const progress = tracker.scratchLine(previous, point);
       const update = controller.scratch(progress);
@@ -170,6 +193,8 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
     scratchingRef.current = false;
     revealingRef.current = false;
     lastPointRef.current = undefined;
+    scratchSegmentsRef.current = [];
+    coverImageRef.current = undefined;
     setCoverVisible(true);
     setResetVersion((value) => value + 1);
     controller.reset();
@@ -189,54 +214,103 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
         ...style,
       }}
     >
-      <div style={{ borderRadius, height, overflow: 'hidden', position: 'relative', width }}>
+      <div
+        data-jackpotkit-scratch-ticket=""
+        style={{
+          background: theme.colors.text,
+          border: `1px solid ${theme.colors.border}`,
+          borderRadius: borderRadius + 8,
+          boxShadow: '0 14px 30px rgba(37, 25, 77, 0.18)',
+          padding: 10,
+        }}
+      >
         <div
           style={{
             alignItems: 'center',
-            background: theme.colors.surface,
-            color: theme.colors.text,
+            color: theme.colors.onPrimary,
             display: 'flex',
-            height: '100%',
-            justifyContent: 'center',
-            width: '100%',
+            fontFamily: theme.typography.fontFamily,
+            fontSize: 11,
+            fontWeight: 800,
+            justifyContent: 'space-between',
+            letterSpacing: '0.08em',
+            padding: '0 4px 8px',
+            textTransform: 'uppercase',
           }}
         >
-          {content}
+          <span>Lucky reveal</span>
+          <span>{Math.round(controller.progress * 100)}%</span>
         </div>
-        {renderCover === undefined ? null : (
+        <div style={{ borderRadius, height, overflow: 'hidden', position: 'relative', width }}>
           <div
-            aria-hidden="true"
             style={{
-              inset: 0,
-              opacity: coverVisible ? 1 : 0,
-              pointerEvents: 'none',
-              position: 'absolute',
-              transition: `opacity ${animationDuration}ms ease`,
+              alignItems: 'center',
+              background: theme.colors.surface,
+              color: theme.colors.text,
+              display: 'flex',
+              height: '100%',
+              justifyContent: 'center',
+              width: '100%',
             }}
           >
-            {renderCover({ height, theme, width })}
+            {content}
           </div>
-        )}
-        <canvas
-          aria-label={`${Math.round(controller.progress * 100)} percent scratched`}
-          height={height}
-          onPointerCancel={stopScratch}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={stopScratch}
-          ref={canvasRef}
+          {renderCover === undefined ? null : (
+            <div
+              aria-hidden="true"
+              style={{
+                inset: 0,
+                opacity: coverVisible ? 1 : 0,
+                pointerEvents: 'none',
+                position: 'absolute',
+                transition: `opacity ${animationDuration}ms ease`,
+              }}
+            >
+              {renderCover({ height, theme, width })}
+            </div>
+          )}
+          <canvas
+            aria-label={`${Math.round(controller.progress * 100)} percent scratched`}
+            height={height}
+            onPointerCancel={stopScratch}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={stopScratch}
+            ref={canvasRef}
+            data-jackpotkit-scratch-canvas=""
+            style={{
+              cursor: disabled ? 'not-allowed' : 'crosshair',
+              height,
+              inset: 0,
+              opacity: coverVisible ? 1 : 0,
+              position: 'absolute',
+              touchAction: 'none',
+              transition: `opacity ${animationDuration}ms ease`,
+              width,
+            }}
+            width={width}
+          />
+        </div>
+        <div
+          aria-hidden="true"
           style={{
-            cursor: disabled ? 'not-allowed' : 'crosshair',
-            height,
-            inset: 0,
-            opacity: coverVisible ? 1 : 0,
-            position: 'absolute',
-            touchAction: 'none',
-            transition: `opacity ${animationDuration}ms ease`,
-            width,
+            background: 'rgba(255,255,255,0.18)',
+            borderRadius: 999,
+            height: 4,
+            marginTop: 8,
+            overflow: 'hidden',
           }}
-          width={width}
-        />
+        >
+          <div
+            style={{
+              background: theme.colors.scratchAccent,
+              borderRadius: 999,
+              height: '100%',
+              transition: `width ${shouldReduceMotion ? 0 : 120}ms ease-out`,
+              width: `${Math.round(controller.progress * 100)}%`,
+            }}
+          />
+        </div>
       </div>
       <button
         disabled={disabled || !coverVisible}

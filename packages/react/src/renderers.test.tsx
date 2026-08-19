@@ -78,25 +78,80 @@ describe('React web renderers', () => {
   });
 
   it('supports an accessible manual Scratch Card reveal', async () => {
+    const gradient = { addColorStop: vi.fn() };
     const context = {
       beginPath: vi.fn(),
       clearRect: vi.fn(),
+      createLinearGradient: vi.fn(() => gradient),
       drawImage: vi.fn(),
       fillRect: vi.fn(),
+      fillText: vi.fn(),
       lineTo: vi.fn(),
       moveTo: vi.fn(),
+      restore: vi.fn(),
+      save: vi.fn(),
+      setTransform: vi.fn(),
       stroke: vi.fn(),
+      strokeRect: vi.fn(),
     };
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
       context as unknown as CanvasRenderingContext2D,
     );
-    render(
+    const scratch = render(
       <ScratchCard height={120} result={{ prize: 'Gold' }} revealDuration={0} width={240}>
         Gold prize
       </ScratchCard>,
     );
+    expect(scratch.container.querySelector('[data-jackpotkit-scratch-ticket]')).not.toBeNull();
+    expect(gradient.addColorStop).toHaveBeenCalledTimes(4);
     fireEvent.click(screen.getByRole('button', { name: 'Reveal card' }));
     expect(await screen.findByText('Prize revealed')).toBeDefined();
+  });
+
+  it('keeps the visible Scratch Card path aligned with accumulated progress', async () => {
+    const context = {
+      beginPath: vi.fn(),
+      clearRect: vi.fn(),
+      createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
+      drawImage: vi.fn(),
+      fillRect: vi.fn(),
+      fillText: vi.fn(),
+      lineTo: vi.fn(),
+      moveTo: vi.fn(),
+      restore: vi.fn(),
+      save: vi.fn(),
+      setTransform: vi.fn(),
+      stroke: vi.fn(),
+      strokeRect: vi.fn(),
+    };
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
+      context as unknown as CanvasRenderingContext2D,
+    );
+    const scratch = render(
+      <ScratchCard autoReveal={false} height={120} result={{ prize: 'Gold' }} width={240}>
+        Gold prize
+      </ScratchCard>,
+    );
+    const canvas = scratch.container.querySelector<HTMLCanvasElement>(
+      '[data-jackpotkit-scratch-canvas]',
+    );
+    expect(canvas).not.toBeNull();
+    Object.defineProperty(canvas, 'getBoundingClientRect', {
+      value: () => ({ bottom: 120, height: 120, left: 0, right: 240, top: 0, width: 240 }),
+    });
+    Object.defineProperty(canvas, 'setPointerCapture', { value: vi.fn() });
+    const initialStrokeCount = context.stroke.mock.calls.length;
+
+    fireEvent.pointerDown(canvas as HTMLCanvasElement, { clientX: 30, clientY: 30, pointerId: 1 });
+    await act(async () => Promise.resolve());
+    fireEvent.pointerMove(canvas as HTMLCanvasElement, { clientX: 180, clientY: 85, pointerId: 1 });
+    fireEvent.pointerUp(canvas as HTMLCanvasElement, { pointerId: 1 });
+
+    expect(context.stroke).toHaveBeenCalledTimes(initialStrokeCount + 6);
+    expect(context.clearRect).toHaveBeenCalledTimes(1);
+    expect(scratch.container.querySelector('[role="status"]')?.textContent).not.toBe(
+      '0% scratched',
+    );
   });
 
   it('renders a D6 with pips and leaves its result upright', async () => {

@@ -6,6 +6,7 @@ import {
 import { createJackpotTheme } from '@jackpotkit/theme';
 import {
   Canvas,
+  Circle,
   Group,
   Image,
   Paint,
@@ -43,6 +44,33 @@ import { assertScratchCardComponentConfiguration } from './validation';
 
 interface ScratchStroke {
   readonly points: readonly ScratchPoint[];
+}
+
+function buildScratchPath(
+  strokes: readonly ScratchStroke[],
+  brushRadius: number,
+  fringe: -1 | 0 | 1,
+) {
+  const builder = Skia.PathBuilder.Make();
+
+  strokes.forEach((stroke, strokeIndex) => {
+    const points = stroke.points.map((point, pointIndex) => {
+      if (fringe === 0) return point;
+      const angle = strokeIndex * 0.83 + pointIndex * 1.91;
+      const distance = brushRadius * 0.67 * fringe;
+      return {
+        x: point.x + Math.cos(angle) * distance,
+        y: point.y + Math.sin(angle) * distance,
+      };
+    });
+    const first = points[0];
+    if (first === undefined) return;
+    builder.moveTo(first.x, first.y);
+    if (points.length === 1) builder.lineTo(first.x + 0.01, first.y);
+    else for (const point of points.slice(1)) builder.lineTo(point.x, point.y);
+  });
+
+  return builder.build();
 }
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -105,22 +133,22 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
     [accessibilityLabel, accessibilityLabels],
   );
 
-  const scratchPath = useMemo(() => {
+  const scratchPaths = useMemo(() => {
+    return {
+      center: buildScratchPath(strokes, brushRadius, 0),
+      leftFringe: buildScratchPath(strokes, brushRadius, -1),
+      rightFringe: buildScratchPath(strokes, brushRadius, 1),
+    };
+  }, [brushRadius, strokes]);
+
+  const foilTexturePath = useMemo(() => {
     const builder = Skia.PathBuilder.Make();
-
-    for (const stroke of strokes) {
-      const first = stroke.points[0];
-      if (first === undefined) continue;
-
-      builder.moveTo(first.x, first.y);
-      if (stroke.points.length === 1) builder.lineTo(first.x + 0.01, first.y);
-      else {
-        for (const point of stroke.points.slice(1)) builder.lineTo(point.x, point.y);
-      }
+    for (let offset = -height; offset < width + height; offset += 16) {
+      builder.moveTo(offset, height);
+      builder.lineTo(offset + height, 0);
     }
-
     return builder.build();
-  }, [strokes]);
+  }, [height, width]);
 
   const animatedCoverStyle = useAnimatedStyle(() => ({ opacity: coverOpacity.value }));
 
@@ -322,6 +350,35 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
                   x={0}
                   y={0}
                 />
+                <Path
+                  color="#FFFFFF"
+                  opacity={0.16}
+                  path={foilTexturePath}
+                  strokeWidth={1}
+                  style="stroke"
+                />
+                {Array.from(
+                  { length: Math.max(14, Math.round((width * height) / 1_800)) },
+                  (_, index) => (
+                    <Circle
+                      color={index % 3 === 0 ? theme.colors.scratchAccent : '#FFFFFF'}
+                      cx={((index * 47 + 19) % 101) * (width / 101)}
+                      cy={((index * 71 + 13) % 97) * (height / 97)}
+                      key={index}
+                      opacity={0.18 + (index % 4) * 0.05}
+                      r={0.8 + (index % 3) * 0.4}
+                    />
+                  ),
+                )}
+                <RoundedRect
+                  color="#FFFFFF"
+                  height={Math.max(34, height * 0.3)}
+                  opacity={0.14}
+                  r={8}
+                  width={width * 0.84}
+                  x={width * 0.08}
+                  y={(height - Math.max(34, height * 0.3)) / 2}
+                />
                 {cover.type === 'image' && image !== null ? (
                   <Image
                     fit={cover.fit ?? 'cover'}
@@ -335,10 +392,26 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
                 {renderCover?.({ height, theme, width })}
                 <Path
                   blendMode="clear"
-                  path={scratchPath}
+                  path={scratchPaths.center}
                   strokeCap="round"
                   strokeJoin="round"
-                  strokeWidth={brushRadius * 2}
+                  strokeWidth={brushRadius * 1.45}
+                  style="stroke"
+                />
+                <Path
+                  blendMode="clear"
+                  path={scratchPaths.leftFringe}
+                  strokeCap="round"
+                  strokeJoin="round"
+                  strokeWidth={brushRadius * 0.55}
+                  style="stroke"
+                />
+                <Path
+                  blendMode="clear"
+                  path={scratchPaths.rightFringe}
+                  strokeCap="round"
+                  strokeJoin="round"
+                  strokeWidth={brushRadius * 0.48}
                   style="stroke"
                 />
               </Group>
