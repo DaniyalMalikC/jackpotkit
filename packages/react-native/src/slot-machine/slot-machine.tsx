@@ -65,7 +65,11 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
   const { width: windowWidth } = useWindowDimensions();
   const machineWidth = width ?? Math.min(460, Math.max(240, windowWidth - 48));
   const reelGap = Math.min(8, machineWidth * 0.02);
-  const reelWidth = (machineWidth - theme.spacing.md * 2 - reelGap * (reelCount - 1)) / reelCount;
+  const reelWidth = Math.max(
+    36,
+    (machineWidth - theme.spacing.md * 2 - theme.spacing.sm * 2 - 12 - reelGap * (reelCount - 1)) /
+      reelCount,
+  );
   const rowCount = props.rowCount ?? 3;
   const operationRef = useRef(0);
   const pendingRef = useRef<PendingAnimation<TValue, TEvaluation> | undefined>(undefined);
@@ -209,41 +213,149 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
       <View
         style={{
           backgroundColor: theme.colors.slotBackground,
-          borderColor: theme.colors.border,
+          borderColor: theme.colors.slotAccent,
           borderCurve: 'continuous',
           borderRadius: theme.radii.lg,
-          borderWidth: 2,
-          flexDirection: 'row',
-          gap: reelGap,
+          borderWidth: 4,
+          boxShadow: '0 18px 32px rgba(37, 25, 77, 0.24), inset 0 -10px 24px rgba(0, 0, 0, 0.22)',
+          gap: theme.spacing.md,
           overflow: 'hidden',
           padding: theme.spacing.md,
           width: machineWidth,
         }}
+        testID="jackpotkit-slot-cabinet"
       >
-        {reels.map((destination, reelIndex) => (
-          <SlotReel
-            active={animationOperation > 0}
-            destination={destination}
-            duration={
-              shouldReduceMotion
-                ? theme.animation.reducedMotionDuration
-                : (duration ?? theme.animation.slotDuration)
-            }
-            easing={easing}
-            key={reelIndex}
-            onStop={handleReelStop}
-            operation={animationOperation}
-            reelDelay={shouldReduceMotion ? 0 : (reelDelay ?? theme.animation.slotReelDelay)}
-            reelIndex={reelIndex}
-            {...(renderSymbol === undefined ? {} : { renderSymbol })}
-            rowCount={rowCount}
-            symbolHeight={symbolHeight}
-            symbols={symbols}
-            theme={theme}
-            width={reelWidth}
-            winningCells={winningCells}
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: theme.spacing.sm,
+            justifyContent: 'space-between',
+            minHeight: 38,
+          }}
+        >
+          <View style={{ flexDirection: 'row', gap: 5 }}>
+            {[0, 1, 2].map((light) => (
+              <View
+                key={light}
+                style={{
+                  backgroundColor:
+                    light === 1 ? theme.colors.slotAccent : theme.colors.scratchAccent,
+                  borderColor: 'rgba(255, 255, 255, 0.7)',
+                  borderRadius: 5,
+                  borderWidth: 2,
+                  boxShadow: `0 0 10px ${light === 1 ? theme.colors.slotAccent : theme.colors.scratchAccent}`,
+                  height: 10,
+                  width: 10,
+                }}
+              />
+            ))}
+          </View>
+          <Text
+            selectable
+            style={{
+              color: '#FFFFFF',
+              fontFamily: theme.typography.fontFamily,
+              fontSize: Math.max(14, theme.typography.labelSize),
+              fontWeight: '900',
+              letterSpacing: 2,
+            }}
+          >
+            LUCKY REELS
+          </Text>
+          <View
+            style={{
+              backgroundColor: isBusy ? theme.colors.slotAccent : 'rgba(255, 255, 255, 0.14)',
+              borderRadius: theme.radii.full,
+              paddingHorizontal: 8,
+              paddingVertical: 6,
+            }}
+          >
+            <Text
+              selectable
+              style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 }}
+            >
+              {isBusy ? 'SPINNING' : 'READY'}
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.34)',
+            borderColor: theme.colors.slotAccent,
+            borderCurve: 'continuous',
+            borderRadius: theme.radii.md,
+            borderWidth: 2,
+            boxShadow: 'inset 0 10px 20px rgba(0, 0, 0, 0.28)',
+            overflow: 'hidden',
+            padding: theme.spacing.sm,
+            position: 'relative',
+          }}
+        >
+          <View style={{ flexDirection: 'row', gap: reelGap }}>
+            {reels.map((destination, reelIndex) => (
+              <SlotReel
+                active={animationOperation > 0}
+                destination={destination}
+                duration={
+                  shouldReduceMotion
+                    ? theme.animation.reducedMotionDuration
+                    : (duration ?? theme.animation.slotDuration)
+                }
+                easing={easing}
+                key={reelIndex}
+                onStop={handleReelStop}
+                operation={animationOperation}
+                reelDelay={shouldReduceMotion ? 0 : (reelDelay ?? theme.animation.slotReelDelay)}
+                reelIndex={reelIndex}
+                {...(renderSymbol === undefined ? {} : { renderSymbol })}
+                rowCount={rowCount}
+                symbolHeight={symbolHeight}
+                symbols={symbols}
+                theme={theme}
+                width={reelWidth}
+                winningCells={winningCells}
+              />
+            ))}
+          </View>
+          <View
+            pointerEvents="none"
+            style={{
+              backgroundColor: theme.colors.slotAccent,
+              boxShadow: `0 0 8px ${theme.colors.slotAccent}`,
+              height: 2,
+              left: 0,
+              opacity: 0.46,
+              position: 'absolute',
+              right: 0,
+              top: rowCount * symbolHeight * 0.5 + theme.spacing.sm,
+            }}
           />
-        ))}
+        </View>
+
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: theme.spacing.xs,
+          }}
+        >
+          <Text selectable style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '900' }}>
+            {reelCount} REELS
+          </Text>
+          <Text selectable style={{ color: theme.colors.slotAccent, fontSize: 10 }}>
+            ● ● ●
+          </Text>
+          <Text selectable style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '900' }}>
+            {rowCount} ROWS
+          </Text>
+        </View>
       </View>
 
       <Pressable
@@ -255,8 +367,15 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
         style={({ pressed }) => ({
           alignItems: 'center',
           backgroundColor: theme.colors.primary,
+          borderColor: 'rgba(255, 255, 255, 0.45)',
           borderCurve: 'continuous',
           borderRadius: theme.radii.full,
+          borderWidth: 2,
+          boxShadow: '0 8px 18px rgba(37, 25, 77, 0.24)',
+          flexDirection: 'row',
+          gap: theme.spacing.sm,
+          justifyContent: 'center',
+          minWidth: 190,
           opacity: isDisabled ? 0.65 : pressed ? 0.8 : 1,
           paddingHorizontal: theme.spacing.xl,
           paddingVertical: theme.spacing.sm + 4,
@@ -267,11 +386,22 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
           style={{
             color: theme.colors.onPrimary,
             fontFamily: theme.typography.fontFamily,
+            fontSize: 20,
+            fontWeight: '900',
+          }}
+        >
+          ↻
+        </Text>
+        <Text
+          selectable
+          style={{
+            color: theme.colors.onPrimary,
+            fontFamily: theme.typography.fontFamily,
             fontSize: theme.typography.labelSize,
             fontWeight: '900',
           }}
         >
-          {isBusy ? labels.spinning : labels.spin}
+          {isBusy ? 'SPINNING…' : 'PULL TO SPIN'}
         </Text>
       </Pressable>
 

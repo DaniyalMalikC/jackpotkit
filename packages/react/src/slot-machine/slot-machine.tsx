@@ -1,10 +1,10 @@
 import type { SlotMachineResult, SlotMachineSelection, SlotSymbol } from '@jackpotkit/core';
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useState } from 'react';
 
-import { actionButtonStyle } from '../internal/styles.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
 import { useReducedMotion } from '../internal/use-reduced-motion.js';
 import { useResolvedTheme } from '../internal/use-resolved-theme.js';
+import { SlotReel } from './slot-reel.js';
 import type { SlotMachineProps, SlotMachineRef } from './types.js';
 import { useSlotMachineController } from './use-slot-machine.js';
 
@@ -30,7 +30,8 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
   const shouldReduceMotion = useReducedMotion(reduceMotion);
   const { cancel, wait } = useAnimationWaiter('Slot Machine');
   const [spinning, setSpinning] = useState(false);
-  const [turns, setTurns] = useState(0);
+  const [animationOperation, setAnimationOperation] = useState(0);
+  const [displayResult, setDisplayResult] = useState<SlotMachineResult<TValue, TEvaluation>>();
   const preview = useMemo(
     () =>
       Array.from({ length: props.reelCount }, (_, reelIndex) =>
@@ -42,7 +43,7 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
       ),
     [props.reelCount, props.symbols, rowCount],
   );
-  const reels = controller.result?.reels ?? preview;
+  const reels = displayResult?.reels ?? preview;
   const baseDuration = shouldReduceMotion
     ? theme.animation.reducedMotionDuration
     : (duration ?? theme.animation.slotDuration);
@@ -50,8 +51,9 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
   const animate = useCallback(
     async (result: SlotMachineResult<TValue, TEvaluation>) => {
       controller.startAnimation(result);
+      setDisplayResult(result);
       setSpinning(true);
-      setTurns((value) => value + 1);
+      setAnimationOperation((value) => value + 1);
       await wait(baseDuration + delay * Math.max(0, props.reelCount - 1));
       result.reels.forEach((_, index) => controller.reelStop(index, result));
       setSpinning(false);
@@ -68,17 +70,19 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
   const reset = useCallback(() => {
     cancel('Slot Machine was reset before its animation completed.');
     setSpinning(false);
-    setTurns(0);
+    setAnimationOperation(0);
+    setDisplayResult(undefined);
     controller.reset();
   }, [cancel, controller]);
   useImperativeHandle(ref, () => ({ reset, spin: () => spin(), spinTo: spin }), [reset, spin]);
   const winningCells = useMemo(() => {
     const cells = new Set<string>();
-    controller.result?.winningPaylines.forEach((payline) =>
+    if (controller.status !== 'completed') return cells;
+    displayResult?.winningPaylines.forEach((payline) =>
       payline.rows.forEach((rowIndex, reelIndex) => cells.add(`${reelIndex}:${rowIndex}`)),
     );
     return cells;
-  }, [controller.result]);
+  }, [controller.status, displayResult]);
   const disabled = props.disabled === true || spinning || controller.status === 'requesting-result';
   return (
     <div
@@ -95,64 +99,174 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
       }}
     >
       <div
+        data-jackpotkit-slot-cabinet=""
         style={{
-          background: theme.colors.slotBackground,
-          border: `3px solid ${theme.colors.slotAccent}`,
+          background: `linear-gradient(145deg, ${theme.colors.slotBackground}, ${theme.colors.text})`,
+          border: `4px solid ${theme.colors.slotAccent}`,
           borderRadius: theme.radii.lg,
-          display: 'grid',
-          gap: theme.spacing.sm,
-          gridTemplateColumns: `repeat(${props.reelCount}, minmax(0, 1fr))`,
+          boxShadow:
+            'inset 0 1px 0 rgb(255 255 255 / 20%), inset 0 -10px 24px rgb(0 0 0 / 22%), 0 18px 32px rgb(37 25 77 / 24%)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: theme.spacing.md,
           overflow: 'hidden',
           padding: theme.spacing.md,
           width: '100%',
         }}
       >
-        {reels.map((reel, reelIndex) => (
-          <div
-            key={reelIndex}
+        <div
+          aria-hidden="true"
+          style={{
+            alignItems: 'center',
+            display: 'grid',
+            gap: theme.spacing.sm,
+            gridTemplateColumns: 'auto 1fr auto',
+            minHeight: 38,
+          }}
+        >
+          <div style={{ display: 'flex', gap: 5 }}>
+            {[0, 1, 2].map((light) => (
+              <span
+                key={light}
+                style={{
+                  background: light === 1 ? theme.colors.slotAccent : theme.colors.scratchAccent,
+                  border: '2px solid rgb(255 255 255 / 70%)',
+                  borderRadius: '50%',
+                  boxShadow: `0 0 10px ${light === 1 ? theme.colors.slotAccent : theme.colors.scratchAccent}`,
+                  height: 10,
+                  width: 10,
+                }}
+              />
+            ))}
+          </div>
+          <strong
             style={{
-              display: 'grid',
-              gap: theme.spacing.xs,
-              transform: `translateY(${turns % 2 === 0 ? 0 : -8}px) rotateX(${turns * 360}deg)`,
-              transition: `transform ${baseDuration}ms ${easing} ${reelIndex * delay}ms`,
+              color: theme.colors.onPrimary,
+              fontFamily: theme.typography.fontFamily,
+              fontSize: Math.max(14, theme.typography.labelSize),
+              letterSpacing: '0.18em',
+              textAlign: 'center',
             }}
           >
-            {reel.map((symbol, rowIndex) => {
-              const winning = winningCells.has(`${reelIndex}:${rowIndex}`);
-              return (
-                <div
-                  key={`${symbol.id}:${rowIndex}`}
-                  style={{
-                    alignItems: 'center',
-                    background: winning ? theme.colors.slotAccent : theme.colors.surface,
-                    borderRadius: theme.radii.sm,
-                    color: winning ? theme.colors.onPrimary : theme.colors.text,
-                    display: 'flex',
-                    fontFamily: theme.typography.fontFamily,
-                    fontSize: theme.typography.titleSize,
-                    fontWeight: 900,
-                    height: symbolHeight,
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {renderSymbol?.({ reelIndex, rowIndex, symbol, theme, winning }) ??
-                    symbol.label ??
-                    symbol.id}
-                </div>
-              );
-            })}
+            LUCKY REELS
+          </strong>
+          <span
+            style={{
+              background: spinning ? theme.colors.slotAccent : 'rgb(255 255 255 / 14%)',
+              borderRadius: theme.radii.full,
+              color: theme.colors.onPrimary,
+              fontFamily: theme.typography.fontFamily,
+              fontSize: 10,
+              fontWeight: 900,
+              letterSpacing: '0.08em',
+              padding: '6px 8px',
+            }}
+          >
+            {spinning ? 'SPINNING' : 'READY'}
+          </span>
+        </div>
+
+        <div
+          style={{
+            background: 'rgb(0 0 0 / 34%)',
+            border: `2px solid ${theme.colors.slotAccent}`,
+            borderRadius: theme.radii.md,
+            boxShadow: 'inset 0 10px 20px rgb(0 0 0 / 28%), 0 1px 0 rgb(255 255 255 / 18%)',
+            overflow: 'hidden',
+            padding: theme.spacing.sm,
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gap: theme.spacing.sm,
+              gridTemplateColumns: `repeat(${props.reelCount}, minmax(0, 1fr))`,
+            }}
+          >
+            {reels.map((destination, reelIndex) => (
+              <SlotReel
+                active={spinning}
+                destination={destination}
+                duration={baseDuration}
+                easing={easing}
+                key={reelIndex}
+                operation={animationOperation}
+                reelDelay={delay}
+                reelIndex={reelIndex}
+                {...(renderSymbol === undefined ? {} : { renderSymbol })}
+                rowCount={rowCount}
+                symbolHeight={symbolHeight}
+                symbols={props.symbols}
+                theme={theme}
+                winningCells={winningCells}
+              />
+            ))}
           </div>
-        ))}
+          <div
+            aria-hidden="true"
+            style={{
+              borderTop: `2px solid ${theme.colors.slotAccent}`,
+              boxShadow: `0 0 8px ${theme.colors.slotAccent}`,
+              left: 0,
+              opacity: 0.46,
+              pointerEvents: 'none',
+              position: 'absolute',
+              right: 0,
+              top: '50%',
+            }}
+          />
+        </div>
+
+        <div
+          aria-hidden="true"
+          style={{
+            alignItems: 'center',
+            color: theme.colors.onPrimary,
+            display: 'flex',
+            fontFamily: theme.typography.fontFamily,
+            fontSize: 10,
+            fontWeight: 900,
+            justifyContent: 'space-between',
+            letterSpacing: '0.12em',
+            opacity: 0.72,
+            padding: `0 ${theme.spacing.xs}px`,
+          }}
+        >
+          <span>{props.reelCount} REELS</span>
+          <span>● ● ●</span>
+          <span>{rowCount} ROWS</span>
+        </div>
       </div>
       <button
+        aria-label="Spin reels"
         aria-busy={disabled}
         disabled={disabled}
         onClick={() => void spin().catch(() => undefined)}
-        style={actionButtonStyle(theme, disabled)}
+        style={{
+          alignItems: 'center',
+          background: `linear-gradient(180deg, ${theme.colors.primary}, ${theme.colors.slotAccent})`,
+          border: '2px solid rgb(255 255 255 / 45%)',
+          borderRadius: theme.radii.full,
+          boxShadow: '0 8px 18px rgb(37 25 77 / 24%), inset 0 1px 0 rgb(255 255 255 / 30%)',
+          color: theme.colors.onPrimary,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          display: 'flex',
+          fontFamily: theme.typography.fontFamily,
+          fontSize: theme.typography.labelSize,
+          fontWeight: 900,
+          gap: theme.spacing.sm,
+          justifyContent: 'center',
+          minWidth: 190,
+          opacity: disabled ? 0.62 : 1,
+          padding: `${theme.spacing.sm + 3}px ${theme.spacing.lg}px`,
+        }}
         type="button"
       >
-        {disabled ? 'Spinning…' : 'Spin reels'}
+        <span aria-hidden="true" style={{ fontSize: 18 }}>
+          ↻
+        </span>
+        {disabled ? 'SPINNING…' : 'PULL TO SPIN'}
       </button>
       <div
         aria-live="polite"

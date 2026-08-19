@@ -86,7 +86,19 @@ export function SlotReel<TValue>({
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={{ height: rowCount * symbolHeight, overflow: 'hidden', width }}
+      style={{
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.slotAccent,
+        borderCurve: 'continuous',
+        borderRadius: theme.radii.md,
+        borderWidth: 2,
+        boxShadow:
+          'inset 0 12px 18px rgba(23, 20, 43, 0.12), inset 0 -12px 18px rgba(23, 20, 43, 0.12)',
+        height: rowCount * symbolHeight,
+        overflow: 'hidden',
+        width,
+      }}
+      testID="jackpotkit-slot-reel"
     >
       <Animated.View style={animatedStyle}>
         {strip.map((symbol, stripIndex) => {
@@ -107,7 +119,9 @@ export function SlotReel<TValue>({
             >
               {renderSymbol === undefined ? (
                 <Text
-                  numberOfLines={2}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.5}
+                  numberOfLines={1}
                   selectable
                   style={{
                     color: winning ? theme.colors.onPrimary : theme.colors.text,
@@ -129,6 +143,28 @@ export function SlotReel<TValue>({
           );
         })}
       </Animated.View>
+      <View
+        pointerEvents="none"
+        style={{
+          backgroundColor: 'rgba(23, 20, 43, 0.1)',
+          height: 10,
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+        }}
+      />
+      <View
+        pointerEvents="none"
+        style={{
+          backgroundColor: 'rgba(23, 20, 43, 0.1)',
+          bottom: 0,
+          height: 10,
+          left: 0,
+          position: 'absolute',
+          right: 0,
+        }}
+      />
     </View>
   );
 }

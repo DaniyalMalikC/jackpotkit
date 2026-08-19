@@ -46,9 +46,12 @@ import { SlotMachine } from '@jackpotkit/react/slot-machine';
 <SlotMachine symbols={symbols} reelCount={3} rowCount={3} />;
 ```
 
-The web renderer resolves the same reel-major core grid before applying staggered CSS transforms.
-It exposes the same hook, imperative play/reset API, custom symbol callback, winning paylines,
-reduced-motion behavior, and lifecycle events without native dependencies.
+The web renderer resolves the same reel-major core grid before animating real vertical symbol
+strips through clipped reel windows. Each reel starts and settles on a stagger, matching the native
+Reanimated presentation instead of rotating the completed grid as a card. Both renderers wrap the
+reels in a themed cabinet with a marquee, status lamp, center payline, and pull-style spin control.
+The web renderer exposes the same hook, imperative play/reset API, custom symbol callback, winning
+paylines, reduced-motion behavior, and lifecycle events without native dependencies.
 
 The grid is reel-major: `reels[reelIndex][rowIndex]`. A payline contains one row index per reel, so `[0, 1, 2]` describes a descending diagonal across three reels.
 
@@ -211,6 +214,8 @@ Use `renderSymbol` with the application's image component. Image sources stay ou
 - A polite live result and screen-reader announcement report matching paylines after the final reel stops.
 - Default labels can be replaced with meaningful reward copy.
 - Each reel owns its Reanimated shared value, so frame-by-frame translation does not update parent React state.
+- Native default text and emoji symbols shrink within their cells at large accessibility text sizes instead of clipping.
+- Web reels use compositor-driven vertical transforms and keep stagger timing outside React render state.
 - Winning cells are determined by the engine, never by the animation's final pixel position.
 - Custom renderers remain responsible for contrast, image descriptions, and non-color-only meaning.
 

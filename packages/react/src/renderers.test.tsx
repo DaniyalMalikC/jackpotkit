@@ -55,7 +55,7 @@ describe('React web renderers', () => {
     expect(await screen.findByText('You found the winning box!')).toBeDefined();
     lucky.unmount();
 
-    render(
+    const slot = render(
       <SlotMachine
         duration={0}
         reelCount={2}
@@ -70,6 +70,11 @@ describe('React web renderers', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Spin reels' }));
     expect(await screen.findByText('1 winning payline')).toBeDefined();
+    expect(slot.container.querySelector('[data-jackpotkit-slot-cabinet]')).not.toBeNull();
+    expect(slot.container.querySelectorAll('[data-jackpotkit-slot-reel]')).toHaveLength(2);
+    const slotStrip = slot.container.querySelector<HTMLElement>('[data-jackpotkit-slot-strip]');
+    expect(slotStrip?.style.transform).toContain('translate3d');
+    expect(slotStrip?.style.transform).not.toContain('rotateX');
   });
 
   it('supports an accessible manual Scratch Card reveal', async () => {

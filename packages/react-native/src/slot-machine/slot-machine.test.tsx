@@ -41,6 +41,15 @@ describe('SlotMachine', () => {
     });
     expect(onReelStop).toHaveBeenCalledTimes(3);
     expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('jackpotkit-slot-cabinet')).toBeVisible();
+    expect(
+      screen.getAllByTestId('jackpotkit-slot-reel', { includeHiddenElements: true }),
+    ).toHaveLength(3);
+    expect(
+      screen
+        .getAllByText('⭐', { includeHiddenElements: true })
+        .every((symbol) => symbol.props.adjustsFontSizeToFit === true),
+    ).toBe(true);
     expect(await screen.findByText('2 winning paylines.')).toBeVisible();
   });
 
