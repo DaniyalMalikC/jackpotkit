@@ -34,10 +34,19 @@ Disabled boxes cannot be selected or win. The immutable result includes `selecte
 ```tsx
 import { LuckyBox } from '@jackpotkit/react-native/lucky-box';
 
-<LuckyBox boxes={boxes} result={{ boxId: 'gold' }} onComplete={(result) => save(result)} />;
+<LuckyBox
+  boxes={boxes}
+  faceStyle="gift-boxes"
+  result={{ boxId: 'gold' }}
+  onComplete={(result) => save(result)}
+/>;
 ```
 
 Users select an enabled box and activate Reveal. `renderBox` supports custom visuals; default content shows selection, availability, and the winning box without relying only on color. `useLuckyBox` exposes `select`, `reveal`, `revealTo`, `pick`, and `reset`; `LuckyBoxRef` provides the same imperative operations.
+
+Use `faceStyle="tiles"` for the compact labeled cards or `faceStyle="gift-boxes"` for dimensional
+gift boxes with ribbons, bows, reward glows, and a lid that pops open on the winning box. The style
+changes presentation only; selection and result authority remain unchanged.
 
 The responsive grid supports custom columns, themes, duration/easing, disabled state, reduced motion, lifecycle callbacks, screen-reader state, and result announcements. Reset invalidates pending provider work and active animation.
 
@@ -46,7 +55,7 @@ The responsive grid supports custom columns, themes, duration/easing, disabled s
 ```tsx
 import { LuckyBox } from '@jackpotkit/react/lucky-box';
 
-<LuckyBox boxes={boxes} result={{ boxId: 'gold' }} />;
+<LuckyBox boxes={boxes} faceStyle="gift-boxes" result={{ boxId: 'gold' }} />;
 ```
 
 The web grid uses native selection buttons and CSS transform motion. `renderBox`, `useLuckyBox`,

@@ -4,6 +4,7 @@ export type {
   LuckyBoxCallbacks,
   LuckyBoxEvent,
   LuckyBoxEventPayload,
+  LuckyBoxFaceStyle,
   LuckyBoxProps,
   LuckyBoxRef,
   LuckyBoxRenderInfo,

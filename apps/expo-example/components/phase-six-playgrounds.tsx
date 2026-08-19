@@ -23,11 +23,13 @@ type ResultMode = 'random' | 'controlled' | 'server';
 type ThemeName = 'default' | 'neon';
 
 function Control<TValue extends string | number>({
+  getOptionLabel = String,
   label,
   onChange,
   options,
   value,
 }: {
+  readonly getOptionLabel?: (value: TValue) => string;
   readonly label: string;
   readonly onChange: (value: TValue) => void;
   readonly options: readonly TValue[];
@@ -41,9 +43,10 @@ function Control<TValue extends string | number>({
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {options.map((option) => {
           const selected = option === value;
+          const optionLabel = getOptionLabel(option);
           return (
             <Pressable
-              accessibilityLabel={`${label}: ${option}`}
+              accessibilityLabel={`${label}: ${optionLabel}`}
               accessibilityRole="button"
               accessibilityState={{ selected }}
               key={String(option)}
@@ -60,7 +63,7 @@ function Control<TValue extends string | number>({
                 selectable
                 style={{ color: selected ? '#FFFFFF' : '#4D4269', fontWeight: '700' }}
               >
-                {String(option)}
+                {optionLabel}
               </Text>
             </Pressable>
           );
@@ -434,6 +437,7 @@ export function LuckyBoxPlayground() {
   const [mode, setMode] = useState<ResultMode>('random');
   const [themeName, setThemeName] = useState<ThemeName>('default');
   const [renderer, setRenderer] = useState<'standard' | 'custom'>('standard');
+  const [faceStyle, setFaceStyle] = useState<'gift-boxes' | 'tiles'>('gift-boxes');
   const [motion, setMotion] = useState<'animated' | 'reduced'>('animated');
   const theme = themeName === 'neon' ? neonTheme : defaultTheme;
   const controlled: LuckyBoxSelection = { boxId: 'gold' };
@@ -494,6 +498,7 @@ export function LuckyBoxPlayground() {
           <LuckyBox<string>
             boxes={luckyBoxes}
             columns={2}
+            faceStyle={faceStyle}
             reduceMotion={motion === 'reduced'}
             ref={reference}
             theme={theme}
@@ -520,6 +525,16 @@ export function LuckyBoxPlayground() {
           }}
           options={['random', 'controlled', 'server']}
           value={mode}
+        />
+        <Control
+          getOptionLabel={(value) => (value === 'gift-boxes' ? 'Gift Box' : 'Tiles')}
+          label="Face style"
+          onChange={(value) => {
+            reset();
+            setFaceStyle(value);
+          }}
+          options={['tiles', 'gift-boxes']}
+          value={faceStyle}
         />
         <Control
           label="Renderer"

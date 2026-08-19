@@ -15,8 +15,15 @@ describe('LuckyBox', () => {
   it('selects independently from a controlled winning box', async () => {
     const onComplete = jest.fn();
     await render(
-      <LuckyBox boxes={boxes} onComplete={onComplete} reduceMotion result={{ boxId: 'one' }} />,
+      <LuckyBox
+        boxes={boxes}
+        faceStyle="gift-boxes"
+        onComplete={onComplete}
+        reduceMotion
+        result={{ boxId: 'one' }}
+      />,
     );
+    expect(screen.getAllByTestId('jackpotkit-lucky-gift')).toHaveLength(3);
     await act(async () => {
       fireEvent.press(screen.getByLabelText('Box one'));
       await Promise.resolve();
@@ -27,6 +34,7 @@ describe('LuckyBox', () => {
     });
     expect(onComplete).toHaveBeenCalledWith(expect.objectContaining({ won: true }));
     expect(screen.getByText('You found the winning box!')).toBeVisible();
+    expect(screen.getByTestId('jackpotkit-lucky-gift-lid-Box one')).toBeVisible();
     expect(screen.getByLabelText('Box three')).toBeDisabled();
   });
 

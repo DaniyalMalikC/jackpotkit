@@ -35,13 +35,14 @@ jest.mock('@shopify/react-native-skia', () => {
 });
 
 jest.mock('react-native-reanimated', () => {
-  const { View } = jest.requireActual('react-native');
+  const { Text, View } = jest.requireActual('react-native');
   const identity = (value) => value;
 
   return {
     __esModule: true,
     default: {
       createAnimatedComponent: identity,
+      Text,
       View,
     },
     Easing: {

@@ -165,6 +165,29 @@ describe('React web renderers', () => {
     expect(face.parentElement?.style.transform).toBe('');
   });
 
+  it('opens the winning graphical gift box', async () => {
+    const lucky = render(
+      <LuckyBox
+        boxes={[
+          { id: 'alpha', label: 'Alpha' },
+          { id: 'beta', label: 'Beta' },
+        ]}
+        duration={0}
+        faceStyle="gift-boxes"
+        result={{ boxId: 'alpha' }}
+      />,
+    );
+
+    expect(lucky.container.querySelectorAll('[data-jackpotkit-lucky-gift]')).toHaveLength(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Alpha' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Reveal selection' }));
+    expect(await screen.findByText('You found the winning box!')).toBeDefined();
+    const winningGift = lucky.container.querySelector('[data-jackpotkit-lucky-gift]');
+    expect(
+      winningGift?.querySelector<HTMLElement>('[data-jackpotkit-lucky-gift-lid]')?.style.transform,
+    ).toContain('translate');
+  });
+
   it('uses native buttons for keyboard-operable Bingo cells', () => {
     const ref = createRef<BingoRef>();
     render(

@@ -26,6 +26,7 @@ const boxes = [
 export function App() {
   const [diceFaceStyle, setDiceFaceStyle] = useState<'numbers' | 'pips'>('pips');
   const [coinFaceStyle, setCoinFaceStyle] = useState<'embossed' | 'flat'>('embossed');
+  const [luckyBoxFaceStyle, setLuckyBoxFaceStyle] = useState<'gift-boxes' | 'tiles'>('gift-boxes');
 
   return (
     <main className="page-shell">
@@ -84,7 +85,20 @@ export function App() {
           </article>
           <article className="game-card">
             <h3>Lucky Box</h3>
-            <LuckyBox boxes={boxes} columns={3} width={300} />
+            <div aria-label="Lucky Box face style" className="face-style-control" role="group">
+              {(['tiles', 'gift-boxes'] as const).map((faceStyle) => (
+                <button
+                  aria-pressed={luckyBoxFaceStyle === faceStyle}
+                  className="face-style-button"
+                  key={faceStyle}
+                  onClick={() => setLuckyBoxFaceStyle(faceStyle)}
+                  type="button"
+                >
+                  {faceStyle === 'gift-boxes' ? 'Gift Box' : 'Tiles'}
+                </button>
+              ))}
+            </div>
+            <LuckyBox boxes={boxes} columns={3} faceStyle={luckyBoxFaceStyle} width={300} />
           </article>
           <article className="game-card game-card-wide">
             <h3>Slot Machine</h3>

@@ -62,12 +62,14 @@ export interface LuckyBoxRenderInfo<TReward = unknown> {
   readonly revealed: boolean;
   readonly theme: JackpotTheme;
 }
+export type LuckyBoxFaceStyle = 'gift-boxes' | 'tiles';
 export interface LuckyBoxProps<TReward = unknown, TRequest = void>
   extends UseLuckyBoxOptions<TReward, TRequest>, WebPresentationProps {
   readonly accessibilityLabel?: string;
   readonly columns?: number;
   readonly duration?: number;
   readonly easing?: WebEasing;
+  readonly faceStyle?: LuckyBoxFaceStyle;
   readonly reduceMotion?: boolean;
   readonly renderBox?: (info: LuckyBoxRenderInfo<TReward>) => ReactNode;
   readonly theme?: JackpotThemeOverride;

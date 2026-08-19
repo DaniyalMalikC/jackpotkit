@@ -18,6 +18,7 @@ import Animated, {
   useReducedMotion,
   useSharedValue,
   withTiming,
+  type SharedValue,
 } from 'react-native-reanimated';
 
 import { useJackpotKitTheme } from '../theme-provider';
@@ -31,6 +32,226 @@ interface PendingLuckyBoxAnimation<TReward> {
   readonly result: LuckyBoxResult<TReward>;
 }
 
+interface GiftBoxFaceProps {
+  readonly accentColor: string;
+  readonly boxColor: string;
+  readonly boxWidth: number;
+  readonly disabled: boolean;
+  readonly label: string;
+  readonly progress: SharedValue<number>;
+  readonly selected: boolean;
+  readonly textColor: string;
+  readonly winning: boolean;
+}
+
+function GiftBoxFace({
+  accentColor,
+  boxColor,
+  boxWidth,
+  disabled,
+  label,
+  progress,
+  selected,
+  textColor,
+  winning,
+}: GiftBoxFaceProps) {
+  const lidStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: winning ? progress.value * -8 : 0 },
+      { translateY: winning ? progress.value * -23 : 0 },
+      { rotateZ: `${winning ? progress.value * -13 : 0}deg` },
+    ],
+  }));
+  const rewardStyle = useAnimatedStyle(() => ({
+    opacity: winning ? progress.value : 0,
+    transform: [
+      { translateY: winning ? 10 - progress.value * 50 : 10 },
+      { scale: winning ? 0.45 + progress.value * 0.63 : 0.45 },
+      { rotateZ: `${winning ? progress.value * 8 : 0}deg` },
+    ],
+  }));
+  const giftWidth = Math.min(82, Math.max(68, boxWidth - 28));
+  const bodyWidth = giftWidth - 16;
+  const ribbonWidth = 12;
+
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        minHeight: 140,
+        opacity: disabled ? 0.5 : 1,
+        paddingTop: 6,
+        width: boxWidth,
+      }}
+      testID="jackpotkit-lucky-gift"
+    >
+      <View
+        style={{
+          height: 92,
+          transform: selected ? [{ translateY: -3 }] : undefined,
+          width: giftWidth,
+        }}
+      >
+        <Animated.Text
+          selectable={false}
+          style={[
+            {
+              color: accentColor,
+              fontSize: 30,
+              fontWeight: '900',
+              left: giftWidth / 2 - 11,
+              position: 'absolute',
+              top: 21,
+              zIndex: 1,
+            },
+            rewardStyle,
+          ]}
+          testID={`jackpotkit-lucky-gift-reward-${label}`}
+        >
+          ★
+        </Animated.Text>
+        <View
+          style={{
+            backgroundColor: boxColor,
+            borderColor: 'rgba(255,255,255,0.34)',
+            borderCurve: 'continuous',
+            borderRadius: 7,
+            borderWidth: 1,
+            bottom: 2,
+            boxShadow: 'inset -8px -8px 14px rgba(23,20,43,0.2), 0 10px 14px rgba(37,25,77,0.2)',
+            height: 52,
+            left: 8,
+            overflow: 'hidden',
+            position: 'absolute',
+            width: bodyWidth,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: 'rgba(23,20,43,0.34)',
+              height: 9,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: accentColor,
+              bottom: 0,
+              left: bodyWidth / 2 - ribbonWidth / 2,
+              position: 'absolute',
+              top: 0,
+              width: ribbonWidth,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.13)',
+              height: 16,
+              left: -8,
+              position: 'absolute',
+              top: 7,
+              transform: [{ rotateZ: '-18deg' }],
+              width: bodyWidth + 20,
+            }}
+          />
+        </View>
+        <Animated.View
+          style={[
+            {
+              backgroundColor: boxColor,
+              borderColor: 'rgba(255,255,255,0.45)',
+              borderCurve: 'continuous',
+              borderRadius: 7,
+              borderWidth: 1,
+              boxShadow: '0 5px 8px rgba(37,25,77,0.25)',
+              height: 24,
+              left: 2,
+              position: 'absolute',
+              top: 25,
+              width: giftWidth - 4,
+              zIndex: 3,
+            },
+            lidStyle,
+          ]}
+          testID={`jackpotkit-lucky-gift-lid-${label}`}
+        >
+          <View
+            style={{
+              backgroundColor: accentColor,
+              bottom: 0,
+              left: (giftWidth - 4) / 2 - ribbonWidth / 2,
+              position: 'absolute',
+              top: 0,
+              width: ribbonWidth,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: accentColor,
+              borderBottomLeftRadius: 12,
+              borderTopLeftRadius: 16,
+              height: 18,
+              left: giftWidth / 2 - 26,
+              position: 'absolute',
+              top: -14,
+              transform: [{ rotateZ: '28deg' }],
+              width: 19,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: accentColor,
+              borderBottomRightRadius: 12,
+              borderTopRightRadius: 16,
+              height: 18,
+              left: giftWidth / 2 + 3,
+              position: 'absolute',
+              top: -14,
+              transform: [{ rotateZ: '-28deg' }],
+              width: 19,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: accentColor,
+              borderColor: 'rgba(255,255,255,0.45)',
+              borderRadius: 7,
+              borderWidth: 2,
+              height: 14,
+              left: giftWidth / 2 - 9,
+              position: 'absolute',
+              top: -9,
+              width: 14,
+            }}
+          />
+        </Animated.View>
+      </View>
+      <Text
+        numberOfLines={2}
+        selectable
+        style={{
+          backgroundColor: selected ? accentColor : 'transparent',
+          borderRadius: 999,
+          color: selected ? '#17142B' : textColor,
+          fontSize: 12,
+          fontWeight: '900',
+          maxWidth: boxWidth - 8,
+          paddingHorizontal: 8,
+          paddingVertical: 4,
+          textAlign: 'center',
+        }}
+      >
+        {winning ? '★ ' : ''}
+        {label}
+        {disabled ? ' · unavailable' : ''}
+      </Text>
+    </View>
+  );
+}
+
 function LuckyBoxInner<TReward = unknown, TRequest = void>(
   props: LuckyBoxProps<TReward, TRequest>,
   ref: React.ForwardedRef<LuckyBoxRef<TReward>>,
@@ -41,6 +262,7 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
     columns = 3,
     duration,
     easing = Easing.out(Easing.cubic),
+    faceStyle = 'tiles',
     reduceMotion,
     renderBox,
     style,
@@ -170,51 +392,72 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
   );
   const busy = revealing || controller.status === 'requesting-result';
   const disabled = props.disabled === true || busy || displayResult !== undefined;
+  const giftColors = [
+    theme.colors.primary,
+    theme.colors.coinFront,
+    theme.colors.wheelPalette[3] ?? theme.colors.scratchAccent,
+    theme.colors.coinBack,
+  ];
   return (
     <View
       accessibilityLabel={accessibilityLabel}
       style={[{ alignItems: 'center', gap: theme.spacing.md, width: componentWidth }, style]}
     >
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap }}>
-        {boxes.map((box) => {
+        {boxes.map((box, index) => {
           const selected = controller.selectedBoxId === box.id;
           const winning = displayResult?.winningBox.id === box.id;
-          const content = renderBox?.({
-            box,
-            revealed: displayResult !== undefined,
-            selected,
-            theme,
-            winning,
-          }) ?? (
-            <View
-              style={{
-                alignItems: 'center',
-                backgroundColor: selected ? theme.colors.luckyBoxSelected : theme.colors.luckyBox,
-                borderColor: winning ? theme.colors.primary : theme.colors.border,
-                borderRadius: theme.radii.md,
-                borderWidth: winning ? 3 : 2,
-                justifyContent: 'center',
-                minHeight: 88,
-                padding: theme.spacing.sm,
-                width: boxWidth,
-              }}
-            >
-              <Text
-                selectable
+          const giftFace = faceStyle === 'gift-boxes' && renderBox === undefined;
+          const content =
+            renderBox?.({
+              box,
+              revealed: displayResult !== undefined,
+              selected,
+              theme,
+              winning,
+            }) ??
+            (giftFace ? (
+              <GiftBoxFace
+                accentColor={theme.colors.scratchAccent}
+                boxColor={giftColors[index % giftColors.length] ?? theme.colors.primary}
+                boxWidth={boxWidth}
+                disabled={box.disabled === true}
+                label={box.label ?? box.id}
+                progress={progress}
+                selected={selected}
+                textColor={theme.colors.text}
+                winning={winning}
+              />
+            ) : (
+              <View
                 style={{
-                  color: selected ? theme.colors.dicePip : theme.colors.text,
-                  fontFamily: theme.typography.fontFamily,
-                  fontSize: theme.typography.labelSize,
-                  fontWeight: '900',
-                  textAlign: 'center',
+                  alignItems: 'center',
+                  backgroundColor: selected ? theme.colors.luckyBoxSelected : theme.colors.luckyBox,
+                  borderColor: winning ? theme.colors.primary : theme.colors.border,
+                  borderRadius: theme.radii.md,
+                  borderWidth: winning ? 3 : 2,
+                  justifyContent: 'center',
+                  minHeight: 88,
+                  padding: theme.spacing.sm,
+                  width: boxWidth,
                 }}
               >
-                {winning ? '★ ' : ''}
-                {box.label ?? box.id}
-                {box.disabled === true ? ' · unavailable' : ''}
-              </Text>
-            </View>
-          );
+                <Text
+                  selectable
+                  style={{
+                    color: selected ? theme.colors.dicePip : theme.colors.text,
+                    fontFamily: theme.typography.fontFamily,
+                    fontSize: theme.typography.labelSize,
+                    fontWeight: '900',
+                    textAlign: 'center',
+                  }}
+                >
+                  {winning ? '★ ' : ''}
+                  {box.label ?? box.id}
+                  {box.disabled === true ? ' · unavailable' : ''}
+                </Text>
+              </View>
+            ));
           return (
             <Pressable
               accessibilityLabel={`${box.label ?? box.id}${selected ? ', selected' : ''}${winning ? ', winning box' : ''}`}
