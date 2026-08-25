@@ -1,5 +1,13 @@
 # @jackpotkit/react-native
 
+## 1.0.1
+
+### Patch Changes
+
+- 90ca202: Prevent native Hermes/Worklets crashes when Dice, Coin Flip, and Lucky Box animations complete by
+  scheduling stable JavaScript-thread callback references instead of locally defined worklet
+  closures.
+
 ## 1.0.0
 
 ### Major Changes

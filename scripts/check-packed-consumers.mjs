@@ -10,7 +10,6 @@ function run(command, arguments_, cwd) {
   const result = spawnSync(command, arguments_, {
     cwd,
     encoding: 'utf8',
-    env: { ...process.env, COREPACK_ENABLE_PROJECT_SPEC: '0' },
   });
 
   if (result.status !== 0) {
@@ -26,8 +25,8 @@ function pack(directory) {
   const destination = join(fixtureRoot, directory);
   mkdirSync(destination, { recursive: true });
   run(
-    'corepack',
-    ['pnpm', 'pack', '--pack-destination', destination],
+    'pnpm',
+    ['pack', '--pack-destination', destination],
     join(repositoryRoot, 'packages', directory),
   );
 

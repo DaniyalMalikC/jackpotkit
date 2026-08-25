@@ -21,7 +21,7 @@ catalog:
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.3
   '@shopify/react-native-skia': 2.6.2
-  expo: 57.0.12
+  expo: ~57.0.16
   react: 19.2.3
   react-dom: 19.2.3
   react-native: 0.86.2
@@ -32,16 +32,24 @@ catalog:
   react-native-worklets: 0.10.1
 
 minimumReleaseAgeExclude:
-  - '@expo/cli@57.0.14'
-  - '@expo/fingerprint@0.20.7'
+  - '@expo/cli@57.0.14 || 57.0.18'
+  - '@expo/fingerprint@0.20.7 || 0.20.10'
   - '@expo/inline-modules@0.1.5'
   - '@expo/local-build-cache-provider@57.0.6'
-  - '@expo/metro-config@57.0.8'
-  - '@expo/metro-runtime@57.0.9'
-  - '@expo/prebuild-config@57.0.11'
-  - '@expo/ui@57.0.10'
-  - expo-asset@57.0.10
-  - expo-constants@57.0.10
-  - expo-router@57.0.12
+  - '@expo/metro-config@57.0.8 || 57.0.10'
+  - '@expo/metro-runtime@57.0.9 || 57.0.13'
+  - '@expo/prebuild-config@57.0.11 || 57.0.14'
+  - '@expo/ui@57.0.10 || 57.0.13'
+  - expo-asset@57.0.10 || 57.0.14
+  - expo-constants@57.0.10 || 57.0.14
+  - expo-router@57.0.12 || 57.0.16
   - expo-server@57.0.2
-  - expo@57.0.12
+  - expo@57.0.12 || 57.0.16
+  - '@expo/config-plugins@57.0.9'
+  - '@expo/config@57.0.9'
+  - '@expo/image-utils@0.11.5'
+  - '@expo/metro-file-map@57.0.2'
+  - '@expo/require-utils@57.0.5'
+  - babel-preset-expo@57.0.8
+  - expo-modules-autolinking@57.0.11
+  - expo-modules-core@57.0.13
