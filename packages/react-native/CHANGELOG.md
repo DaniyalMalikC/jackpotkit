@@ -1,12 +1,20 @@
 # @jackpotkit/react-native
 
-## 1.0.1
+## 1.1.0
+
+### Minor Changes
+
+- 3bc2988: Add selectable face styles for Dice and Coin Flip.
+- 0b145a6: Improve Slot Machine and Slot Reel animation, symbol rendering, and accessibility.
+- e56c471: Improve Scratch Card rendering and scratch effects.
+- 25c2316, f657509: Add gift-box visuals for Lucky Box and reliably reset its selection state.
 
 ### Patch Changes
 
 - 90ca202: Prevent native Hermes/Worklets crashes when Dice, Coin Flip, and Lucky Box animations complete by
   scheduling stable JavaScript-thread callback references instead of locally defined worklet
   closures.
+- Keep Coin Flip face content readable when the preferred theme color does not meet WCAG contrast.
 
 ## 1.0.0
 

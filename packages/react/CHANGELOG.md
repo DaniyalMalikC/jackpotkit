@@ -1,5 +1,18 @@
 # @jackpotkit/react
 
+## 1.1.0
+
+### Minor Changes
+
+- 3bc2988: Add selectable face styles for Dice and Coin Flip.
+- 0b145a6: Improve Slot Machine and Slot Reel animation, symbol rendering, and accessibility.
+- e56c471, 58d15b6: Add canvas-backed Scratch Card rendering with improved visuals and accessibility.
+- 25c2316: Add gift-box visuals for Lucky Box.
+
+### Patch Changes
+
+- Keep Coin Flip face content readable when the preferred theme color does not meet WCAG contrast.
+
 ## 1.0.0
 
 ### Major Changes

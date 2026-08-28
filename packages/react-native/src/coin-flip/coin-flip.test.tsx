@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { neonTheme } from '@jackpotkit/theme';
 import { act, createRef } from 'react';
 import { Text } from 'react-native';
 
@@ -55,5 +56,12 @@ describe('CoinFlip', () => {
       screen.getAllByTestId('jackpotkit-coin-rim', { includeHiddenElements: true }),
     ).toHaveLength(2);
     expect(screen.getByText('Result: Tails')).toBeVisible();
+  });
+
+  it('uses readable content on the neon front face', async () => {
+    await render(<CoinFlip faceStyle="embossed" reduceMotion size={140} theme={neonTheme} />);
+
+    expect(screen.getByText('H')).toHaveStyle({ color: neonTheme.colors.onPrimary });
+    expect(screen.getByText('Heads')).toHaveStyle({ color: neonTheme.colors.onPrimary });
   });
 });
