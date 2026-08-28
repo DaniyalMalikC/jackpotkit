@@ -1,4 +1,5 @@
 import axe from 'axe-core';
+import { neonTheme } from '@jackpotkit/theme';
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -35,6 +36,7 @@ describe('React web accessibility audit', () => {
     ],
     ['Dice', <Dice count={2} width={240} />],
     ['Coin Flip', <CoinFlip size={120} />],
+    ['Neon Coin Flip', <CoinFlip size={120} theme={neonTheme} />],
     [
       'Lucky Box',
       <LuckyBox

@@ -13,6 +13,52 @@ import { useResolvedTheme } from '../internal/use-resolved-theme.js';
 import type { CoinFlipProps, CoinFlipRef } from './types.js';
 import { useCoinFlipController } from './use-coin-flip.js';
 
+function parseHexColor(color: string): readonly [number, number, number] | undefined {
+  if (!/^#[\da-f]{6}$/i.test(color)) return undefined;
+  return [
+    Number.parseInt(color.slice(1, 3), 16),
+    Number.parseInt(color.slice(3, 5), 16),
+    Number.parseInt(color.slice(5, 7), 16),
+  ];
+}
+
+function relativeLuminance(color: string): number | undefined {
+  const channels = parseHexColor(color);
+  if (channels === undefined) return undefined;
+  const toLinear = (channel: number) => {
+    const value = channel / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  };
+  const [red, green, blue] = channels.map(toLinear) as [number, number, number];
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function contrastRatio(foreground: string, background: string): number | undefined {
+  const foregroundLuminance = relativeLuminance(foreground);
+  const backgroundLuminance = relativeLuminance(background);
+  if (foregroundLuminance === undefined || backgroundLuminance === undefined) return undefined;
+  return (
+    (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+    (Math.min(foregroundLuminance, backgroundLuminance) + 0.05)
+  );
+}
+
+function selectReadableColor(
+  background: string,
+  preferred: string,
+  alternatives: readonly string[],
+): string {
+  const preferredRatio = contrastRatio(preferred, background);
+  if (preferredRatio === undefined || preferredRatio >= 4.5) return preferred;
+  return alternatives.reduce(
+    (best, candidate) => {
+      const ratio = contrastRatio(candidate, background) ?? 0;
+      return ratio > best.ratio ? { color: candidate, ratio } : best;
+    },
+    { color: preferred, ratio: preferredRatio },
+  ).color;
+}
+
 function CoinFlipInner<TValue = unknown, TRequest = void>(
   props: CoinFlipProps<TValue, TRequest>,
   ref: React.ForwardedRef<CoinFlipRef<TValue>>,
@@ -112,7 +158,14 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
           {coinFaces.map((face, index) => {
             const active = face.id === faceId;
             const background = index === 0 ? theme.colors.coinFront : theme.colors.coinBack;
-            const color = index === 0 ? theme.colors.dicePip : theme.colors.onPrimary;
+            const color =
+              index === 0
+                ? selectReadableColor(background, theme.colors.dicePip, [
+                    theme.colors.onPrimary,
+                    theme.colors.text,
+                    theme.colors.background,
+                  ])
+                : theme.colors.onPrimary;
             const label = face.label ?? face.id;
             return (
               <div
