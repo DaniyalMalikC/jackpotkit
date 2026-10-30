@@ -17,3 +17,4 @@ packages/*/lib/
 playwright-report/
 test-results/
 blob-report/
+*.tsbuildinfo
