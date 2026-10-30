@@ -36,7 +36,7 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 | Docs framework   | Next.js App Router + Fumadocs + Tailwind + shadcn/ui in `apps/docs`, replacing Docusaurus                                 | Type-generated props tables, playground UI, native Vercel previews. No public URLs existed, so nothing breaks.        |
 | Docs content     | MDX stays in the root `docs/` directory                                                                                   | Keeps content reviewable beside code and reusable by any renderer.                                                    |
 | Web playground   | Real `@jackpotkit/react` components with typed per-game control schemas, event log, and generated code                    | Visitors use the shipped package, not a mock-up.                                                                      |
-| Editable sandbox | Sandpack in an isolated iframe, plus "open in StackBlitz"                                                                 | Isolates user code from the docs origin.                                                                              |
+| Editable sandbox | "Open in StackBlitz" via StackBlitz's POST API (B2); an embedded Sandpack iframe is deferred                              | Isolates user code from the docs origin with no in-page code execution and no new runtime dependency.                 |
 | Native preview   | Deploy the `apps/expo-example` web export and embed it per game; add Expo Snack links once compatibility is verified      | Real `@jackpotkit/react-native` code via react-native-web. No EAS account is configured, so QR previews are deferred. |
 | Companion repos  | Convert `jackpotkit-web` and `jackpotkit-app` into scheduled published-package smoke tests                                | Keeps an independent clean-consumer check after each release.                                                         |
 | Agent automation | `.claude/agents/` definitions + GitHub Actions running Claude Code on a schedule, on `@claude` mentions, and on PR review | Agent files alone do not execute anything. Actions supply triggers, scoped permissions, logs, and cost limits.        |
@@ -47,7 +47,7 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 | ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------- |
 | A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                    |
 | B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Done                                    |
-| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Not started                             |
+| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done (pending integration)              |
 | B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending) |
 | B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                    |
 | C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started                             |
@@ -74,6 +74,11 @@ access.
   selection") and Bingo ("Call next Bingo number" vs "Call next number").
 - Web game wrappers are `div` elements with `aria-label` and no role (axe "needs review"). Decide
   whether to add `role="group"` across all games in one changeset.
+- B2: the docs site had WCAG AA contrast failures outside the playground (Shiki `github-light/dark`
+  tokens on the tinted code-block background, and the active sidebar link). B2 switched to the
+  high-contrast GitHub themes, darkened one comment colour, and darkened the light primary colour;
+  the docs E2E axe scans now cover every game page in both site themes.
+- B2: decide whether to add an embedded Sandpack editor beside the StackBlitz handoff.
 - The `webpack` and `serialize-javascript` overrides in `pnpm-workspace.yaml` no longer match any
   dependency after the Docusaurus removal.
 

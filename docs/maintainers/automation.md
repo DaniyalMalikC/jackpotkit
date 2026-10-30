@@ -32,8 +32,9 @@ token exchange; it is not used to publish anything.
 - **validate** runs `pnpm validate`: format, lint, typecheck, unit tests, build, `expo-doctor`
   (needs network access to `exp.host`, available on GitHub runners), and every `check:*` gate.
 - **e2e** runs in parallel with `validate`. It installs dependencies, runs
-  `pnpm --filter @jackpotkit/e2e exec playwright install --with-deps <browser>`, builds the gallery,
-  and runs `pnpm test:e2e`. On failure it uploads `playwright-report-<browser>` (HTML report,
+  `pnpm --filter @jackpotkit/e2e exec playwright install --with-deps <browser>`, builds the gallery
+  and the docs site, and runs `pnpm test:e2e` (both the `gallery-<browser>` and `docs-<browser>`
+  projects). On failure it uploads `playwright-report-<browser>` (HTML report,
   traces, screenshots) for 14 days. The matrix runs Chromium only; add `firefox` or `webkit` to
   `matrix.browser` to widen coverage. The suite supports both engines through `E2E_BROWSERS`.
 
@@ -42,9 +43,14 @@ Browser E2E is intentionally not part of `pnpm validate`, because it needs downl
 ## Browser E2E suite (`apps/e2e`)
 
 `@jackpotkit/e2e` is a private workspace package using `@playwright/test` and `@axe-core/playwright`.
-It currently targets the Vite gallery in `apps/web-example`, built and served with `vite preview`.
+It has two projects per browser engine:
 
-Coverage, for all seven games:
+- `gallery-<engine>` (`tests/gallery/`): the Vite gallery in `apps/web-example`, served with
+  `vite preview`;
+- `docs-<engine>` (`tests/docs/`): the documentation site in `apps/docs`, served with `next start`
+  from its production build.
+
+Gallery coverage, for all seven games:
 
 - each game renders with its primary control and a polite `role="status"` live region, and every
   control is reachable with Tab;
@@ -61,12 +67,27 @@ with a comment describing the defect and its source file; once a fix lands, the
 check reports "unexpectedly passed" and the marker must be removed. The gallery exposes no reset
 control, so the visible-reset check is `test.fixme()` until one exists.
 
+Docs playground coverage (`tests/docs/`), for all seven game pages:
+
+- each page loads without console errors and the real component renders;
+- each game is played with the keyboard inside the playground and its callback (`onComplete`, or
+  `onCall` for Bingo) appears in the event log;
+- control changes update the generated code (Spin Wheel size, direction, result mode; Dice sides);
+- controlled results yield the chosen outcome (Spin Wheel, Coin Flip), a resolving provider yields
+  its outcome, and the provider "fail" switch logs `onError` (Spin Wheel);
+- reset returns the game to its initial state, restore defaults resets the code, a seeded replay
+  repeats after remounting, and library validation errors are shown instead of crashing;
+- the playground bundle is not downloaded on a page without a playground;
+- axe WCAG 2.0/2.1/2.2 A and AA scans of the whole page before and after a round, with the site in
+  light and dark mode, each with the matching and the opposite JackpotKit theme;
+- no horizontal overflow at 390 px for every preview width, and reduced motion shortens the spin.
+
 ### Run E2E locally
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm --filter @jackpotkit/e2e exec playwright install chromium   # once per Playwright version
-pnpm test:e2e                                                    # builds the gallery, then runs
+pnpm test:e2e                                                    # builds the gallery and docs, then runs
 ```
 
 Useful variables:
@@ -77,6 +98,8 @@ Useful variables:
 | `PW_CHROMIUM_PATH` | Launch an existing Chromium binary instead of the Playwright download.                                                        |
 | `GALLERY_BASE_URL` | Test an already running gallery (for example `pnpm --filter @jackpotkit/web-example dev`) instead of starting `vite preview`. |
 | `GALLERY_PORT`     | Port for the automatically started preview server. Default `4173`.                                                            |
+| `DOCS_BASE_URL`    | Test an already running docs site (for example `pnpm --filter @jackpotkit/docs dev`) instead of starting `next start`.        |
+| `DOCS_PORT`        | Port for the automatically started docs server. Default `3210`.                                                               |
 
 Run a single file or open the UI runner from the package:
 
@@ -86,17 +109,9 @@ pnpm --filter @jackpotkit/e2e test:e2e:ui
 pnpm --filter @jackpotkit/e2e exec playwright show-report
 ```
 
-### Adding the documentation site
-
-`apps/e2e/playwright.config.ts` builds one project per browser for the gallery (`gallery-<engine>`,
-`testDir: tests/gallery`). To cover the docs site after phase B1:
-
-1. Add `@jackpotkit/docs` as a `workspace:*` dev dependency of `@jackpotkit/e2e`, so `turbo run
-test:e2e` builds it first.
-2. Add a `DOCS_BASE_URL` variable (and a second `webServer` entry that starts the built site) and a
-   `docs-<engine>` project per engine with `testDir: './tests/docs'` and that `baseURL`.
-3. Put docs specs in `tests/docs/` and add `DOCS_BASE_URL` to `passThroughEnv` of the `test:e2e`
-   task in `turbo.json`.
+Both servers start for any run, so build both first (`pnpm turbo run build
+--filter=@jackpotkit/web-example... --filter=@jackpotkit/docs...`), or point `GALLERY_BASE_URL` /
+`DOCS_BASE_URL` at running servers. Run one project with `--project=docs-chromium`.
 
 ## Claude Code workflows
 
