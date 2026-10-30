@@ -43,16 +43,16 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 
 ## Phases
 
-| Phase | Scope                                                                            | Owner agent                                | Status      |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | ----------- |
-| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done        |
-| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Not started |
-| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Not started |
-| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Not started |
-| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Not started |
-| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started |
-| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Not started |
-| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started |
+| Phase | Scope                                                                            | Owner agent                                | Status                                                       |
+| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                                         |
+| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Not started                                                  |
+| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Not started                                                  |
+| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (pending integration; real-device verification pending) |
+| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Not started                                                  |
+| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started                                                  |
+| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Not started                                                  |
+| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                                                  |
 
 B1, B3, and B4 can run in parallel after A. B2 integrates into B1. C and E follow B1. D needs Vercel
 access.
