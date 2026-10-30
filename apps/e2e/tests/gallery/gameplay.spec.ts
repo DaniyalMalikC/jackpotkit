@@ -26,7 +26,10 @@ test.describe('gallery rendering', () => {
         const element = document.activeElement;
         if (!(element instanceof HTMLElement)) return undefined;
         const title = element.closest('article')?.querySelector('h3')?.textContent ?? '';
-        const name = element.getAttribute('aria-label') ?? element.textContent ?? '';
+        // Approximate the accessible name: aria-hidden decorations are not part of it.
+        const visible = element.cloneNode(true) as HTMLElement;
+        visible.querySelectorAll('[aria-hidden="true"]').forEach((hidden) => hidden.remove());
+        const name = element.getAttribute('aria-label') ?? visible.textContent ?? '';
         return { name: name.trim(), title };
       });
       if (focused === undefined) continue;

@@ -94,8 +94,9 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
           result.winningPaylines.length > 0
             ? `${result.winningPaylines.length} winning payline${result.winningPaylines.length === 1 ? '' : 's'}.`
             : 'No matching paylines.'),
-      spin: accessibilityLabels.spin ?? 'Spin reels',
-      spinning: accessibilityLabels.spinning ?? 'Reels spinning',
+      // Defaults contain the visible "PULL TO SPIN" / "SPINNING…" text so voice control matches.
+      spin: accessibilityLabels.spin ?? 'Pull to spin',
+      spinning: accessibilityLabels.spinning ?? 'Spinning',
     }),
     [accessibilityLabel, accessibilityLabels],
   );

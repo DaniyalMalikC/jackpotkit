@@ -3,7 +3,7 @@ import { act, createRef } from 'react';
 import { Text } from 'react-native';
 
 import { Dice } from './dice';
-import type { DiceRef } from './types';
+import type { DiceProps, DiceRef } from './types';
 
 describe('Dice', () => {
   it('animates an exact result and announces the total', async () => {
@@ -49,5 +49,30 @@ describe('Dice', () => {
       screen.getAllByTestId('jackpotkit-die-pip', { includeHiddenElements: true }),
     ).toHaveLength(5);
     expect(screen.getByText('Total: 5')).toBeVisible();
+  });
+  // Type-level regression, enforced by `pnpm typecheck`: the Dice export lost its generic, so its
+  // props resolved to DiceProps<unknown> and neither a DiceProps object nor a typed request fit.
+  it('keeps generic props on the export', async () => {
+    const props: DiceProps = { reduceMotion: true, result: { values: [2] } };
+    await render(<Dice {...props} />);
+    await act(async () => {
+      fireEvent.press(screen.getByLabelText('Roll dice'));
+      await Promise.resolve();
+    });
+    expect(screen.getByText('Total: 2')).toBeVisible();
+
+    await render(
+      <Dice<{ readonly playId: string }>
+        reduceMotion
+        resultProvider={(request) => ({ values: [request.playId.length] })}
+        resultRequest={{ playId: 'abc' }}
+      />,
+    );
+    await act(async () => {
+      fireEvent.press(screen.getByLabelText('Roll dice'));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(await screen.findByText('Total: 3')).toBeVisible();
   });
 });

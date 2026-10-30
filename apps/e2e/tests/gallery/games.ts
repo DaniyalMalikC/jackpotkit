@@ -92,10 +92,10 @@ export const games: readonly GameContract[] = [
   },
   {
     title: 'Slot Machine',
-    control: /^Spin reels$/,
-    focusable: /^Spin reels$/,
+    control: /^Pull to spin$/i,
+    focusable: /^Pull to spin$/i,
     completed: /^\d+ winning paylines?$/,
-    play: (_page, card) => pressControl(card, /^Spin reels$/),
+    play: (_page, card) => pressControl(card, /^Pull to spin$/i),
   },
   {
     title: 'Scratch Card',

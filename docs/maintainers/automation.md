@@ -57,7 +57,7 @@ Coverage, for all seven games:
 - no horizontal overflow, and no card past the viewport, at 390 px.
 
 Known library defects are not suppressed. Checks that fail because of them are marked `test.fail()`
-with the defect described in `apps/e2e/tests/gallery/accessibility.spec.ts`; once a fix lands, the
+with a comment describing the defect and its source file; once a fix lands, the
 check reports "unexpectedly passed" and the marker must be removed. The gallery exposes no reset
 control, so the visible-reset check is `test.fixme()` until one exists.
 

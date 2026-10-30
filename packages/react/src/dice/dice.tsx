@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 
+import { isPlayInFlight } from '../internal/is-play-in-flight.js';
 import { actionButtonStyle } from '../internal/styles.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
 import { useReducedMotion } from '../internal/use-reduced-motion.js';
@@ -112,7 +113,8 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
   }, [cancel, controller, definitions, stopMotion]);
   useEffect(() => stopMotion, [stopMotion]);
   useImperativeHandle(ref, () => ({ reset, roll: () => roll(), rollTo: roll }), [reset, roll]);
-  const disabled = props.disabled === true || rolling || controller.status === 'requesting-result';
+  const busy = rolling || isPlayInFlight(controller.status);
+  const disabled = props.disabled === true || busy;
   const dieSize = Math.max(52, Math.min(96, (width - theme.spacing.md * 2) / definitions.length));
   return (
     <div
@@ -153,6 +155,7 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
               {renderDie?.({ die, index, rolling, theme, value }) ?? (
                 <div
                   aria-label={`${die.label ?? `Die ${index + 1}`}: ${value}`}
+                  role="img"
                   style={{
                     alignItems: 'center',
                     background: theme.colors.diceFace,
@@ -211,13 +214,13 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
         })}
       </div>
       <button
-        aria-busy={disabled}
+        aria-busy={busy}
         disabled={disabled}
         onClick={() => void roll().catch(() => undefined)}
         style={actionButtonStyle(theme, disabled)}
         type="button"
       >
-        {disabled ? 'Rolling…' : 'Roll dice'}
+        {busy ? 'Rolling…' : 'Roll dice'}
       </button>
       <div
         aria-live="polite"
@@ -235,4 +238,6 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
     </div>
   );
 }
-export const Dice = forwardRef(DiceInner);
+export const Dice = forwardRef(DiceInner) as <TRequest = void>(
+  props: DiceProps<TRequest> & React.RefAttributes<DiceRef>,
+) => React.ReactElement;

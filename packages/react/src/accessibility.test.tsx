@@ -1,6 +1,6 @@
 import axe from 'axe-core';
 import { neonTheme } from '@jackpotkit/theme';
-import { render } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Bingo } from './bingo/index.js';
@@ -21,7 +21,10 @@ describe('React web accessibility audit', () => {
   beforeEach(() => {
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
   });
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
 
   it.each([
     [
@@ -66,6 +69,42 @@ describe('React web accessibility audit', () => {
       runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
     });
     expect(results.violations).toEqual([]);
+  });
+
+  // Regression: B4 Playwright + axe in Chromium reported these as serious violations. jsdom cannot
+  // compute rendered text, so axe returns them as "incomplete" here; both lists must stay empty.
+  it.each([
+    ['numbers', <Dice count={2} result={{ values: [3, 5] }} width={240} />],
+    ['pips', <Dice count={2} faceStyle="pips" result={{ values: [3, 5] }} width={240} />],
+  ])('names %s Dice faces with an image role so aria-label is permitted', async (_style, dice) => {
+    render(dice);
+    const faces = screen.getAllByRole('img', { name: /^D6: \d$/ });
+    expect(faces).toHaveLength(2);
+    const results = await axe.run(
+      { include: faces },
+      { runOnly: { type: 'rule', values: ['aria-prohibited-attr'] } },
+    );
+    expect([...results.violations, ...results.incomplete]).toEqual([]);
+  });
+
+  it('keeps the Slot Machine spin control name aligned with its visible text', async () => {
+    render(
+      <SlotMachine
+        reelCount={2}
+        rowCount={1}
+        symbols={[
+          { id: 'cherry', label: 'Cherry' },
+          { id: 'star', label: 'Star' },
+        ]}
+        width={240}
+      />,
+    );
+    const button = screen.getByRole('button', { name: /PULL TO SPIN/ });
+    expect(button.hasAttribute('aria-label')).toBe(false);
+    const results = await axe.run(button, {
+      runOnly: { type: 'rule', values: ['label-content-name-mismatch'] },
+    });
+    expect([...results.violations, ...results.incomplete]).toEqual([]);
   });
 
   it('provides an accessible Scratch Card gesture alternative', async () => {
