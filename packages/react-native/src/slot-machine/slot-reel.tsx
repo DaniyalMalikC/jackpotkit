@@ -12,6 +12,7 @@ import Animated, {
   type EasingFunction,
 } from 'react-native-reanimated';
 
+import { getFixedCellTextProps } from '../internal/fixed-cell-text';
 import type { SlotSymbolRenderInfo } from './types';
 
 interface SlotReelProps<TValue> {
@@ -61,6 +62,9 @@ export function SlotReel<TValue>({
   const strip = [...filler, ...destination];
   const target = -filler.length * symbolHeight;
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ translateY: offset.value }] }));
+  const symbolFontSize = Math.min(28, symbolHeight * 0.38);
+  // The 1px bottom border is inside the fixed cell height.
+  const symbolTextProps = getFixedCellTextProps(symbolFontSize, symbolHeight - 1);
 
   useEffect(() => {
     cancelAnimation(offset);
@@ -119,14 +123,12 @@ export function SlotReel<TValue>({
             >
               {renderSymbol === undefined ? (
                 <Text
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.5}
-                  numberOfLines={1}
+                  {...symbolTextProps}
                   selectable
                   style={{
                     color: winning ? theme.colors.onPrimary : theme.colors.text,
                     fontFamily: theme.typography.fontFamily,
-                    fontSize: Math.min(28, symbolHeight * 0.38),
+                    fontSize: symbolFontSize,
                     fontWeight: '900',
                     textAlign: 'center',
                   }}

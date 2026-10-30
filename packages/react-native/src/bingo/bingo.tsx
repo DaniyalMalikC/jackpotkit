@@ -83,6 +83,8 @@ function BingoInner(props: BingoProps, ref: React.ForwardedRef<BingoRef>) {
     );
     return cells;
   }, [controller.state]);
+  const columnCount = controller.board[0]?.length ?? 5;
+  const cellSize = (boardWidth - cellGap * (columnCount - 1)) / columnCount;
   const headers =
     controller.board.length === 5
       ? CLASSIC_HEADERS
@@ -150,6 +152,7 @@ function BingoInner(props: BingoProps, ref: React.ForwardedRef<BingoRef>) {
                 <BingoCell
                   {...info}
                   accessibilityLabel={labels.cell(info)}
+                  cellSize={cellSize}
                   duration={duration}
                   key={`${rowIndex}:${columnIndex}`}
                   onPress={() => {

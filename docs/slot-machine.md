@@ -214,7 +214,7 @@ Use `renderSymbol` with the application's image component. Image sources stay ou
 - A polite live result and screen-reader announcement report matching paylines after the final reel stops.
 - Default labels can be replaced with meaningful reward copy.
 - Each reel owns its Reanimated shared value, so frame-by-frame translation does not update parent React state.
-- Native default text and emoji symbols shrink within their cells at large accessibility text sizes instead of clipping.
+- Native default text and emoji symbols follow the system text size up to 200%, or less when a short `symbolHeight` leaves no room, and then shrink to fit the reel cell instead of clipping. Font scaling is never disabled, and the machine's live result announcement is unchanged. Text returned by `renderSymbol` is not capped; set `maxFontSizeMultiplier` on your own `Text` if it sits in the fixed-height cell.
 - Web reels use compositor-driven vertical transforms and keep stagger timing outside React render state.
 - Winning cells are determined by the engine, never by the animation's final pixel position.
 - Custom renderers remain responsible for contrast, image descriptions, and non-color-only meaning.

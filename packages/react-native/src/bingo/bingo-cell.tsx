@@ -2,10 +2,13 @@ import { useEffect, type ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import { getFixedCellTextProps } from '../internal/fixed-cell-text';
 import type { BingoCellRenderInfo } from './types';
 
 interface BingoCellProps extends BingoCellRenderInfo {
   readonly accessibilityLabel: string;
+  /** Rendered edge length of the square cell, used to cap system font scaling. */
+  readonly cellSize: number;
   readonly duration: number;
   readonly onPress: () => void;
   readonly renderCell?: (info: BingoCellRenderInfo) => ReactNode;
@@ -13,6 +16,7 @@ interface BingoCellProps extends BingoCellRenderInfo {
 
 export function BingoCell({
   accessibilityLabel,
+  cellSize,
   duration,
   onPress,
   renderCell,
@@ -29,6 +33,9 @@ export function BingoCell({
     transform: [{ scale: 0.94 + progress.value * 0.06 }],
   }));
   const foreground = info.marked ? info.theme.colors.onPrimary : info.theme.colors.text;
+  const fontSize = info.theme.typography.labelSize + 2;
+  // A matched cell draws a 3px border on each side inside the square.
+  const textProps = getFixedCellTextProps(fontSize, cellSize - 6);
 
   return (
     <Pressable
@@ -62,11 +69,12 @@ export function BingoCell({
       >
         {renderCell === undefined ? (
           <Text
+            {...textProps}
             selectable
             style={{
               color: foreground,
               fontFamily: info.theme.typography.fontFamily,
-              fontSize: info.theme.typography.labelSize + 2,
+              fontSize,
               fontVariant: ['tabular-nums'],
               fontWeight: '900',
             }}
