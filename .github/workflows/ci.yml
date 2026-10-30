@@ -76,9 +76,11 @@ jobs:
         env:
           BROWSER: ${{ matrix.browser }}
 
-      - name: Build the gallery and its packages
-        run: pnpm turbo run build --filter=@jackpotkit/web-example...
+      - name: Build the gallery, the docs site, and their packages
+        run: pnpm turbo run build --filter=@jackpotkit/web-example... --filter=@jackpotkit/docs...
 
+      # Runs both projects per browser: gallery-<browser> (vite preview) and docs-<browser>
+      # (next start), each started by apps/e2e/playwright.config.ts.
       - name: Run browser end-to-end tests
         run: pnpm test:e2e
         env:
