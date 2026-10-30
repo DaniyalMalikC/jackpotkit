@@ -11,7 +11,7 @@ node_modules/
 coverage/
 dist/
 build/
-lib/
+packages/*/lib/
 *.tgz
 *.log
 playwright-report/

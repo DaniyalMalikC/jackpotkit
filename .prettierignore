@@ -6,7 +6,7 @@ next-env.d.ts
 build
 coverage
 dist
-lib
+packages/*/lib
 node_modules
 pnpm-lock.yaml
 *.docx
