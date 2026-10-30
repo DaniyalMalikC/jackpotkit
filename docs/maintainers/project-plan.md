@@ -43,16 +43,16 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 
 ## Phases
 
-| Phase | Scope                                                                            | Owner agent                                | Status      |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | ----------- |
-| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done        |
-| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Not started |
-| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Not started |
-| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Not started |
-| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Not started |
-| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started |
-| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Not started |
-| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started |
+| Phase | Scope                                                                            | Owner agent                                | Status                                                       |
+| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                                         |
+| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Not started                                                  |
+| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Not started                                                  |
+| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Not started                                                  |
+| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done (pending integration; docs-site E2E project follows B1) |
+| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started                                                  |
+| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Not started                                                  |
+| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                                                  |
 
 B1, B3, and B4 can run in parallel after A. B2 integrates into B1. C and E follow B1. D needs Vercel
 access.
@@ -60,7 +60,12 @@ access.
 ## Open blockers
 
 - Vercel project access for production and preview deployments.
-- An `ANTHROPIC_API_KEY` repository secret before the Claude Code workflows can run.
+- An `ANTHROPIC_API_KEY` repository secret and the Claude GitHub App before the Claude Code workflows
+  can run (they skip cleanly until then; see [CI and agent automation](./automation.md)).
+- E2E found two `@jackpotkit/react` accessibility defects, tracked as `test.fail()` checks in
+  `apps/e2e/tests/gallery/accessibility.spec.ts`: Dice die faces use `aria-label` on a role-less
+  `div` (axe `aria-prohibited-attr`), and the Slot Machine button's `aria-label="Spin reels"` omits
+  its visible text "PULL TO SPIN" (axe `label-content-name-mismatch`).
 - No EAS project, so Expo QR previews are deferred.
 - Screen readers (VoiceOver, TalkBack), physical-device gestures, and `expo-doctor` network checks
   remain human-operated or network-dependent gates.

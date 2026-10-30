@@ -1,0 +1,96 @@
+name: Claude mention
+
+# Runs Claude Code when a trusted maintainer mentions @claude in an issue, an issue or PR comment, a
+# PR review, or a PR review comment. See docs/maintainers/automation.md.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  issues:
+    types: [opened, assigned]
+
+permissions:
+  contents: read
+
+jobs:
+  claude:
+    name: Respond to @claude
+    # Only repository owners, organisation members, and collaborators can start a run. The action
+    # repeats a write-access check, and bots are rejected by the action by default.
+    if: |
+      (github.event_name == 'issue_comment' &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review_comment' &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review' &&
+        contains(github.event.review.body, '@claude') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.review.author_association)) ||
+      (github.event_name == 'issues' &&
+        (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Job-level so comments that do not trigger Claude cannot displace a queued run.
+    concurrency:
+      group: claude-mention-${{ github.event.issue.number || github.event.pull_request.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      # Required by the action's default Claude GitHub App token exchange (OIDC).
+      id-token: write
+
+    steps:
+      - name: Check for the Anthropic API key
+        id: secret
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::notice title=Claude skipped::The ANTHROPIC_API_KEY repository secret is not set, so Claude Code did not run. See docs/maintainers/automation.md."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out repository
+        if: steps.secret.outputs.available == 'true'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Install pnpm
+        if: steps.secret.outputs.available == 'true'
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.21.0
+          run_install: false
+
+      - name: Set up Node.js
+        if: steps.secret.outputs.available == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.secret.outputs.available == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Claude Code
+        if: steps.secret.outputs.available == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --max-turns 40
+            --append-system-prompt "Follow CLAUDE.md and the role definitions in .claude/agents/. You may push to your own branch and open draft pull requests or issues only. Never merge pull requests, publish packages, deploy, or edit files under .github/workflows/."
+            --allowedTools "Bash(pnpm install:*),Bash(pnpm format:*),Bash(pnpm lint:*),Bash(pnpm typecheck:*),Bash(pnpm test:*),Bash(pnpm build:*),Bash(pnpm --filter:*),Bash(pnpm check:*),Bash(pnpm changeset:*)"
+            --disallowedTools "Bash(gh pr merge:*),Bash(npm publish:*),Bash(pnpm publish:*),Bash(pnpm release:*),Bash(git push --force:*),Edit(.github/workflows/**),Write(.github/workflows/**)"

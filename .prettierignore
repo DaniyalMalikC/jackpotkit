@@ -10,3 +10,6 @@ pnpm-lock.yaml
 *.docx
 *.pdf
 
+playwright-report
+test-results
+blob-report

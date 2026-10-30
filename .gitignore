@@ -13,3 +13,6 @@ build/
 lib/
 *.tgz
 *.log
+playwright-report/
+test-results/
+blob-report/

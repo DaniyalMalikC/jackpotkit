@@ -27,6 +27,18 @@
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "passThroughEnv": [
+        "CI",
+        "E2E_BROWSERS",
+        "GALLERY_BASE_URL",
+        "GALLERY_PORT",
+        "PLAYWRIGHT_BROWSERS_PATH",
+        "PW_CHROMIUM_PATH"
+      ]
+    },
     "typecheck": {
       "dependsOn": ["^build"]
     }

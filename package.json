@@ -29,6 +29,7 @@
     "release:status": "changeset status --verbose",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
+    "test:e2e": "turbo run test:e2e",
     "typecheck": "turbo run typecheck",
     "validate": "prettier --check . && turbo run lint && turbo run typecheck && turbo run test && turbo run build && turbo run doctor --filter=@jackpotkit/expo-example && node scripts/check-boundaries.mjs && node scripts/check-package-dependencies.mjs && node scripts/check-privacy.mjs && node scripts/check-package-exports.mjs && node scripts/check-packed-consumers.mjs && node scripts/check-package-packs.mjs && node scripts/check-package-types.mjs",
     "version-packages": "changeset version"

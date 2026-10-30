@@ -9,6 +9,9 @@ const allowedNames = new Set([
   'coverage',
   'dist',
   'lib',
+  'playwright-report',
+  'test-results',
+  'blob-report',
 ]);
 
 for (const target of process.argv.slice(2)) {
