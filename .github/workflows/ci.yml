@@ -40,3 +40,57 @@ jobs:
 
       - name: Run complete validation
         run: pnpm validate
+
+  e2e:
+    name: Browser end-to-end tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        # Firefox and WebKit are supported by apps/e2e/playwright.config.ts; add them here to widen
+        # coverage (see docs/maintainers/automation.md).
+        browser: [chromium]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.21.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browser and system dependencies
+        run: pnpm --filter @jackpotkit/e2e exec playwright install --with-deps "$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+
+      - name: Build the gallery and its packages
+        run: pnpm turbo run build --filter=@jackpotkit/web-example...
+
+      - name: Run browser end-to-end tests
+        run: pnpm test:e2e
+        env:
+          E2E_BROWSERS: ${{ matrix.browser }}
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: |
+            apps/e2e/playwright-report/
+            apps/e2e/test-results/
+          retention-days: 14
+          if-no-files-found: ignore
