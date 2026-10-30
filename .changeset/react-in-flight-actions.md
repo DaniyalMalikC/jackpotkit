@@ -13,3 +13,8 @@ is permitted and announced (WCAG 4.1.2). The Slot Machine spin button no longer 
 text with `aria-label="Spin reels"`; its accessible name is now the visible `PULL TO SPIN` /
 `SPINNING…` text (WCAG 2.5.3). Tests or automation that query the `Spin reels` name must use the
 visible text instead.
+
+Preserve the generic signature of the `Dice` export, matching the other six games. Its props now
+resolve to `DiceProps<TRequest>` (default `void`) instead of `DiceProps<unknown>`, so a `DiceProps`
+object can be spread onto `<Dice>` under `exactOptionalPropertyTypes` and `<Dice<TRequest>>` accepts a
+typed `resultProvider` and `resultRequest`.

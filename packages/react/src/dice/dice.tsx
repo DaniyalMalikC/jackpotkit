@@ -238,4 +238,6 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
     </div>
   );
 }
-export const Dice = forwardRef(DiceInner);
+export const Dice = forwardRef(DiceInner) as <TRequest = void>(
+  props: DiceProps<TRequest> & React.RefAttributes<DiceRef>,
+) => React.ReactElement;

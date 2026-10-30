@@ -18,7 +18,7 @@ import {
   flushMicrotasks,
   mockReducedMotionPreference,
 } from '../__tests__/test-utils.js';
-import { Dice, type DiceRef } from './index.js';
+import { Dice, type DiceProps, type DiceRef } from './index.js';
 
 const DURATION = 700;
 const rollButton = () => screen.getByRole('button', { name: /Roll/ });
@@ -211,6 +211,30 @@ describe('Dice (web)', () => {
       restore();
       Reflect.deleteProperty(HTMLElement.prototype, 'animate');
     }
+  });
+
+  // Type-level regression, enforced by `pnpm typecheck`: the Dice export lost its generic, so its
+  // props resolved to DiceProps<unknown> and neither a DiceProps object nor a typed request fit.
+  it('keeps generic props on the export', async () => {
+    const props: DiceProps = { count: 1, duration: 0, result: { values: [2] } };
+    const typed = (
+      <Dice<{ readonly playId: string }>
+        duration={0}
+        resultProvider={(request) => ({ values: [request.playId.length] })}
+        resultRequest={{ playId: 'abc' }}
+      />
+    );
+    render(<Dice {...props} />);
+    fireEvent.click(rollButton());
+    await advance(0);
+    expect(status()).toBe('Total: 2');
+    cleanup();
+
+    render(typed);
+    fireEvent.click(rollButton());
+    await flushMicrotasks();
+    await advance(0);
+    expect(status()).toBe('Total: 3');
   });
 
   it('exposes a focusable native button for keyboard activation', () => {
