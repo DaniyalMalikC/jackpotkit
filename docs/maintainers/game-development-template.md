@@ -1,6 +1,6 @@
 ---
 title: Game development template
-sidebar_position: 18
+description: The expected file layout and checklist for adding a new game.
 ---
 
 # Game development template

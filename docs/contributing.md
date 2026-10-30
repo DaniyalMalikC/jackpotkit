@@ -1,6 +1,6 @@
 ---
 title: Contributing
-sidebar_position: 16
+description: Set up the monorepo, run the quality gates, and propose changes.
 ---
 
 # Contributing

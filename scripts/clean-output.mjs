@@ -2,7 +2,8 @@ import { rmSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 
 const allowedNames = new Set([
-  '.docusaurus',
+  '.next',
+  '.source',
   '.expo',
   '.turbo',
   'build',

@@ -1,6 +1,6 @@
 ---
 title: Security
-sidebar_position: 14
+description: How to report vulnerabilities and where JackpotKit security boundaries lie.
 ---
 
 # Security

@@ -1,6 +1,6 @@
 ---
 title: React web renderers
-sidebar_position: 11
+description: Install and use the independent React web renderers in @jackpotkit/react.
 ---
 
 # React web renderers

@@ -1,6 +1,6 @@
 ---
 title: Roadmap
-sidebar_position: 17
+description: Completed phases and planned JackpotKit work.
 ---
 
 # Roadmap

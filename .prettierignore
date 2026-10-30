@@ -1,4 +1,6 @@
-.docusaurus
+.next
+.source
+next-env.d.ts
 .expo
 .turbo
 build

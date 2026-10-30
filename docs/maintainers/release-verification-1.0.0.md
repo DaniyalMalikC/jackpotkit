@@ -1,6 +1,6 @@
 ---
 title: Release verification 1.0.0
-sidebar_position: 24
+description: Evidence gathered while verifying the 1.0.0 release.
 ---
 
 # Release verification 1.0.0

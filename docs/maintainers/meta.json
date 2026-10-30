@@ -1,0 +1,11 @@
+{
+  "title": "Maintainers",
+  "pages": [
+    "project-plan",
+    "releasing",
+    "release-readiness",
+    "release-verification-1.0.0",
+    "dependency-review",
+    "game-development-template"
+  ]
+}

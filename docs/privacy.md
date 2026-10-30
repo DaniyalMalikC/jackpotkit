@@ -1,6 +1,6 @@
 ---
 title: Privacy and telemetry
-sidebar_position: 15
+description: JackpotKit sends no telemetry and has no backend. Applications own any analytics.
 ---
 
 # Privacy and telemetry

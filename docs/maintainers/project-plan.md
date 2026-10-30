@@ -1,6 +1,6 @@
 ---
 title: Project plan and status
-sidebar_position: 1
+description: Programme status, architecture decisions, phases, and blockers.
 ---
 
 # Project plan and status

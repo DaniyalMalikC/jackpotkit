@@ -1,6 +1,6 @@
 ---
 title: Stable-release readiness
-sidebar_position: 22
+description: The checklist a release must pass before publishing.
 ---
 
 # Stable-release readiness
@@ -18,7 +18,7 @@ checks that remain open.
 - formatting, lint, strict types, unit and component tests;
 - core/native boundary and zero-telemetry rules;
 - public dependency and peer allowlists;
-- all TypeScript, Builder Bob, Vite, Docusaurus, and Expo builds;
+- all TypeScript, Builder Bob, Vite, Next.js documentation, and Expo builds;
 - Expo Doctor and iOS, Android, and web JavaScript exports;
 - exact runtime exports and declaration targets;
 - isolated packed-consumer ESM and SSR execution;

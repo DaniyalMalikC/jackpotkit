@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/purple.css';
+@import 'fumadocs-ui/css/preset.css';
+
+@source '../components';
+@source '../lib';
+
+:root {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0 !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* Homepage hero glow and floating mark. Disabled entirely for reduced-motion users. */
+.jk-hero-glow {
+  background:
+    radial-gradient(60% 60% at 30% 20%, rgb(104 67 213 / 0.28), transparent 70%),
+    radial-gradient(50% 50% at 80% 60%, rgb(235 77 138 / 0.18), transparent 70%);
+}
+
+@keyframes jk-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(8deg);
+  }
+}
+
+@keyframes jk-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.jk-float {
+  animation: jk-float 6s ease-in-out infinite;
+}
+
+.jk-fade-up {
+  animation: jk-fade-up 600ms ease-out both;
+}
+
+.jk-card {
+  transition:
+    transform 160ms ease-out,
+    border-color 160ms ease-out,
+    box-shadow 160ms ease-out;
+}
+
+.jk-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -12px rgb(104 67 213 / 0.45);
+}
+
+.jk-demo-surface {
+  background-image: radial-gradient(circle at 1px 1px, var(--color-fd-border) 1px, transparent 0);
+  background-size: 18px 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jk-float,
+  .jk-fade-up {
+    animation: none;
+  }
+
+  .jk-card,
+  .jk-card:hover {
+    transition: none;
+    transform: none;
+  }
+}

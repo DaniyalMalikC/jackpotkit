@@ -1,6 +1,6 @@
 ---
 title: Core primitives
-sidebar_position: 3
+description: Results, rewards, randomness, result providers, errors, and events in @jackpotkit/core.
 ---
 
 # Core primitives
