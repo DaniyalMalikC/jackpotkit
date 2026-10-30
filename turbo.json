@@ -32,6 +32,8 @@
       "cache": false,
       "passThroughEnv": [
         "CI",
+        "DOCS_BASE_URL",
+        "DOCS_PORT",
         "E2E_BROWSERS",
         "GALLERY_BASE_URL",
         "GALLERY_PORT",
