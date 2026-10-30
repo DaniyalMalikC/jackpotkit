@@ -6,6 +6,7 @@ import {
 } from '@jackpotkit/core';
 import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 
+import { isPlayInFlight } from '../internal/is-play-in-flight.js';
 import { actionButtonStyle } from '../internal/styles.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
 import { useReducedMotion } from '../internal/use-reduced-motion.js';
@@ -121,7 +122,8 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
     controller.reset();
   }, [cancel, coinFaces, controller]);
   useImperativeHandle(ref, () => ({ flip: () => flip(), flipTo: flip, reset }), [flip, reset]);
-  const disabled = props.disabled === true || flipping || controller.status === 'requesting-result';
+  const busy = flipping || isPlayInFlight(controller.status);
+  const disabled = props.disabled === true || busy;
   return (
     <div
       aria-label={accessibilityLabel}
@@ -250,13 +252,13 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
         </div>
       </div>
       <button
-        aria-busy={disabled}
+        aria-busy={busy}
         disabled={disabled}
         onClick={() => void flip().catch(() => undefined)}
         style={actionButtonStyle(theme, disabled)}
         type="button"
       >
-        {disabled ? 'Flipping…' : 'Flip coin'}
+        {busy ? 'Flipping…' : 'Flip coin'}
       </button>
       <div
         aria-live="polite"

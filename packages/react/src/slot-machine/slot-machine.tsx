@@ -1,6 +1,7 @@
 import type { SlotMachineResult, SlotMachineSelection, SlotSymbol } from '@jackpotkit/core';
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useState } from 'react';
 
+import { isPlayInFlight } from '../internal/is-play-in-flight.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
 import { useReducedMotion } from '../internal/use-reduced-motion.js';
 import { useResolvedTheme } from '../internal/use-resolved-theme.js';
@@ -83,7 +84,8 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
     );
     return cells;
   }, [controller.status, displayResult]);
-  const disabled = props.disabled === true || spinning || controller.status === 'requesting-result';
+  const busy = spinning || isPlayInFlight(controller.status);
+  const disabled = props.disabled === true || busy;
   return (
     <div
       aria-label={accessibilityLabel}
@@ -240,7 +242,7 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
       </div>
       <button
         aria-label="Spin reels"
-        aria-busy={disabled}
+        aria-busy={busy}
         disabled={disabled}
         onClick={() => void spin().catch(() => undefined)}
         style={{
@@ -266,7 +268,7 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
         <span aria-hidden="true" style={{ fontSize: 18 }}>
           ↻
         </span>
-        {disabled ? 'SPINNING…' : 'PULL TO SPIN'}
+        {busy ? 'SPINNING…' : 'PULL TO SPIN'}
       </button>
       <div
         aria-live="polite"

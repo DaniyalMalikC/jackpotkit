@@ -267,6 +267,9 @@ importers:
         specifier: workspace:^
         version: link:../theme
     devDependencies:
+      '@jackpotkit/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@testing-library/dom':
         specifier: 10.4.1
         version: 10.4.1
