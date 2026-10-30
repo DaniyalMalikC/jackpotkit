@@ -7,7 +7,9 @@ import tseslint from 'typescript-eslint';
 const config = tseslint.config(
   {
     ignores: [
-      '**/.docusaurus/**',
+      '**/.next/**',
+      '**/.source/**',
+      '**/next-env.d.ts',
       '**/.expo/**',
       '**/.turbo/**',
       '**/build/**',

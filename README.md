@@ -223,7 +223,8 @@ Scratch Card's Skia renderer is available only from `@jackpotkit/react-native/sc
 
 - `apps/expo-example`: responsive Expo Router gallery shell.
 - `apps/web-example`: interactive Vite gallery for all seven React web renderers.
-- `apps/docs`: Docusaurus documentation shell backed by root `docs/` content.
+- `apps/docs`: Next.js and Fumadocs documentation site backed by root `docs/` content, with live
+  `@jackpotkit/react` demos.
 
 ## Contributing and security
 

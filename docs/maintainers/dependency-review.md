@@ -1,6 +1,6 @@
 ---
 title: Dependency review
-sidebar_position: 21
+description: The reviewed runtime and peer dependency surface of each package.
 ---
 
 # Dependency review
@@ -27,7 +27,9 @@ runtime dependency of a public JackpotKit package.
 
 The 2026-08-12 Phase 8 audit found no affected dependency shipped in a public package tarball.
 Available `webpack` and `serialize-javascript` fixes are enforced through root overrides. The
-remaining reported `uuid` and `image-size` paths belong to private Expo or Docusaurus tooling.
+remaining reported `uuid` and `image-size` paths belong to private Expo tooling. Phase B1 replaced
+the Docusaurus app with a Next.js site, which removed the `webpack` and `serialize-javascript` paths;
+the overrides are now inert and can be dropped in a dependency-maintenance change.
 Builds use repository-owned configuration and content rather than untrusted remote build inputs.
 They remain tracked for upstream patches; in particular, the registry did not yet contain the
 advisory-listed patched `image-size` release during this review. Re-run `pnpm audit` immediately

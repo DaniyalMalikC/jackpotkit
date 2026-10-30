@@ -1,14 +1,28 @@
 {
-  "extends": "@docusaurus/tsconfig",
+  "extends": "@jackpotkit/shared-config/tsconfig/react.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "exactOptionalPropertyTypes": true,
-    "ignoreDeprecations": "6.0",
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "tsBuildInfoFile": "./node_modules/.cache/docs.tsbuildinfo"
+    "allowJs": true,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": ["node"],
+    "noEmit": true
   },
-  "include": ["docusaurus.config.ts", "sidebars.ts", "src"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mjs",
+    ".source/**/*.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next/dev"]
 }

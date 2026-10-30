@@ -1,6 +1,6 @@
 ---
 title: Accessibility review
-sidebar_position: 12
+description: The accessibility baseline every JackpotKit game meets, and what remains a human review gate.
 ---
 
 # Accessibility review

@@ -5,7 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/docs/**"],
-      "outputs": ["build/**", "dist/**", "lib/**", ".docusaurus/**"]
+      "outputs": ["build/**", "dist/**", "lib/**", ".next/**", "!.next/cache/**"]
     },
     "clean": {
       "cache": false

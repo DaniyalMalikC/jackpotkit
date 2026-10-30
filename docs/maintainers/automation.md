@@ -1,6 +1,6 @@
 ---
 title: CI and agent automation
-sidebar_position: 2
+description: CI quality gates, browser E2E, and the Claude Code workflows that maintain JackpotKit.
 ---
 
 # CI and agent automation

@@ -1,6 +1,6 @@
 ---
 title: Stable API review
-sidebar_position: 19
+description: Which runtime exports, types, and behaviours JackpotKit treats as stable public API.
 ---
 
 # Stable API review

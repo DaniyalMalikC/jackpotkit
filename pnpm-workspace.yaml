@@ -15,6 +15,7 @@ allowBuilds:
   '@shopify/react-native-skia': true
   '@swc/core': true
   core-js: true
+  esbuild: false
   unrs-resolver: true
 
 catalog:

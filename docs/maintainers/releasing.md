@@ -1,6 +1,6 @@
 ---
 title: Releasing
-sidebar_position: 23
+description: How Changesets, the release PR, and npm publishing fit together.
 ---
 
 # Releasing
