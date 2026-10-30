@@ -197,7 +197,7 @@ pnpm release:check
 
 Every publishable package change requires a Changeset. Merges to `main` update a draft release pull request; npm publication is a separate, manually approved workflow that uses npm Trusted Publishing rather than a long-lived write token.
 
-See [the versioning and migration policy](./docs/versioning.md), [release-readiness checklist](./docs/release-readiness.md), and [release guide](./docs/releasing.md).
+See [the versioning and migration policy](./docs/versioning.md), [release-readiness checklist](./docs/maintainers/release-readiness.md), and [release guide](./docs/maintainers/releasing.md).
 
 ## Architecture
 

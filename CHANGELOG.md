@@ -4,6 +4,9 @@ The Phase 0 package shells were initially published to npm at version `0.0.0`. P
 
 ## 1.1.0 - 2026-08-28
 
+`@jackpotkit/react` and `@jackpotkit/react-native` were released at `1.1.0`. `@jackpotkit/core`,
+`@jackpotkit/theme`, and `@jackpotkit/testing` remain at `1.0.0`.
+
 - Fixed a native Hermes/Worklets crash when Dice, Coin Flip, or Lucky Box animations completed.
 - Added selectable Dice and Coin Flip face styles across React and React Native.
 - Fixed neon Coin Flip face content contrast across React and React Native.

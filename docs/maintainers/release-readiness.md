@@ -31,7 +31,7 @@ checks that remain open.
 Before approving `1.0.0`, the release pull request must record:
 
 - API and generated declaration review for every public entrypoint;
-- the manual accessibility matrix in [Accessibility review](./accessibility.md);
+- the manual accessibility matrix in [Accessibility review](../accessibility.md);
 - iOS and Android example checks on supported devices or simulators;
 - current browser checks for the Vite gallery;
 - dependency advisory triage and peer-range review;
