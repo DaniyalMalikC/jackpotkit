@@ -10,8 +10,8 @@
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",
-    "test": "node scripts/check-links.mjs",
-    "test:coverage": "node scripts/check-links.mjs",
+    "test": "node scripts/check-links.mjs && vitest run",
+    "test:coverage": "node scripts/check-links.mjs && vitest run",
     "typecheck": "fumadocs-mdx && next typegen && tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
