@@ -155,6 +155,7 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
               {renderDie?.({ die, index, rolling, theme, value }) ?? (
                 <div
                   aria-label={`${die.label ?? `Die ${index + 1}`}: ${value}`}
+                  role="img"
                   style={{
                     alignItems: 'center',
                     background: theme.colors.diceFace,

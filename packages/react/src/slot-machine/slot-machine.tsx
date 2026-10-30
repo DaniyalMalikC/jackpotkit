@@ -241,7 +241,6 @@ function SlotMachineInner<TValue = unknown, TEvaluation = unknown, TRequest = vo
         </div>
       </div>
       <button
-        aria-label="Spin reels"
         aria-busy={busy}
         disabled={disabled}
         onClick={() => void spin().catch(() => undefined)}

@@ -37,6 +37,9 @@ Use `faceStyle="numbers"` for numeric faces (the backwards-compatible default) o
 callbacks, typed events, visible totals, and screen-reader announcements. Custom dice must preserve
 readable values, labels, contrast, and non-color-only state.
 
+On the web, each default die face is exposed as an image named with its die label and value, for
+example `D6: 5`, so pip faces without text still have an accessible name.
+
 ## React web
 
 ```tsx

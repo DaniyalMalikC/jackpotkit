@@ -29,7 +29,7 @@ const DURATION = 1_200;
 const REEL_DELAY = 100;
 // Three reels stop one delay apart, so the whole spin lasts the base duration plus two delays.
 const TOTAL = DURATION + REEL_DELAY * 2;
-const spinButton = () => screen.getByRole('button', { name: 'Spin reels' });
+const spinButton = () => screen.getByRole('button', { name: /^(PULL TO SPIN|SPINNING…)$/ });
 const status = () => screen.getByRole('status').textContent;
 const paylineText = (result: SlotMachineResult) =>
   `${result.winningPaylines.length} winning payline${result.winningPaylines.length === 1 ? '' : 's'}`;

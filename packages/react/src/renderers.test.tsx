@@ -68,7 +68,7 @@ describe('React web renderers', () => {
         ]}
       />,
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Spin reels' }));
+    fireEvent.click(screen.getByRole('button', { name: 'PULL TO SPIN' }));
     expect(await screen.findByText('1 winning payline')).toBeDefined();
     expect(slot.container.querySelector('[data-jackpotkit-slot-cabinet]')).not.toBeNull();
     expect(slot.container.querySelectorAll('[data-jackpotkit-slot-reel]')).toHaveLength(2);

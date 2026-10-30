@@ -211,6 +211,7 @@ Use `renderSymbol` with the application's image component. Image sources stay ou
 ## Accessibility and performance
 
 - The spin control exposes button, busy, and disabled state.
+- The spin control's accessible name contains its visible text, so voice-control users can say what they see. The web button is named by its visible `PULL TO SPIN` / `SPINNING…` text; the native default labels are `Pull to spin` and `Spinning`, overridable with `accessibilityLabels.spin` and `accessibilityLabels.spinning`.
 - A polite live result and screen-reader announcement report matching paylines after the final reel stops.
 - Default labels can be replaced with meaningful reward copy.
 - Each reel owns its Reanimated shared value, so frame-by-frame translation does not update parent React state.
