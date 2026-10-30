@@ -15,6 +15,14 @@ html {
   scrollbar-gutter: stable;
 }
 
+/*
+ * Fumadocs' light purple primary (hsl 270 100% 52%) is 3.9:1 on the active sidebar item's tinted
+ * background. A darker shade keeps it above WCAG AA 4.5:1 there and on white.
+ */
+html:not(.dark) {
+  --color-fd-primary: hsl(270, 100%, 42%);
+}
+
 body {
   font-family: var(--font-sans);
 }
