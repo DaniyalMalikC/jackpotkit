@@ -50,8 +50,10 @@ individually and report the doctor result as unverified, not passed.
 
 - One concern per branch: `feat/`, `fix/`, `docs/`, `test/`, `refactor/`, `chore/`, `release/`.
   Use a separate worktree for parallel work.
-- Conventional Commits (`feat(playground): ...`). Use the configured git identity. Do not add AI
-  co-author trailers or session links.
+- Conventional Commits (`feat(playground): ...`). Author and commit as the maintainer:
+  `M. Daniyal Malik .C <40606850+DaniyalMalikC@users.noreply.github.com>`. If `git config user.email`
+  shows anything else, set it in the repository (`git config user.name` / `user.email`) before
+  committing. Do not add AI co-author trailers or session links.
 - Agents may open issues and draft PRs. Merging, npm publishing, production deploys, and destructive
   operations require human approval.
 

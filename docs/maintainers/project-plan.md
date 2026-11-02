@@ -62,7 +62,7 @@ access.
 - Vercel: project `jackpotkit` (root `apps/docs`, Node 24, Git-linked) serves
   <https://jackpotkit.vercel.app>. The first deployment, built from `claude/charming-ptolemy-f1ecnh`,
   was promoted to production automatically and verified publicly (all routes 200, playgrounds mount,
-  no console errors). Confirm in Vercel → Settings → Git that the production branch is `main`.
+  no console errors). Later branch pushes build as previews, so production follows `main`.
 - An `ANTHROPIC_API_KEY` repository secret and the Claude GitHub App before the Claude Code workflows
   can run (they skip cleanly until then; see [CI and agent automation](./automation.md)).
 - No EAS project, so Expo QR previews are deferred.
