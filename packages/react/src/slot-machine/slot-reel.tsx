@@ -3,6 +3,7 @@ import type { JackpotTheme } from '@jackpotkit/theme';
 import { useEffect, useMemo, useRef } from 'react';
 
 import type { WebEasing } from '../internal/types.js';
+import { getSymbolCellFontSize, getSymbolLabelStyle } from './symbol-label-style.js';
 import type { SlotSymbolRenderInfo } from './types.js';
 
 interface SlotReelProps<TValue> {
@@ -46,6 +47,15 @@ export function SlotReel<TValue>({
     [reelIndex, symbols],
   );
   const strip = [...filler, ...destination];
+  const labelStyles = useMemo(() => {
+    const styles = new Map<string, React.CSSProperties>();
+    if (renderSymbol !== undefined) return styles;
+    for (const symbol of [...symbols, ...destination]) {
+      const label = symbol.label ?? symbol.id;
+      if (!styles.has(label)) styles.set(label, getSymbolLabelStyle(label, symbolHeight));
+    }
+    return styles;
+  }, [destination, renderSymbol, symbolHeight, symbols]);
   const target = -filler.length * symbolHeight;
 
   useEffect(() => {
@@ -92,6 +102,7 @@ export function SlotReel<TValue>({
         {strip.map((symbol, stripIndex) => {
           const rowIndex = stripIndex - filler.length;
           const winning = rowIndex >= 0 && winningCells.has(`${reelIndex}:${rowIndex}`);
+          const label = symbol.label ?? symbol.id;
           return (
             <div
               key={`${operation}:${stripIndex}:${symbol.id}`}
@@ -102,9 +113,12 @@ export function SlotReel<TValue>({
                   : `linear-gradient(180deg, ${theme.colors.surface}, ${theme.colors.background})`,
                 borderBottom: `1px solid ${theme.colors.border}`,
                 color: winning ? theme.colors.onPrimary : theme.colors.text,
+                // Default labels size themselves against the cell width (`cqi`); custom renderers
+                // keep an unchanged cell.
+                containerType: renderSymbol === undefined ? 'inline-size' : undefined,
                 display: 'flex',
                 fontFamily: theme.typography.fontFamily,
-                fontSize: Math.min(34, symbolHeight * 0.5),
+                fontSize: getSymbolCellFontSize(symbolHeight),
                 fontWeight: 900,
                 height: symbolHeight,
                 justifyContent: 'center',
@@ -115,15 +129,19 @@ export function SlotReel<TValue>({
                 textShadow: winning ? '0 2px 6px rgb(23 20 43 / 28%)' : undefined,
               }}
             >
-              {renderSymbol?.({
-                reelIndex,
-                rowIndex: Math.max(0, rowIndex),
-                symbol,
-                theme,
-                winning,
-              }) ??
-                symbol.label ??
-                symbol.id}
+              {renderSymbol === undefined ? (
+                <span data-jackpotkit-slot-label="" style={labelStyles.get(label)}>
+                  {label}
+                </span>
+              ) : (
+                (renderSymbol({
+                  reelIndex,
+                  rowIndex: Math.max(0, rowIndex),
+                  symbol,
+                  theme,
+                  winning,
+                }) ?? label)
+              )}
             </div>
           );
         })}
