@@ -51,7 +51,30 @@ jobs:
         run: pnpm release:check
 
       - name: Publish packages and create releases
+        id: changesets
         uses: changesets/action@v1
         with:
           createGithubReleases: true
           publish: pnpm release
+
+      # Starts the published-package smoke tests in jackpotkit-web and jackpotkit-app. A dispatch
+      # failure must never fail an already-completed publish, so the step is skipped without a token
+      # and does not fail the job. See docs/maintainers/automation.md.
+      - name: Trigger companion smoke tests
+        if: steps.changesets.outputs.published == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.COMPANION_DISPATCH_TOKEN }}
+          PUBLISHED: ${{ steps.changesets.outputs.publishedPackages }}
+        run: |
+          set -euo pipefail
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice title=Smoke tests not triggered::COMPANION_DISPATCH_TOKEN is not set."
+            exit 0
+          fi
+          version="$(jq -r '[.[] | select(.name == "@jackpotkit/react" or .name == "@jackpotkit/react-native") | .version] | first // "latest"' <<<"$PUBLISHED")"
+          for repo in DaniyalMalikC/jackpotkit-web DaniyalMalikC/jackpotkit-app; do
+            gh api --method POST "repos/${repo}/dispatches" \
+              -f event_type=jackpotkit-release \
+              -F "client_payload[version]=${version}"
+          done

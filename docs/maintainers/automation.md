@@ -11,14 +11,14 @@ their own; these workflows supply the triggers, scoped tokens, logs, and cost li
 
 ## Workflows at a glance
 
-| Workflow                 | Trigger                                                        | Job permissions                                                    | Secrets             |
-| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------- |
-| `ci.yml`                 | `pull_request`, push to `main`                                 | `contents: read`                                                   | none                |
-| `claude.yml`             | `@claude` in issues, comments, reviews, review comments        | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY` |
-| `claude-review.yml`      | `pull_request` opened, synchronize, ready_for_review, reopened | `contents: read`, `pull-requests: write`, `id-token: write`        | `ANTHROPIC_API_KEY` |
-| `claude-maintenance.yml` | Mondays 04:17 UTC, `workflow_dispatch`                         | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY` |
-| `release-pr.yml`         | push to `main`, `workflow_dispatch`                            | `contents`, `pull-requests`: write                                 | none                |
-| `publish.yml`            | `workflow_dispatch` on `main`, protected `npm` environment     | `contents`, `pull-requests`: write; `id-token: write` (provenance) | npm trusted publish |
+| Workflow                 | Trigger                                                        | Job permissions                                                    | Secrets                                                  |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- |
+| `ci.yml`                 | `pull_request`, push to `main`                                 | `contents: read`                                                   | none                                                     |
+| `claude.yml`             | `@claude` in issues, comments, reviews, review comments        | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY`                                      |
+| `claude-review.yml`      | `pull_request` opened, synchronize, ready_for_review, reopened | `contents: read`, `pull-requests: write`, `id-token: write`        | `ANTHROPIC_API_KEY`                                      |
+| `claude-maintenance.yml` | Mondays 04:17 UTC, `workflow_dispatch`                         | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY`                                      |
+| `release-pr.yml`         | push to `main`, `workflow_dispatch`                            | `contents`, `pull-requests`: write                                 | none                                                     |
+| `publish.yml`            | `workflow_dispatch` on `main`, protected `npm` environment     | `contents`, `pull-requests`: write; `id-token: write` (provenance) | npm trusted publish; optional `COMPANION_DISPATCH_TOKEN` |
 
 Every workflow sets a workflow-level `permissions: contents: read` default (or the minimum it needs),
 a `timeout-minutes` per job, and a `concurrency` group. Third-party actions are pinned to a major
@@ -199,3 +199,9 @@ approve, publish to npm, deploy, or edit workflows. A maintainer must:
 2. Add the `ANTHROPIC_API_KEY` repository secret (**Settings > Secrets and variables > Actions**).
 3. Optionally set a spend limit for the key's workspace in the Anthropic Console.
 4. Confirm the `npm` environment still requires manual approval.
+5. Optionally add `COMPANION_DISPATCH_TOKEN` to the `npm` environment so each publish starts the
+   published-package smoke tests in `jackpotkit-web` and `jackpotkit-app`. Use a fine-grained
+   personal access token (or GitHub App token) limited to those two repositories with
+   **Contents: Read and write** and **Metadata: Read**; the default `GITHUB_TOKEN` cannot trigger
+   workflows in other repositories. Without it, the step logs a notice and the smoke tests still run
+   weekly. A dispatch failure never fails the publish job.
