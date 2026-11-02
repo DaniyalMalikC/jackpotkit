@@ -219,6 +219,7 @@ Use `renderSymbol` with the application's image component. Image sources stay ou
 - Each reel owns its Reanimated shared value, so frame-by-frame translation does not update parent React state.
 - Native default text and emoji symbols follow the system text size up to 200%, or less when a short `symbolHeight` leaves no room, and then shrink to fit the reel cell instead of clipping. Font scaling is never disabled, and the machine's live result announcement is unchanged. Text returned by `renderSymbol` is not capped; set `maxFontSizeMultiplier` on your own `Text` if it sits in the fixed-height cell.
 - Web reels use compositor-driven vertical transforms and keep stagger timing outside React render state.
+- Web default text and emoji symbols shrink to the width of their reel cell, and multi-word labels may wrap onto two lines when the cell is tall enough, so narrow or many-reel layouts no longer clip them. Sizing uses CSS container query units (`cqi`); browsers without them keep the previous height-based size. Output returned by `renderSymbol` is not resized.
 - Winning cells are determined by the engine, never by the animation's final pixel position.
 - Custom renderers remain responsible for contrast, image descriptions, and non-color-only meaning.
 
