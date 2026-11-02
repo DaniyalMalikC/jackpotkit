@@ -62,5 +62,14 @@ individually and report the doctor result as unverified, not passed.
 Role definitions live in `.claude/agents/`. The orchestrator plans and assigns work; specialists stay
 within their scope and end with the report format below.
 
-Report format: **Decisions made**, **Completed** (files and the checks run, with results),
-**Remaining**, **Blockers**, **Next actions** (priority and owner agent).
+Report format, in this order:
+
+- **Decisions made**: approach, architectural decisions, trade-offs, deviations.
+- **Completed**: changes, files, and every check run with its actual result.
+- **Remaining**: unfinished requirements and follow-ups; "None." if nothing remains.
+- **Blockers**: missing access, decisions, or dependencies; "None." if there are none.
+- **Next actions**: priority and owner agent.
+- **Git summary**: repository, branch, worktree, commit hashes and messages, push/PR status
+  ("Not applicable" where a field does not apply).
+- **Final status**: exactly one of Completed, Partially Completed, Blocked, Ready for Review. Never
+  Completed while a required check failed or was not run.
