@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "node ../../scripts/clean-output.mjs playwright-report test-results blob-report",
-    "lint": "eslint tests playwright.config.ts",
+    "lint": "eslint tests scripts playwright.config.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "typecheck": "tsc -p tsconfig.json --noEmit"

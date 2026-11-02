@@ -9,11 +9,19 @@ import { defineConfig, devices, type Project } from '@playwright/test';
  * - `docs`: the Fumadocs site in `apps/docs` and its game playgrounds, built with `next build` and
  *   served with `next start`. Started automatically unless `DOCS_BASE_URL` points at a running
  *   server.
+ * - `native`: the Expo Router web export of `apps/expo-example` (`build:web`, `dist-web/`), the
+ *   React Native preview embedded in the docs. Served by `scripts/static-server.mjs` with Vercel's
+ *   `cleanUrls` behaviour and the headers from `apps/expo-example/vercel.json`. Started
+ *   automatically unless `NATIVE_BASE_URL` points at a running server.
  *
  * Environment variables:
  * - `GALLERY_BASE_URL`: use an already running gallery instead of starting `vite preview`.
  * - `DOCS_BASE_URL`: use an already running docs site instead of starting `next start`.
- * - `GALLERY_PORT`, `DOCS_PORT`: ports for the automatically started servers (4173, 3210).
+ * - `NATIVE_BASE_URL`: use an already running native preview instead of the static server.
+ * - `GALLERY_PORT`, `DOCS_PORT`, `NATIVE_PORT`: ports for the automatically started servers
+ *   (4173, 3210, 4174).
+ * - `NEXT_PUBLIC_NATIVE_PREVIEW_URL`: the native preview origin the docs build embeds. The docs
+ *   tests expect it in the iframe and, when it is not the local server, route it to the local one.
  * - `E2E_BROWSERS`: comma-separated engines (`chromium`, `firefox`, `webkit`). Default `chromium`.
  * - `PW_CHROMIUM_PATH`: launch a preinstalled Chromium binary instead of the Playwright download.
  */
@@ -23,6 +31,8 @@ const galleryPort = Number(process.env.GALLERY_PORT ?? 4173);
 const galleryBaseURL = process.env.GALLERY_BASE_URL ?? `http://127.0.0.1:${galleryPort}`;
 const docsPort = Number(process.env.DOCS_PORT ?? 3210);
 const docsBaseURL = process.env.DOCS_BASE_URL ?? `http://127.0.0.1:${docsPort}`;
+const nativePort = Number(process.env.NATIVE_PORT ?? 4174);
+const nativeBaseURL = process.env.NATIVE_BASE_URL ?? `http://127.0.0.1:${nativePort}`;
 const chromiumPath = process.env.PW_CHROMIUM_PATH;
 
 const engines = {
@@ -54,6 +64,11 @@ const projects: Project[] = requestedEngines.flatMap((engine) => [
     testDir: './tests/docs',
     use: { ...engines[engine], baseURL: docsBaseURL },
   },
+  {
+    name: `native-${engine}`,
+    testDir: './tests/native',
+    use: { ...engines[engine], baseURL: nativeBaseURL },
+  },
 ]);
 
 const webServer = [
@@ -76,6 +91,17 @@ const webServer = [
           stdout: 'ignore' as const,
           timeout: 60_000,
           url: `${docsBaseURL}/docs/spin-wheel`,
+        },
+      ]
+    : []),
+  ...(process.env.NATIVE_BASE_URL === undefined
+    ? [
+        {
+          command: `node scripts/static-server.mjs ../expo-example/dist-web ${nativePort} ../expo-example/vercel.json`,
+          reuseExistingServer: !isCI,
+          stdout: 'ignore' as const,
+          timeout: 30_000,
+          url: `${nativeBaseURL}/embed/spin-wheel`,
         },
       ]
     : []),
