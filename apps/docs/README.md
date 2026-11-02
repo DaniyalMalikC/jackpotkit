@@ -16,12 +16,15 @@ root.
 
 ## Environment
 
-| Variable   | Default                         | Purpose                                                                      |
-| ---------- | ------------------------------- | ---------------------------------------------------------------------------- |
-| `SITE_URL` | `https://jackpotkit.vercel.app` | Canonical origin for metadata, Open Graph URLs, `sitemap.xml`, `robots.txt`. |
+| Variable                         | Default                                | Purpose                                                                                       |
+| -------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `SITE_URL`                       | `https://jackpotkit.vercel.app`        | Canonical origin for metadata, Open Graph URLs, `sitemap.xml`, `robots.txt`.                  |
+| `NEXT_PUBLIC_NATIVE_PREVIEW_URL` | `https://jackpotkit-native.vercel.app` | Origin of the Expo gallery web export embedded by `<NativePreview />`. Inlined at build time. |
 
-The default is a placeholder until the production domain is confirmed. Set `SITE_URL` in the
-deployment environment (for example, Vercel project settings) before the first public deploy.
+The `SITE_URL` default is a placeholder until the production domain is confirmed. Set `SITE_URL` in
+the deployment environment (for example, Vercel project settings) before the first public deploy.
+`NEXT_PUBLIC_NATIVE_PREVIEW_URL` must be a different origin from the docs site (see below); it is
+read at build time, so redeploy the docs after changing it.
 
 ## Content
 
@@ -86,8 +89,46 @@ hydration mismatches from client randomness. The simple `<GameDemo game="..." />
 (`components/game-demo/`) is still registered, also code-split; the homepage hero wheel uses its own
 small component.
 
-React Native renderers depend on native animation libraries and do not run in the browser; each
-playground says so in its caption.
+The playground shows the web renderer (`@jackpotkit/react`). Its caption links to the page's React
+Native preview.
+
+## React Native preview
+
+Each game page also embeds `<NativePreview game="spin-wheel" />` (`components/native-preview/`) in a
+"React Native preview" section. It is the real `@jackpotkit/react-native` playground from
+`apps/expo-example`, rendered through react-native-web by the gallery's static web export
+(`pnpm --filter @jackpotkit/expo-example build:web`, output `dist-web/`) and loaded from
+`${NEXT_PUBLIC_NATIVE_PREVIEW_URL}/embed/<game>`.
+
+- **Click to load.** Nothing is fetched until the visitor presses "Load React Native preview": the
+  export is several megabytes of JavaScript, and Scratch Card also downloads the CanvasKit
+  WebAssembly build (about 8 MB) for Skia. The frame also has `loading="lazy"`, a descriptive
+  `title`, a fixed per-game height capped at 85% of the viewport, and full content width. Focus
+  moves to the frame when it loads.
+- **Sandbox.** `sandbox="allow-scripts allow-same-origin"`. react-native-web needs scripts, and the
+  frame needs its own origin to fetch its chunks and `canvaskit.wasm` (an opaque sandboxed origin
+  would make those requests cross-origin and fail). The pair only isolates the frame because the
+  preview is served from a separate origin; never point it at the docs origin.
+- **Framing policy.** The preview's `apps/expo-example/vercel.json` sends a
+  `Content-Security-Policy` whose `frame-ancestors` lists `'self'`,
+  `https://jackpotkit.vercel.app`, `https://*.vercel.app`, `http://localhost:*`, and
+  `http://127.0.0.1:*`, and sends no `X-Frame-Options`, so only the docs site, its Vercel previews,
+  and local development can frame it.
+- **Honest copy.** The caption states that native-only behaviour (Reanimated worklets on the UI
+  thread, Gesture Handler native gestures, haptics, platform font scaling) differs on devices, and
+  how to run the Expo gallery locally (`pnpm --filter @jackpotkit/expo-example dev`). No EAS project
+  exists yet, so there is no QR code.
+- **No Snack links yet.** Expo Snack support for Expo SDK 57 with Reanimated 4 and
+  react-native-worklets has not been verified (snack.expo.dev was unreachable from the environment
+  that built this). A maintainer must confirm a game runs in Snack before links are added.
+
+Run it locally against a local export:
+
+```bash
+pnpm turbo run build:web --filter=@jackpotkit/expo-example
+node apps/e2e/scripts/static-server.mjs apps/expo-example/dist-web 4174 apps/expo-example/vercel.json
+NEXT_PUBLIC_NATIVE_PREVIEW_URL=http://127.0.0.1:4174 pnpm --filter @jackpotkit/docs dev
+```
 
 ```bash
 pnpm --filter @jackpotkit/docs test   # link check, then vitest (codegen type-check, schemas, state)

@@ -2,6 +2,7 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
 import { GameDemo } from '@/components/game-demo/lazy';
+import { NativePreview } from '@/components/native-preview/native-preview';
 import { Playground } from '@/components/playground';
 
 /**
@@ -12,6 +13,7 @@ export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
     GameDemo,
+    NativePreview,
     Playground,
     ...components,
   } satisfies MDXComponents;
