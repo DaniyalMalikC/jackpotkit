@@ -47,11 +47,11 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 | ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------- |
 | A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                    |
 | B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Done                                    |
-| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done (pending integration)              |
+| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done                                    |
 | B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending) |
 | B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                    |
 | C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started                             |
-| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Not started                             |
+| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | In progress                             |
 | E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                             |
 
 B1, B3, and B4 can run in parallel after A. B2 integrates into B1. C and E follow B1. D needs Vercel
@@ -59,7 +59,8 @@ access.
 
 ## Open blockers
 
-- Vercel: access to the maintainer's account is confirmed (Hobby plan); the project is not created yet.
+- Vercel: project `jackpotkit` exists (root `apps/docs`, Node 24, linked to this repository). Production
+  deploys from `main`, so the public site goes live when this work is merged.
 - An `ANTHROPIC_API_KEY` repository secret and the Claude GitHub App before the Claude Code workflows
   can run (they skip cleanly until then; see [CI and agent automation](./automation.md)).
 - No EAS project, so Expo QR previews are deferred.
@@ -81,6 +82,9 @@ access.
 - B2: decide whether to add an embedded Sandpack editor beside the StackBlitz handoff.
 - The `webpack` and `serialize-javascript` overrides in `pnpm-workspace.yaml` no longer match any
   dependency after the Docusaurus removal.
+
+- Playground: segment colour swatches show a placeholder when a segment inherits its theme colour;
+  show the resolved theme colour instead. Open the StackBlitz handoff in a real browser once deployed.
 
 ## Human approval gates
 
