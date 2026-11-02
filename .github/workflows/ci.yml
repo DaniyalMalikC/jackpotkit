@@ -44,7 +44,11 @@ jobs:
   e2e:
     name: Browser end-to-end tests (${{ matrix.browser }})
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
+    env:
+      # The docs build embeds the native preview from this origin; the native-<browser> project's
+      # static server (apps/e2e/scripts/static-server.mjs) serves the Expo web export there.
+      NEXT_PUBLIC_NATIVE_PREVIEW_URL: http://127.0.0.1:4174
     strategy:
       fail-fast: false
       matrix:
@@ -79,8 +83,12 @@ jobs:
       - name: Build the gallery, the docs site, and their packages
         run: pnpm turbo run build --filter=@jackpotkit/web-example... --filter=@jackpotkit/docs...
 
-      # Runs both projects per browser: gallery-<browser> (vite preview) and docs-<browser>
-      # (next start), each started by apps/e2e/playwright.config.ts.
+      - name: Export the Expo gallery for the web (native preview)
+        run: pnpm turbo run build:web --filter=@jackpotkit/expo-example
+
+      # Runs three projects per browser: gallery-<browser> (vite preview), docs-<browser>
+      # (next start), and native-<browser> (static server for the Expo web export), each started by
+      # apps/e2e/playwright.config.ts.
       - name: Run browser end-to-end tests
         run: pnpm test:e2e
         env:
