@@ -26,6 +26,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, Path } from 'react-native-svg';
 
+import { getFixedCellTextProps } from '../internal/fixed-cell-text';
 import { useJackpotKitTheme } from '../theme-provider';
 import { createSegmentPath, getSegmentLabelPosition } from './geometry';
 import type { SpinWheelProps, SpinWheelRef } from './types';
@@ -227,6 +228,14 @@ function SpinWheelInner<TValue = unknown, TRequest = void>(
   };
 
   const labelWidth = Math.max(54, wheelSize * 0.24);
+  // Segment labels are capped against one line of the 36pt label box and may still wrap to two
+  // lines before shrinking. The hub label sits in a 76pt circle with a 4px border, so it gets the
+  // circle's inscribed height.
+  const segmentLabelTextProps = {
+    ...getFixedCellTextProps(theme.typography.labelSize, 36),
+    numberOfLines: 2,
+  };
+  const hubLabelTextProps = getFixedCellTextProps(14, (76 - 8) * 0.7);
 
   return (
     <View
@@ -298,7 +307,7 @@ function SpinWheelInner<TValue = unknown, TRequest = void>(
               >
                 {renderSegment === undefined ? (
                   <Text
-                    numberOfLines={2}
+                    {...segmentLabelTextProps}
                     selectable
                     style={{
                       color: theme.colors.onPrimary,
@@ -362,6 +371,7 @@ function SpinWheelInner<TValue = unknown, TRequest = void>(
           })}
         >
           <Text
+            {...hubLabelTextProps}
             selectable
             style={{
               color: theme.colors.onPrimary,

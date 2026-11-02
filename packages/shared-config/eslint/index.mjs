@@ -7,13 +7,16 @@ import tseslint from 'typescript-eslint';
 const config = tseslint.config(
   {
     ignores: [
-      '**/.docusaurus/**',
+      '**/.next/**',
+      '**/.source/**',
+      '**/next-env.d.ts',
       '**/.expo/**',
       '**/.turbo/**',
       '**/build/**',
       '**/coverage/**',
       '**/dist/**',
-      '**/lib/**',
+      '**/lib/module/**',
+      '**/lib/typescript/**',
       '**/node_modules/**',
       '**/*.d.ts',
     ],

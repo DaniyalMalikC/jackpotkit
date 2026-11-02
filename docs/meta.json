@@ -1,0 +1,30 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "---Getting started---",
+    "index",
+    "---Games---",
+    "spin-wheel",
+    "scratch-card",
+    "slot-machine",
+    "bingo",
+    "dice",
+    "coin-flip",
+    "lucky-box",
+    "---Guides---",
+    "react-web",
+    "architecture",
+    "core-primitives",
+    "server-authoritative-results",
+    "accessibility",
+    "versioning",
+    "api-review",
+    "---Project---",
+    "contributing",
+    "roadmap",
+    "security",
+    "privacy",
+    "---Maintainers---",
+    "...maintainers"
+  ]
+}

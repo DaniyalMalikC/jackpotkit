@@ -26,6 +26,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { getFixedCellTextProps } from '../internal/fixed-cell-text';
 import { useJackpotKitTheme } from '../theme-provider';
 import type { DiceProps, DiceRef } from './types';
 import { useDiceController } from './use-dice';
@@ -79,6 +80,9 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
     52,
     Math.min(96, (componentWidth - theme.spacing.md * 2) / definitions.length),
   );
+  const faceFontSize = theme.typography.titleSize * 1.5;
+  // The 2px face border sits inside the fixed die size.
+  const faceTextProps = getFixedCellTextProps(faceFontSize, dieSize - 4);
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion === true || systemReducedMotion;
   const rollProgress = useSharedValue(0);
@@ -259,11 +263,12 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
                     </View>
                   ) : (
                     <Text
+                      {...faceTextProps}
                       selectable
                       style={{
                         color: theme.colors.dicePip,
                         fontFamily: theme.typography.fontFamily,
-                        fontSize: theme.typography.titleSize * 1.5,
+                        fontSize: faceFontSize,
                         fontWeight: '900',
                       }}
                     >
@@ -320,4 +325,6 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
   );
 }
 
-export const Dice = forwardRef(DiceInner);
+export const Dice = forwardRef(DiceInner) as <TRequest = void>(
+  props: DiceProps<TRequest> & React.RefAttributes<DiceRef>,
+) => React.ReactElement;

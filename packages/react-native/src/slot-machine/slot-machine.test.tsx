@@ -36,7 +36,7 @@ describe('SlotMachine', () => {
     );
 
     await act(async () => {
-      fireEvent.press(screen.getByLabelText('Spin reels'));
+      fireEvent.press(screen.getByLabelText('Pull to spin'));
       await Promise.resolve();
     });
     expect(onReelStop).toHaveBeenCalledTimes(3);
@@ -78,7 +78,19 @@ describe('SlotMachine', () => {
     expect(renderSymbol).toHaveBeenCalledWith(expect.objectContaining({ winning: true }));
 
     await act(() => reference.current?.reset());
-    expect(screen.getByLabelText('Spin reels')).not.toBeDisabled();
+    expect(screen.getByLabelText('Pull to spin')).not.toBeDisabled();
+  });
+
+  // Regression (WCAG 2.5.3 label in name): the default label "Spin reels" did not contain the
+  // visible "PULL TO SPIN" text, so voice-control users could not activate it by what they see.
+  it('uses a default spin label that contains the visible button text', async () => {
+    await render(<SlotMachine reelCount={3} rowCount={2} symbols={symbols} />);
+
+    const button = screen.getByRole('button');
+    const label = String(button.props.accessibilityLabel).toLowerCase();
+    const visible = screen.getByText('PULL TO SPIN');
+    expect(visible).toBeVisible();
+    expect(label).toContain('pull to spin');
   });
 
   it('rejects invalid presentation geometry', () => {

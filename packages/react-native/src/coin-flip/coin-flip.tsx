@@ -27,6 +27,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { getFixedCellTextProps } from '../internal/fixed-cell-text';
 import { useJackpotKitTheme } from '../theme-provider';
 import type { CoinFlipProps, CoinFlipRef } from './types';
 import { useCoinFlipController } from './use-coin-flip';
@@ -243,6 +244,14 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
   const busy =
     flipping || controller.status === 'playing' || controller.status === 'requesting-result';
   const disabled = props.disabled === true || busy;
+  // Embossed faces split the inner rim between the initial and the label; flat faces center one
+  // label inside the circle, whose inscribed square is about 70% of its diameter.
+  const rimSize = size * 0.76;
+  const initialFontSize = size * 0.3;
+  const embossedLabelFontSize = Math.max(10, size * 0.085);
+  const initialTextProps = getFixedCellTextProps(initialFontSize, rimSize * 0.55);
+  const embossedLabelTextProps = getFixedCellTextProps(embossedLabelFontSize, rimSize * 0.3);
+  const flatLabelTextProps = getFixedCellTextProps(theme.typography.titleSize, size * 0.7);
   return (
     <View
       accessibilityLabel={accessibilityLabel}
@@ -321,11 +330,12 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
                         testID="jackpotkit-coin-rim"
                       >
                         <Text
+                          {...initialTextProps}
                           selectable
                           style={{
                             color: contentColor,
                             fontFamily: theme.typography.fontFamily,
-                            fontSize: size * 0.3,
+                            fontSize: initialFontSize,
                             fontWeight: '900',
                             lineHeight: size * 0.34,
                           }}
@@ -333,11 +343,12 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
                           {label.slice(0, 1).toUpperCase()}
                         </Text>
                         <Text
+                          {...embossedLabelTextProps}
                           selectable
                           style={{
                             color: contentColor,
                             fontFamily: theme.typography.fontFamily,
-                            fontSize: Math.max(10, size * 0.085),
+                            fontSize: embossedLabelFontSize,
                             fontWeight: '900',
                             letterSpacing: 1.2,
                             opacity: flipping ? 0 : 1,
@@ -349,6 +360,7 @@ function CoinFlipInner<TValue = unknown, TRequest = void>(
                       </View>
                     ) : (
                       <Text
+                        {...flatLabelTextProps}
                         selectable
                         style={{
                           color: contentColor,

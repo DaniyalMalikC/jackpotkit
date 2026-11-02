@@ -1,6 +1,6 @@
 ---
 title: Contributing
-sidebar_position: 16
+description: Set up the monorepo, run the quality gates, and propose changes.
 ---
 
 # Contributing
@@ -15,6 +15,6 @@ pnpm validate
 
 Changes to publishable packages require a Changeset. Pull requests must preserve the dependency boundary around `@jackpotkit/core` and must not introduce telemetry, payment behavior, or animation-derived outcomes.
 
-See [Releasing](./releasing.md) for the version pull request and approved publication process.
+See [Releasing](./maintainers/releasing.md) for the version pull request and approved publication process.
 
-The complete new-game contribution contract is added before the first stable release. At minimum, each game will require pure engine types and validation, deterministic tests, platform renderers, accessibility, examples, documentation, exports, and a Changeset.
+New games follow the [game development template](./maintainers/game-development-template.md). Each game requires pure engine types and validation, deterministic tests, platform renderers, accessibility, examples, documentation, exports, and a Changeset.

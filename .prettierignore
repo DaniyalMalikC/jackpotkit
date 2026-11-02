@@ -1,12 +1,18 @@
-.docusaurus
+.next
+.source
+next-env.d.ts
 .expo
 .turbo
 build
 coverage
 dist
-lib
+packages/*/lib
 node_modules
 pnpm-lock.yaml
 *.docx
 *.pdf
 
+playwright-report
+test-results
+blob-report
+*.tsbuildinfo

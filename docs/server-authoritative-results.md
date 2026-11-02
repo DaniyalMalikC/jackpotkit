@@ -1,6 +1,6 @@
 ---
 title: Server-authoritative results
-sidebar_position: 13
+description: Keep valuable outcomes on your server and let JackpotKit animate them.
 ---
 
 # Server-authoritative results

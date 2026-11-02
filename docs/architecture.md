@@ -1,6 +1,6 @@
 ---
 title: Architecture
-sidebar_position: 2
+description: How results, pure engines, platform state, renderers, and animation are layered.
 ---
 
 # Architecture

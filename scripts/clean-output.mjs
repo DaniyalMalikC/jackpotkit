@@ -2,13 +2,17 @@ import { rmSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 
 const allowedNames = new Set([
-  '.docusaurus',
+  '.next',
+  '.source',
   '.expo',
   '.turbo',
   'build',
   'coverage',
   'dist',
   'lib',
+  'playwright-report',
+  'test-results',
+  'blob-report',
 ]);
 
 for (const target of process.argv.slice(2)) {

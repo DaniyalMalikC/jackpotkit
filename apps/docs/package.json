@@ -2,33 +2,38 @@
   "name": "@jackpotkit/docs",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "node scripts/sync-docs.mjs && docusaurus build",
-    "clean": "docusaurus clear",
-    "dev": "node scripts/sync-docs.mjs && docusaurus start",
-    "lint": "eslint docusaurus.config.ts sidebars.ts scripts",
-    "serve": "docusaurus serve",
-    "test": "node -e \"process.exit(0)\"",
-    "test:coverage": "node -e \"process.exit(0)\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "build": "node scripts/check-links.mjs && fumadocs-mdx && next build",
+    "check:links": "node scripts/check-links.mjs",
+    "clean": "node ../../scripts/clean-output.mjs .next .source",
+    "dev": "next dev",
+    "lint": "eslint .",
+    "start": "next start",
+    "test": "node scripts/check-links.mjs && vitest run",
+    "test:coverage": "node scripts/check-links.mjs && vitest run",
+    "typecheck": "fumadocs-mdx && next typegen && tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@docusaurus/core": "3.10.2",
-    "@docusaurus/faster": "3.10.2",
-    "@docusaurus/preset-classic": "3.10.2",
-    "@mdx-js/react": "3.1.1",
-    "clsx": "2.1.1",
-    "prism-react-renderer": "2.4.1",
+    "@jackpotkit/core": "workspace:*",
+    "@jackpotkit/react": "workspace:*",
+    "@jackpotkit/theme": "workspace:*",
+    "fumadocs-core": "16.17.9",
+    "fumadocs-mdx": "15.4.10",
+    "fumadocs-ui": "16.17.9",
+    "next": "16.4.3",
+    "next-themes": "0.4.6",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "search-insights": "2.17.3"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.10.2",
-    "@docusaurus/plugin-content-docs": "3.10.2",
-    "@docusaurus/tsconfig": "3.10.2",
-    "@docusaurus/types": "3.10.2",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/mdast": "4.0.4",
+    "@types/mdx": "2.0.14",
+    "@types/node": "24.13.3",
     "@types/react": "catalog:",
-    "@types/react-dom": "catalog:"
+    "@types/react-dom": "catalog:",
+    "postcss": "8.5.32",
+    "tailwindcss": "4.3.3"
   }
 }

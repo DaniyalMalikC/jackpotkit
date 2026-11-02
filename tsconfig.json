@@ -8,7 +8,6 @@
     { "path": "./packages/theme" },
     { "path": "./packages/testing" },
     { "path": "./apps/expo-example" },
-    { "path": "./apps/web-example" },
-    { "path": "./apps/docs" }
+    { "path": "./apps/web-example" }
   ]
 }

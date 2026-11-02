@@ -1,6 +1,7 @@
 import type { LuckyBoxResult, LuckyBoxSelection } from '@jackpotkit/core';
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 
+import { isPlayInFlight } from '../internal/is-play-in-flight.js';
 import { actionButtonStyle } from '../internal/styles.js';
 import { useAnimationWaiter } from '../internal/use-animation-waiter.js';
 import { useReducedMotion } from '../internal/use-reduced-motion.js';
@@ -261,7 +262,7 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
   const disabled =
     props.disabled === true ||
     revealing ||
-    controller.status === 'requesting-result' ||
+    isPlayInFlight(controller.status) ||
     displayResult !== undefined;
   const giftColors = [
     theme.colors.primary,

@@ -1,6 +1,6 @@
 ---
 title: Accessibility review
-sidebar_position: 12
+description: The accessibility baseline every JackpotKit game meets, and what remains a human review gate.
 ---
 
 # Accessibility review
@@ -16,6 +16,10 @@ Accessibility is part of the public component contract, not an optional visual e
 - Scratch Card includes an explicit Reveal action so pointer gestures are never the only path.
 - Default content does not rely on color alone for selected, winning, unavailable, or completed state.
 - Components honor the platform reduced-motion preference and support an explicit override.
+- React Native default text inside fixed-size cells (Slot Machine symbols, Bingo squares, numeric die
+  faces, coin faces, and Spin Wheel labels and hub) scales with the system text size up to 200%, or
+  less when the cell is too short, then shrinks to fit. Font scaling is never turned off, and
+  text in surrounding controls and results scales without a cap.
 - Custom renderers receive state needed to preserve labels, contrast, and non-color-only meaning.
 
 React web renderers run automated WCAG 2 A/AA checks with axe-core. React Native component tests
@@ -37,7 +41,7 @@ Before a stable release, verify the current examples with:
 Record the tested OS, browser or device, assistive technology, package commit, and any accepted
 limitations in the release pull request. A serious regression blocks stable publication.
 
-The [1.0.0 post-publication verification record](./release-verification-1.0.0.md) preserves the first
+The [1.0.0 post-publication verification record](./maintainers/release-verification-1.0.0.md) preserves the first
 stable audit results without treating automated engine coverage as a completed manual review.
 
 ## Consumer responsibility

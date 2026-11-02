@@ -1,6 +1,6 @@
 ---
 title: Versioning and migrations
-sidebar_position: 20
+description: Semantic Versioning, Changesets, and the migration policy for breaking changes.
 ---
 
 # Versioning and migrations
