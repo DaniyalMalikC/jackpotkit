@@ -51,7 +51,7 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 | B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending) |
 | B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                    |
 | C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started                             |
-| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | In progress                             |
+| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Live; SEO done, OG image pending        |
 | E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                             |
 
 B1, B3, and B4 can run in parallel after A. B2 integrates into B1. C and E follow B1. D needs Vercel
@@ -59,8 +59,10 @@ access.
 
 ## Open blockers
 
-- Vercel: project `jackpotkit` exists (root `apps/docs`, Node 24, linked to this repository). Production
-  deploys from `main`, so the public site goes live when this work is merged.
+- Vercel: project `jackpotkit` (root `apps/docs`, Node 24, Git-linked) serves
+  <https://jackpotkit.vercel.app>. The first deployment, built from `claude/charming-ptolemy-f1ecnh`,
+  was promoted to production automatically and verified publicly (all routes 200, playgrounds mount,
+  no console errors). Confirm in Vercel → Settings → Git that the production branch is `main`.
 - An `ANTHROPIC_API_KEY` repository secret and the Claude GitHub App before the Claude Code workflows
   can run (they skip cleanly until then; see [CI and agent automation](./automation.md)).
 - No EAS project, so Expo QR previews are deferred.
