@@ -16,6 +16,7 @@
   "dependencies": {
     "@jackpotkit/core": "workspace:*",
     "@jackpotkit/react": "workspace:*",
+    "@jackpotkit/testing": "workspace:*",
     "@jackpotkit/theme": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

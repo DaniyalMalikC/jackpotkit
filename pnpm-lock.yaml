@@ -263,6 +263,9 @@ importers:
       '@jackpotkit/react':
         specifier: workspace:*
         version: link:../../packages/react
+      '@jackpotkit/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
       '@jackpotkit/theme':
         specifier: workspace:*
         version: link:../../packages/theme

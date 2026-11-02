@@ -5,6 +5,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './app';
+import { resolveFixture } from './fixtures';
 
 const rootElement = document.querySelector('#root');
 
@@ -12,8 +13,6 @@ if (!rootElement) {
   throw new Error('The web example root element is missing.');
 }
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+const Fixture = resolveFixture(window.location.search);
+
+createRoot(rootElement).render(<StrictMode>{Fixture ? <Fixture /> : <App />}</StrictMode>);
