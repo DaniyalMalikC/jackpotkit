@@ -17,3 +17,13 @@ export const siteDescription =
 export const githubUrl = 'https://github.com/DaniyalMalikC/jackpotkit';
 export const npmUrl = 'https://www.npmjs.com/org/jackpotkit';
 export const docsRoute = '/docs';
+
+/**
+ * Origin of the deployed `apps/expo-example` web export that the game pages embed as their React
+ * Native preview (`/embed/<game>`). Inlined at build time from `NEXT_PUBLIC_NATIVE_PREVIEW_URL`.
+ * It must stay a different origin from the docs site: the iframe sandbox allows scripts and
+ * same-origin access, which is only safe when "same origin" is not the docs origin.
+ */
+export const nativePreviewUrl = (
+  process.env.NEXT_PUBLIC_NATIVE_PREVIEW_URL || 'https://jackpotkit-native.vercel.app'
+).replace(/\/+$/, '');

@@ -5,6 +5,8 @@ import { Stack } from 'expo-router/stack';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { embedBackground } from '@/components/game-playgrounds';
+
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -35,6 +37,10 @@ export default function RootLayout() {
         <Stack.Screen name="dice" options={{ headerLargeTitle: false, title: 'Dice' }} />
         <Stack.Screen name="coin-flip" options={{ headerLargeTitle: false, title: 'Coin Flip' }} />
         <Stack.Screen name="lucky-box" options={{ headerLargeTitle: false, title: 'Lucky Box' }} />
+        <Stack.Screen
+          name="embed/[game]"
+          options={{ contentStyle: { backgroundColor: embedBackground }, headerShown: false }}
+        />
         <Stack.Screen name="+not-found" options={{ headerLargeTitle: false, title: 'Not Found' }} />
       </Stack>
     </GestureHandlerRootView>

@@ -7,6 +7,10 @@
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/docs/**"],
       "outputs": ["build/**", "dist/**", "lib/**", ".next/**", "!.next/cache/**"]
     },
+    "build:web": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist-web/**"]
+    },
     "clean": {
       "cache": false
     },
@@ -28,7 +32,7 @@
       "outputs": ["coverage/**"]
     },
     "test:e2e": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@jackpotkit/expo-example#build:web"],
       "cache": false,
       "passThroughEnv": [
         "CI",
@@ -37,6 +41,9 @@
         "E2E_BROWSERS",
         "GALLERY_BASE_URL",
         "GALLERY_PORT",
+        "NATIVE_BASE_URL",
+        "NATIVE_PORT",
+        "NEXT_PUBLIC_NATIVE_PREVIEW_URL",
         "PLAYWRIGHT_BROWSERS_PATH",
         "PW_CHROMIUM_PATH"
       ]

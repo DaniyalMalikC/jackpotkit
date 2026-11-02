@@ -454,9 +454,12 @@ export function Playground({ game }: { readonly game: GameId }) {
       <CodePanel code={code} gameName={name} />
 
       <figcaption className="border-t px-4 py-3 text-sm text-fd-muted-foreground">
-        Live <code>{schema.componentName}</code> from <code>@jackpotkit/react/{game}</code>. The
-        React Native component in <code>@jackpotkit/react-native/{game}</code> uses native animation
-        libraries that do not run in the browser, so this page previews the web renderer only.
+        Live <code>{schema.componentName}</code> from <code>@jackpotkit/react/{game}</code>, the web
+        renderer. The <code>@jackpotkit/react-native/{game}</code> component is shown in the{' '}
+        <a className="font-medium text-fd-primary underline" href="#react-native-preview">
+          React Native preview
+        </a>{' '}
+        on this page, rendered through react-native-web.
       </figcaption>
     </figure>
   );

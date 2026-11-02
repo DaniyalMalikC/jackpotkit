@@ -9,6 +9,7 @@ const allowedNames = new Set([
   'build',
   'coverage',
   'dist',
+  'dist-web',
   'lib',
   'playwright-report',
   'test-results',

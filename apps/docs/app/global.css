@@ -17,10 +17,12 @@ html {
 
 /*
  * Fumadocs' light purple primary (hsl 270 100% 52%) is 3.9:1 on the active sidebar item's tinted
- * background. A darker shade keeps it above WCAG AA 4.5:1 there and on white.
+ * background. A darker shade keeps it above WCAG AA 4.5:1 there and on white. The preset's dark
+ * purple foreground is too dark on that shade, so text on primary surfaces is white (7.9:1).
  */
 html:not(.dark) {
   --color-fd-primary: hsl(270, 100%, 42%);
+  --color-fd-primary-foreground: hsl(0, 0%, 100%);
 }
 
 body {

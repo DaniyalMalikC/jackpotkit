@@ -10,6 +10,9 @@ next-env.d.ts
 node_modules/
 coverage/
 dist/
+dist-web/
+# Copied from canvaskit-wasm by `setup-skia-web public` during the Expo web build.
+apps/expo-example/public/canvaskit.wasm
 build/
 packages/*/lib/
 *.tgz
