@@ -7,6 +7,10 @@
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/docs/**"],
       "outputs": ["build/**", "dist/**", "lib/**", ".next/**", "!.next/cache/**"]
     },
+    "build:web": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist-web/**"]
+    },
     "clean": {
       "cache": false
     },
