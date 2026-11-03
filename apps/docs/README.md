@@ -164,8 +164,35 @@ NEXT_PUBLIC_NATIVE_PREVIEW_URL=http://127.0.0.1:4174 pnpm --filter @jackpotkit/d
 pnpm --filter @jackpotkit/docs test   # link check, then vitest (codegen type-check, schemas, state)
 ```
 
+## Code samples
+
+Guide and recipe samples live in `examples/` (`web/`, `native/`, `server/`, `testing/`) and are
+embedded in MDX with Fumadocs' include syntax, optionally a `// #region name` of the file:
+
+```mdx
+<include lang="tsx">../apps/docs/examples/web/theming.tsx#provider</include>
+```
+
+`test/examples.test.ts` type-checks every sample with the TypeScript compiler API under the shared
+strict presets (React web or React Native), resolving the workspace packages to their sources.
+`examples/testing/*.test.ts` also run as Vitest tests. `examples/` is excluded from the app's
+`tsconfig.json` because the native samples need React Native types.
+
+## Changelog and unreleased changes
+
+`docs/changelog.mdx` includes each `packages/*/CHANGELOG.md` with `<include>`;
+`lib/remark-demote-headings.ts` moves the included headings one level down. The migration guide's
+`<UnreleasedChanges />` (`components/unreleased-changes.tsx`) reads `.changeset/*.md` while the
+page is prerendered. `turbo.json` in this app adds those files and the package sources to the
+`build` and `test` inputs, so cached builds are invalidated when they change.
+
 ## Search and SEO
 
 Search uses Fumadocs' static Orama index from `app/api/search/route.ts`, built at build time and
 queried in the browser. No external search service is used. `app/sitemap.ts`, `app/robots.ts`, and
 the metadata in `app/layout.tsx` provide the SEO basics.
+
+`app/og.png/route.tsx` renders the site's Open Graph image (1200 x 630) with `next/og` at build
+time (`dynamic = 'force-static'`), using only the font bundled with Next.js, so the build fetches
+nothing. The root layout and every docs page reference it as `og:image` and `twitter:image` with a
+`summary_large_image` card (`ogImage` in `lib/site.ts`).

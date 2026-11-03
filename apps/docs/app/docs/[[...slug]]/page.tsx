@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getMDXComponents } from '@/components/mdx';
-import { githubUrl } from '@/lib/site';
+import { githubUrl, ogImage } from '@/lib/site';
 import { source } from '@/lib/source';
 
 interface DocsRouteProps {
@@ -59,6 +59,14 @@ export async function generateMetadata({ params }: DocsRouteProps): Promise<Meta
       title: page.data.title,
       description: page.data.description,
       url: page.url,
+      // Page-level `openGraph` replaces the root one, so the shared image is repeated here.
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.data.title,
+      description: page.data.description,
+      images: [{ url: ogImage.url, alt: ogImage.alt }],
     },
   };
 }

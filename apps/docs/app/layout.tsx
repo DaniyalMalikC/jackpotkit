@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
 import { Provider } from '@/components/provider';
-import { siteDescription, siteName, siteTagline, siteUrl } from '@/lib/site';
+import { ogImage, siteDescription, siteName, siteTagline, siteUrl } from '@/lib/site';
 
 import './global.css';
 
@@ -20,11 +20,13 @@ export const metadata: Metadata = {
     title: siteName,
     description: siteDescription,
     url: '/',
+    images: [ogImage],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: siteName,
     description: siteDescription,
+    images: [{ url: ogImage.url, alt: ogImage.alt }],
   },
 };
 
