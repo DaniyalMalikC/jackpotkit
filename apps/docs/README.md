@@ -36,6 +36,36 @@ read at build time, so redeploy the docs after changing it.
   work on GitHub and are rewritten to site routes. `scripts/check-links.mjs` fails the build and
   `test` on missing files or heading anchors.
 
+## Generated API reference
+
+Props, ref, and core type tables are generated at build time from the exported TypeScript types
+with [fumadocs-typescript](https://fumadocs.dev/docs/integrations/typescript) (`remarkAutoTypeTable`
+in `source.config.ts`). In MDX:
+
+```mdx
+<auto-type-table path="packages/react/src/spin-wheel/types.ts" name="SpinWheelProps" />
+
+<platform-differences
+  name="SpinWheelProps"
+  web="packages/react/src/spin-wheel/types.ts"
+  native="packages/react-native/src/spin-wheel/types.ts"
+/>
+```
+
+- `path` is relative to the repository root. `tsconfig.api.json` resolves `@jackpotkit/core` and
+  `@jackpotkit/theme` to their `src/`, so generation needs no package build and no network.
+- `lib/api-reference/generator.ts` sorts members (required, optional, then `on*` callbacks), adds a
+  description from `lib/api-reference/descriptions.ts` when the source has no TSDoc, and adds the
+  default that the component assigns while destructuring its props (`lib/api-reference/defaults.ts`
+  reads `const { size = 320 } = props` from `<Component>Inner`).
+- `<platform-differences>` (`lib/api-reference/remark-platform-differences.ts`) lists props that
+  exist on only one platform and props whose types differ, computed from both types.
+- `test/api-reference.test.ts` fails when a table cannot be generated, when a member has no
+  description, when a description or default names a member that no longer exists, when a game
+  page lacks either platform's props table, or when the two platforms' ref methods diverge.
+
+When a package adds a prop, add one sentence for it to `descriptions.ts` (or TSDoc in the source).
+
 ## Game playgrounds
 
 Each game page embeds `<Playground game="spin-wheel" />` (registered in `components/mdx.tsx`, no

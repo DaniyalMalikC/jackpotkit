@@ -180,24 +180,55 @@ ref.current?.reset();
 
 Reset and unmount reject an active component animation promise with `AnimationError`.
 
-## Component API
+## API reference
 
-| Prop                                        | Purpose                                                                                         |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `symbols`                                   | IDs, labels, values, positive weights, and metadata.                                            |
-| `reelCount`, `rowCount`                     | Positive grid dimensions; rows default to `3`.                                                  |
-| `paylines`                                  | One row index per reel; defaults to straight rows.                                              |
-| `evaluate`                                  | Consumer-defined non-monetary interpretation of the matched grid.                               |
-| `result`                                    | Controlled next symbol-ID grid.                                                                 |
-| `resultProvider` / `resultRequest`          | Application-supplied synchronous or asynchronous destination.                                   |
-| `randomSource`                              | Injectable client random source.                                                                |
-| `duration`, `reelDelay`, `easing`           | Reel animation and stagger controls.                                                            |
-| `reduceMotion`                              | Short transition with no stagger; system preference is used when omitted.                       |
-| `renderSymbol`                              | Custom text, emoji, image, or branded React Native renderer.                                    |
-| `symbolHeight`, `width`, `theme`, `style`   | Responsive presentation controls.                                                               |
-| `disabled`, `status`                        | Disable play or present external status.                                                        |
-| `accessibilityLabel`, `accessibilityLabels` | Override machine, action, busy, and result copy.                                                |
-| Lifecycle callbacks / `onEvent`             | Ready, play, request, resolve, animation, reel stop, reveal, complete, reset, and error events. |
+Generated at build time from the exported types, so the tables always match the published
+packages. Select a row to see its full type, description, and default. Defaults in the **Default**
+column are read from the component source; animation durations fall back to the theme.
+
+### React web props
+
+`SlotMachineProps` from `@jackpotkit/react/slot-machine`.
+
+<auto-type-table path="packages/react/src/slot-machine/types.ts" name="SlotMachineProps" />
+
+### React Native props
+
+`SlotMachineProps` from `@jackpotkit/react-native/slot-machine`.
+
+<auto-type-table path="packages/react-native/src/slot-machine/types.ts" name="SlotMachineProps" />
+
+### Platform differences
+
+<platform-differences
+  name="SlotMachineProps"
+  web="packages/react/src/slot-machine/types.ts"
+  native="packages/react-native/src/slot-machine/types.ts"
+/>
+
+### Ref
+
+`SlotMachineRef` has the same methods on both platforms. Pass a ref to call them imperatively.
+
+<auto-type-table path="packages/react/src/slot-machine/types.ts" name="SlotMachineRef" />
+
+### `SlotSymbol`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="SlotSymbol" />
+
+### `SlotMachineSelection`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="SlotMachineSelection" />
+
+### `SlotMachineResult`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="SlotMachineResult" />
 
 ## Images and custom symbols
 

@@ -123,23 +123,52 @@ const { status, result, error, spin, spinTo, reset } = useSpinWheel({
 
 `useSpinWheel` is useful for custom native renderers. Its play promises resolve after result selection; because it has no renderer, it completes the lifecycle immediately.
 
-## Component API
+## API reference
 
-| Prop                                           | Purpose                                                                                |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `segments`                                     | IDs, labels, values, colors, weights, and metadata.                                    |
-| `result`                                       | Controlled next `{ segmentId }`.                                                       |
-| `resultProvider` / `resultRequest`             | Application-supplied sync or async outcome.                                            |
-| `randomSource`                                 | Injectable client random source.                                                       |
-| `duration`, `rotations`, `direction`, `easing` | Destination animation controls.                                                        |
-| `disabled`, `status`                           | Disabled or externally presented status.                                               |
-| `reduceMotion`                                 | Short direct transition; system preference is used when omitted.                       |
-| `renderSegment`, `renderPointer`               | Custom native renderers.                                                               |
-| `theme`                                        | Per-wheel platform-neutral theme override.                                             |
-| `accessibilityLabels`                          | Override wheel, action, progress, and result copy.                                     |
-| Lifecycle callbacks / `onEvent`                | Ready, play, request, resolve, animation, reveal, completion, reset, and error events. |
+Generated at build time from the exported types, so the tables always match the published
+packages. Select a row to see its full type, description, and default. Defaults in the **Default**
+column are read from the component source; animation durations fall back to the theme.
 
-`SpinWheelRef` exposes `spin()`, `spinTo(segmentId)`, and `reset()`. Spin promises resolve after the component finishes its animation and result announcement. Reset or unmount cancels active Reanimated work.
+### React web props
+
+`SpinWheelProps` from `@jackpotkit/react/spin-wheel`.
+
+<auto-type-table path="packages/react/src/spin-wheel/types.ts" name="SpinWheelProps" />
+
+### React Native props
+
+`SpinWheelProps` from `@jackpotkit/react-native/spin-wheel`.
+
+<auto-type-table path="packages/react-native/src/spin-wheel/types.ts" name="SpinWheelProps" />
+
+### Platform differences
+
+<platform-differences
+  name="SpinWheelProps"
+  web="packages/react/src/spin-wheel/types.ts"
+  native="packages/react-native/src/spin-wheel/types.ts"
+/>
+
+### Ref
+
+`SpinWheelRef` has the same methods on both platforms. Pass a ref to call them imperatively.
+
+<auto-type-table path="packages/react/src/spin-wheel/types.ts" name="SpinWheelRef" />
+
+Spin promises resolve after the component finishes its animation and result announcement. Reset or
+unmount cancels active animation work.
+
+### `WheelSegment`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="WheelSegment" />
+
+### `SpinWheelResult`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="SpinWheelResult" />
 
 ## Customization and themes
 

@@ -185,23 +185,49 @@ ref.current?.reset();
 
 With `autoReveal={false}`, threshold completion leaves the cover visible until `reveal()` is called. Completion callbacks are emitted at most once per reset.
 
-## Component API
+## API reference
 
-| Prop                                           | Purpose                                                                             |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `width`, `height`                              | Required positive card dimensions.                                                  |
-| `children`                                     | Hidden React Native content or a render function receiving the current result.      |
-| `result`                                       | Controlled `{ prize, metadata }` selection.                                         |
-| `resultProvider` / `resultRequest`             | Application-supplied synchronous or asynchronous selection.                         |
-| `threshold`                                    | Completion coverage in `(0, 1]`; defaults to `0.65`.                                |
-| `brushRadius`                                  | Positive scratch radius in layout points; defaults to `18`.                         |
-| `cover`                                        | Theme-aware solid or image cover.                                                   |
-| `renderCover`                                  | Custom Skia cover drawing.                                                          |
-| `autoReveal`, `revealDuration`, `reduceMotion` | Visual reveal controls.                                                             |
-| `disabled`, `status`                           | Disable interaction or present external status.                                     |
-| `theme`, `borderRadius`, `style`               | Presentation overrides.                                                             |
-| `accessibilityLabel`, `accessibilityLabels`    | Override card, action, progress, disabled, and result copy.                         |
-| Lifecycle callbacks / `onEvent`                | Ready, play, request, resolve, progress, reveal, complete, reset, and error events. |
+Generated at build time from the exported types, so the tables always match the published
+packages. Select a row to see its full type, description, and default. Defaults in the **Default**
+column are read from the component source; animation durations fall back to the theme.
+
+### React web props
+
+`ScratchCardProps` from `@jackpotkit/react/scratch-card`.
+
+<auto-type-table path="packages/react/src/scratch-card/types.ts" name="ScratchCardProps" />
+
+### React Native props
+
+`ScratchCardProps` from `@jackpotkit/react-native/scratch-card`.
+
+<auto-type-table path="packages/react-native/src/scratch-card/types.ts" name="ScratchCardProps" />
+
+### Platform differences
+
+<platform-differences
+  name="ScratchCardProps"
+  web="packages/react/src/scratch-card/types.ts"
+  native="packages/react-native/src/scratch-card/types.ts"
+/>
+
+### Ref
+
+`ScratchCardRef` has the same methods on both platforms. Pass a ref to call them imperatively.
+
+<auto-type-table path="packages/react/src/scratch-card/types.ts" name="ScratchCardRef" />
+
+### `ScratchCardSelection`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="ScratchCardSelection" />
+
+### `ScratchCardResult`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="ScratchCardResult" />
 
 ## Accessibility and motion
 
