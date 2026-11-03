@@ -106,6 +106,6 @@ test.describe('gallery routes are unchanged', () => {
   test('a game route keeps its stack header', async ({ page }) => {
     await page.goto('/spin-wheel');
     await expect(page.getByRole('heading', { level: 1, name: 'Spin Wheel' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Spin the example wheel' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Spin', exact: true })).toBeVisible();
   });
 });

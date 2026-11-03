@@ -179,8 +179,6 @@ export function SpinWheelPlayground() {
             ref={wheelRef}
             accessibilityLabels={{
               result: (result) => `Selected ${result.segment.label ?? result.segment.id}`,
-              spin: 'Spin the example wheel',
-              spinning: 'Wheel spinning',
             }}
             duration={duration}
             onComplete={handleComplete}

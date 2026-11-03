@@ -52,9 +52,9 @@ export const nativeGames: readonly NativeGameContract[] = [
   {
     slug: 'spin-wheel',
     title: 'Spin Wheel',
-    control: /^Spin the example wheel$/,
+    control: /^Spin$/,
     completed: /^Result ID: \w+$/,
-    play: (page) => press(page, /^Spin the example wheel$/),
+    play: (page) => press(page, /^Spin$/),
   },
   {
     slug: 'scratch-card',

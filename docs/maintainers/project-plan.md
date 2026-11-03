@@ -97,9 +97,10 @@ access.
   Bingo, Lucky Box label-in-name; Dice role-less face label) are fixed on `fix/rn-accessible-names`
   and their E2E `test.fail()` markers removed. VoiceOver and TalkBack checks of the new names, the
   Scratch Card value, and the hidden-until-revealed prize are still pending.
-- C1: the Expo gallery's Spin Wheel passes the long label "Spin the example wheel" as
-  `accessibilityLabels.spin`, which is also the hub's visible text, so it truncates to "Spin th…".
-  Decide whether the hub should show a short visible label separately from its accessible name.
+- C1: the Expo gallery's Spin Wheel no longer overrides `accessibilityLabels.spin` with the long
+  "Spin the example wheel", which was also the hub's visible text and truncated to "Spin th…"; it
+  uses the default `Spin` / `Spinning`. The library default `Spinning` may still be tight in the
+  76 pt hub on web, where react-native-web cannot shrink text to fit.
 - C1: narrow the preview's `frame-ancestors https://*.vercel.app` once the docs have a custom
   domain.
 
