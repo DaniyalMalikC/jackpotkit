@@ -1,8 +1,17 @@
+import { brandThemeOverrides } from '@/lib/brand-theme';
+
 import type { ErasedSchema } from './schema';
 import { quote, toSource } from './serialize';
 import { selectionFor, type PlaygroundState } from './state';
 
-export type ResolvedTheme = 'default' | 'neon';
+/** `brand-light` and `brand-dark` are the site's own theme (`lib/brand-theme.ts`), not presets. */
+export type ResolvedTheme = 'default' | 'neon' | 'brand-light' | 'brand-dark';
+
+function brandOverride(theme: ResolvedTheme) {
+  if (theme === 'brand-light') return brandThemeOverrides.light;
+  if (theme === 'brand-dark') return brandThemeOverrides.dark;
+  return undefined;
+}
 
 export interface CodeInput {
   readonly schema: ErasedSchema;
@@ -80,7 +89,14 @@ export function generateCode({ schema, state, theme }: CodeInput): string {
     }
   }
 
+  const brand = brandOverride(theme);
   if (theme === 'neon') attributes.push('theme={neonTheme}');
+  if (brand !== undefined) {
+    hoisted.push(
+      `// The JackpotKit docs site theme. Delete it (and the theme prop) to use the default theme.\nconst brandTheme = createJackpotTheme(${toSource(brand)});`,
+    );
+    attributes.push('theme={brandTheme}');
+  }
 
   const selection = state.mode === 'random' ? undefined : selectionFor(schema, state.outcome);
   if (state.mode === 'random' && schema.modes.random && state.seed !== '') {
@@ -114,6 +130,7 @@ export function generateCode({ schema, state, theme }: CodeInput): string {
     imports.push(`import { ${coreImports.join(', ')} } from '@jackpotkit/core';`);
   imports.push(`import { ${component} } from '@jackpotkit/react/${schema.game}';`);
   if (theme === 'neon') imports.push(`import { neonTheme } from '@jackpotkit/theme';`);
+  if (brand !== undefined) imports.push(`import { createJackpotTheme } from '@jackpotkit/theme';`);
 
   const props = attributes.map((attribute) => `      ${attribute}`).join('\n');
   const element = schema.prizeChildren

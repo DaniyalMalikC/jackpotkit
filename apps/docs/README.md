@@ -50,7 +50,9 @@ import needed). It renders the real `@jackpotkit/react` component with:
 - reset (the component's imperative `reset()`), remount, and restore-defaults buttons;
 - an event log of every callback prop with a timestamp and JSON payload. It announces a summary
   through a polite live region at most every two seconds;
-- a theme switch (match site, default, neon), a preview-width switch (360, 768, full);
+- a theme switch and a preview-width switch (360, 768, full). "Match site" renders the site's
+  brand theme (`lib/brand-theme.ts`, built with the public `createJackpotTheme`) in its light or
+  dark variant; "Default" and "Neon" render the library's `defaultTheme` and `neonTheme` presets;
 - generated code with a copy button and an "Open in StackBlitz" handoff.
 
 ### Schemas cannot drift from the components
@@ -68,7 +70,9 @@ library's own error message.
 `lib/playground/codegen.ts` prints a complete module: the game imported from its exact subpath,
 only props that differ from the component's own defaults (`libraryDefaults`, read from the
 component and engine sources and the exported `defaultTheme`, `DEFAULT_COIN_FACES`, and
-`DEFAULT_BINGO_*` values), and the current result mode and theme. `test/codegen.test.ts` writes the
+`DEFAULT_BINGO_*` values), and the current result mode and theme. The site brand theme is printed
+as a `createJackpotTheme({ ... })` call so the pasted code matches the preview; the default theme
+prints nothing and neon imports `neonTheme`. `test/codegen.test.ts` writes the
 default and several modified states of all seven games to temporary `.tsx` files and type-checks
 them with the TypeScript compiler API against `@jackpotkit/react` under the repository's strict
 settings.

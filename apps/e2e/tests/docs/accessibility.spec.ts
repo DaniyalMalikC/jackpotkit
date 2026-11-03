@@ -15,15 +15,31 @@ async function violations(page: Page) {
 
 /**
  * Whole-page scans of every game page: site chrome, MDX content, the playground controls, and the
- * real component, before and after a round. "Match site" renders the default theme in light mode
- * and neon in dark mode; the explicit choices cover the opposite pairings.
+ * real component, before and after a round. "Match site" renders the site brand theme in its light
+ * or dark variant; the explicit choices cover both library presets on both site schemes.
  */
 const cases = [
   { label: 'light site, matching theme', scheme: 'light', theme: undefined },
   { label: 'dark site, matching theme', scheme: 'dark', theme: undefined },
+  { label: 'light site, default theme', scheme: 'light', theme: 'default' },
   { label: 'light site, neon theme', scheme: 'light', theme: 'neon' },
   { label: 'dark site, default theme', scheme: 'dark', theme: 'default' },
+  { label: 'dark site, neon theme', scheme: 'dark', theme: 'neon' },
 ] as const;
+
+test.describe('docs homepage axe WCAG 2 A/AA', () => {
+  for (const scheme of ['light', 'dark'] as const) {
+    test.describe(`${scheme} site`, () => {
+      test.use({ colorScheme: scheme });
+
+      test('homepage and its live Spin Wheel have no violations', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.getByRole('button', { name: 'Spin' })).toBeVisible();
+        expect(await violations(page)).toEqual([]);
+      });
+    });
+  }
+});
 
 test.describe('docs playground axe WCAG 2 A/AA', () => {
   for (const variant of cases) {

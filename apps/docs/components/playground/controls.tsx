@@ -137,7 +137,7 @@ function ListEditor({
                           className="h-9 w-12 flex-none cursor-pointer rounded-md border bg-fd-background p-1"
                           onChange={(event) => update(index, field.key, event.currentTarget.value)}
                           type="color"
-                          value={typeof fieldValue === 'string' ? fieldValue : '#6843d5'}
+                          value={typeof fieldValue === 'string' ? fieldValue : '#800020'}
                         />
                         {typeof fieldValue === 'string' ? (
                           <Button

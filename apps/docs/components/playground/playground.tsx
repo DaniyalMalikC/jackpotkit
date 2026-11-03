@@ -1,10 +1,11 @@
 'use client';
 
 import { SeededRandomSource } from '@jackpotkit/core';
-import { neonTheme } from '@jackpotkit/theme';
+import { defaultTheme, neonTheme, type JackpotTheme } from '@jackpotkit/theme';
 import { useTheme } from 'next-themes';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
+import { brandThemes } from '@/lib/brand-theme';
 import { games, type GameId } from '@/lib/games';
 import { generateCode, type ResolvedTheme } from '@/lib/playground/codegen';
 import { playgroundSchemas } from '@/lib/playground/games';
@@ -44,9 +45,18 @@ const widthOptions: readonly { readonly label: string; readonly value: PreviewWi
   { label: 'Full', value: 'full' },
 ];
 
-const themeBackgrounds: Readonly<Record<ResolvedTheme, string>> = {
-  default: '#F7F6FB',
-  neon: neonTheme.colors.background,
+const resolvedThemes: Readonly<Record<ResolvedTheme, JackpotTheme>> = {
+  'brand-dark': brandThemes.dark,
+  'brand-light': brandThemes.light,
+  default: defaultTheme,
+  neon: neonTheme,
+};
+
+const themeLabels: Readonly<Record<ResolvedTheme, string>> = {
+  'brand-dark': 'site brand, dark',
+  'brand-light': 'site brand, light',
+  default: 'default',
+  neon: 'neon',
 };
 
 function timestamp(): string {
@@ -187,7 +197,7 @@ export function Playground({ game }: { readonly game: GameId }) {
   const gameRef = useRef<ResettableGame | null>(null);
   const { resolvedTheme: siteTheme } = useTheme();
   const theme: ResolvedTheme =
-    state.theme === 'auto' ? (siteTheme === 'dark' ? 'neon' : 'default') : state.theme;
+    state.theme === 'auto' ? (siteTheme === 'dark' ? 'brand-dark' : 'brand-light') : state.theme;
   const modes = supportedModes(schema);
 
   const log = useCallback((eventName: string, args: readonly unknown[]) => {
@@ -234,7 +244,7 @@ export function Playground({ game }: { readonly game: GameId }) {
   const props = useMemo(
     () => ({
       ...configProps(state.values),
-      ...(theme === 'neon' ? { theme: neonTheme } : {}),
+      ...(theme === 'default' ? {} : { theme: resolvedThemes[theme] }),
       ...(randomSource === undefined ? {} : { randomSource }),
       ...(state.mode === 'controlled' && schema.modes.controlled ? { result: selection } : {}),
       ...(resultProvider === undefined ? {} : { resultProvider }),
@@ -290,7 +300,9 @@ export function Playground({ game }: { readonly game: GameId }) {
               onChange={(event) => update({ theme: event.currentTarget.value as ThemeChoice })}
               value={state.theme}
             >
-              <option value="auto">Match site ({theme === 'neon' ? 'neon' : 'default'})</option>
+              <option value="auto">
+                Match site ({themeLabels[siteTheme === 'dark' ? 'brand-dark' : 'brand-light']})
+              </option>
               <option value="default">Default</option>
               <option value="neon">Neon</option>
             </Select>
@@ -336,7 +348,7 @@ export function Playground({ game }: { readonly game: GameId }) {
         aria-label={`${name} preview`}
         className="jk-demo-surface flex min-h-[340px] justify-center overflow-x-auto border-y p-4"
         data-testid="playground-preview"
-        style={{ backgroundColor: themeBackgrounds[theme] }}
+        style={{ backgroundColor: resolvedThemes[theme].colors.background }}
       >
         <div
           className="flex w-full min-w-0 items-center justify-center"
