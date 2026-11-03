@@ -60,11 +60,51 @@ describe('Bingo', () => {
 
   it('supports random calls and validates presentation geometry', async () => {
     await render(<Bingo board={board} maxNumber={9} randomSource={{ next: () => 0 }} size={3} />);
-    await act(async () => fireEvent.press(screen.getByLabelText('Call next Bingo number')));
+    await act(async () =>
+      fireEvent.press(screen.getByRole('button', { name: 'Call next number' })),
+    );
     expect(await screen.findByText('Last call: 1')).toBeVisible();
     expect(() => assertBingoComponentConfiguration(0)).toThrow('width must be a positive');
     expect(() => assertBingoComponentConfiguration(300, -1)).toThrow(
       'cellGap must be a non-negative',
     );
+  });
+
+  // Regression: the default call-button name differed from its visible text (WCAG 2.5.3).
+  it('names the call button with its visible text by default', async () => {
+    const reference = createRef<BingoRef>();
+    await render(<Bingo board={board} maxNumber={9} reduceMotion ref={reference} size={3} />);
+
+    const callButton = screen.getByRole('button', { name: 'Call next number' });
+    expect(callButton).toHaveTextContent('Call next number');
+    expect(callButton).not.toHaveProp('accessibilityHint', expect.anything());
+
+    await act(async () => reference.current?.call(4));
+    const lastCall = screen.getByRole('button', { name: 'Last call: 4' });
+    expect(lastCall).toHaveTextContent('Last call: 4');
+    expect(lastCall).toHaveProp('accessibilityHint', 'Calls the next number');
+    expect(screen.queryByLabelText('Call next Bingo number')).toBeNull();
+  });
+
+  it('keeps a consumer call-button label override', async () => {
+    const reference = createRef<BingoRef>();
+    await render(
+      <Bingo
+        accessibilityLabels={{ call: 'Draw a ball' }}
+        board={board}
+        maxNumber={9}
+        reduceMotion
+        ref={reference}
+        size={3}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Draw a ball' })).toHaveTextContent(
+      'Call next number',
+    );
+    await act(async () => reference.current?.call(4));
+    const callButton = screen.getByRole('button', { name: 'Draw a ball' });
+    expect(callButton).toHaveTextContent('Last call: 4');
+    expect(callButton).not.toHaveProp('accessibilityHint', expect.anything());
   });
 });

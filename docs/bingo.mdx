@@ -206,6 +206,7 @@ The engine never imports images, fonts, or platform APIs. Custom cells remain re
 - Every numeric cell reports its called, marked, and disabled state.
 - Uncalled cells and the automatic free space cannot be activated accidentally.
 - Calls and completion are announced to screen readers.
+- The call button's default name is its visible text (`Call next number`, then `Last call: n`), so voice-control users can say what they see. `accessibilityLabels.call` replaces it.
 - System reduced-motion preference is honored unless explicitly overridden.
 - `state` is a frozen, serializable snapshot. Applications own storage; replay saved calls and marks into a validated card when restoring a session.
 

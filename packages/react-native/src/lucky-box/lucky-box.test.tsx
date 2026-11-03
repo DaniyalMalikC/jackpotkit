@@ -50,13 +50,13 @@ describe('LuckyBox', () => {
       await Promise.resolve();
     });
     await act(async () => {
-      fireEvent.press(screen.getByLabelText('Reveal Lucky Box'));
+      fireEvent.press(screen.getByRole('button', { name: 'Reveal selection' }));
       await Promise.resolve();
     });
     expect(onComplete).toHaveBeenCalledWith(expect.objectContaining({ won: true }));
     expect(screen.getByText('You found the winning box!')).toBeVisible();
     expect(screen.getByTestId('jackpotkit-lucky-gift-lid-Box one')).toBeVisible();
-    expect(screen.getByLabelText('Box three')).toBeDisabled();
+    expect(screen.getByLabelText('Box three, unavailable')).toBeDisabled();
   });
 
   it('supports custom boxes and imperative picks', async () => {
@@ -77,4 +77,38 @@ describe('LuckyBox', () => {
     await expect(result).resolves.toMatchObject({ selectedBox: { id: 'two' } });
     act(() => reference.current?.reset());
   });
+
+  // Regression: default names differed from the visible text of the reveal button and of
+  // unavailable boxes (WCAG 2.5.3).
+  it.each(['tiles', 'gift-boxes'] as const)(
+    'names %s controls starting with their visible text',
+    async (faceStyle) => {
+      await render(
+        <LuckyBox boxes={boxes} faceStyle={faceStyle} reduceMotion result={{ boxId: 'two' }} />,
+      );
+
+      expect(screen.getByRole('button', { name: 'Reveal selection' })).toHaveTextContent(
+        'Reveal selection',
+      );
+      expect(screen.queryByLabelText('Reveal Lucky Box')).toBeNull();
+      const unavailable = screen.getByRole('button', { name: 'Box three, unavailable' });
+      expect(unavailable).toBeDisabled();
+      expect(unavailable).toHaveTextContent(/Box three · unavailable$/);
+
+      await act(async () => {
+        fireEvent.press(screen.getByRole('button', { name: 'Box one' }));
+        await Promise.resolve();
+      });
+      expect(screen.getByRole('button', { name: 'Box one, selected' })).toHaveTextContent(
+        /Box one$/,
+      );
+      await act(async () => {
+        fireEvent.press(screen.getByRole('button', { name: 'Reveal selection' }));
+        await Promise.resolve();
+      });
+      expect(screen.getByRole('button', { name: 'Box two, winning box' })).toHaveTextContent(
+        /★ Box two$/,
+      );
+    },
+  );
 });

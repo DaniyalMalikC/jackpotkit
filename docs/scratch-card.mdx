@@ -205,7 +205,8 @@ With `autoReveal={false}`, threshold completion leaves the cover visible until `
 
 ## Accessibility and motion
 
-- The card exposes a button role, busy and disabled state, scratch percentage, and an accessibility action that reveals without a gesture.
+- The cover is the accessible control: a button named `Scratch Card` (or `accessibilityLabel` / `accessibilityLabels.card`) with busy and disabled state, the scratch percentage as its accessibility value, and an accessibility action that reveals without a gesture.
+- The prize content under the cover is hidden from screen readers until the reveal starts (or the threshold completes with `autoReveal={false}`), so the outcome is never announced early. After that it is ordinary readable content, outside the button.
 - Completion announces the consumer-provided result label. Override it when the prize has meaningful copy.
 - `reduceMotion` uses a short transition; when omitted, the system reduced-motion preference is honored.
 - Custom covers and hidden content remain the application's responsibility for contrast, legibility, focus order, and non-color-only meaning.
