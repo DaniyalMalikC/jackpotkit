@@ -80,8 +80,6 @@ access.
 
 - B3: verify the fixed-cell font-scale cap on an iOS simulator and an Android device at the largest
   accessibility text size.
-- React Native label-in-name mismatches remain on Lucky Box ("Reveal Lucky Box" vs "Reveal
-  selection") and Bingo ("Call next Bingo number" vs "Call next number").
 - Web game wrappers are `div` elements with `aria-label` and no role (axe "needs review"). Decide
   whether to add `role="group"` across all games in one changeset.
 - B2: the docs site had WCAG AA contrast failures outside the playground (Shiki `github-light/dark`
@@ -95,15 +93,14 @@ access.
 - C1: verify Expo Snack with Expo SDK 57, Reanimated 4, and react-native-worklets before adding any
   Snack links (snack.expo.dev was unreachable from the C1 environment). Then do C2 (companion repos
   at `1.1.0`).
-- C1: `@jackpotkit/react-native` axe defects seen through react-native-web (E2E `test.fail()` in
-  `apps/e2e/tests/native/games.ts`): Scratch Card surface label omits its visible prize text; Bingo
-  "Call next Bingo number" vs "Call next number"; Lucky Box "Reveal Lucky Box" vs "Reveal
-  selection" and "Locked gift" vs "Locked gift · unavailable"; default Dice faces put
-  `accessibilityLabel` on a role-less View (`aria-label` on a plain `div`). Fix in one changeset
-  with native screen-reader checks.
-- C1: the Expo gallery's Spin Wheel passes the long label "Spin the example wheel" as
-  `accessibilityLabels.spin`, which is also the hub's visible text, so it truncates to "Spin th…".
-  Decide whether the hub should show a short visible label separately from its accessible name.
+- C1: the `@jackpotkit/react-native` axe defects seen through react-native-web (Scratch Card,
+  Bingo, Lucky Box label-in-name; Dice role-less face label) are fixed on `fix/rn-accessible-names`
+  and their E2E `test.fail()` markers removed. VoiceOver and TalkBack checks of the new names, the
+  Scratch Card value, and the hidden-until-revealed prize are still pending.
+- C1: the Expo gallery's Spin Wheel no longer overrides `accessibilityLabels.spin` with the long
+  "Spin the example wheel", which was also the hub's visible text and truncated to "Spin th…"; it
+  uses the default `Spin` / `Spinning`. The library default `Spinning` may still be tight in the
+  76 pt hub on web, where react-native-web cannot shrink text to fit.
 - C1: narrow the preview's `frame-ancestors https://*.vercel.app` once the docs have a custom
   domain.
 

@@ -461,7 +461,7 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
             ));
           return (
             <Pressable
-              accessibilityLabel={`${box.label ?? box.id}${selected ? ', selected' : ''}${winning ? ', winning box' : ''}`}
+              accessibilityLabel={`${box.label ?? box.id}${box.disabled === true ? ', unavailable' : ''}${selected ? ', selected' : ''}${winning ? ', winning box' : ''}`}
               accessibilityRole="button"
               accessibilityState={{ disabled: disabled || box.disabled === true, selected }}
               disabled={disabled || box.disabled === true}
@@ -474,7 +474,8 @@ function LuckyBoxInner<TReward = unknown, TRequest = void>(
         })}
       </View>
       <Pressable
-        accessibilityLabel={busy ? 'Revealing Lucky Box' : 'Reveal Lucky Box'}
+        accessibilityHint={busy ? undefined : 'Reveals the Lucky Box result'}
+        accessibilityLabel={busy ? 'Revealing' : 'Reveal selection'}
         accessibilityRole="button"
         accessibilityState={{ busy, disabled: disabled || controller.selectedBoxId === undefined }}
         disabled={disabled || controller.selectedBoxId === undefined}

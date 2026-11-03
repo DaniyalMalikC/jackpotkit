@@ -298,18 +298,14 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
       ? (cover.color ?? theme.colors.scratchCover)
       : (cover.fallbackColor ?? theme.colors.scratchCover);
 
+  /* The prize sits under the cover, so it stays hidden from assistive technology until the reveal
+     starts (or the threshold completes without auto reveal). Exposing it earlier would leak the
+     outcome; exposing it inside the cover button would make the button's visible text differ from
+     its accessible name (WCAG 2.5.3). The cover, which carries no text, is the accessible control. */
+  const contentHidden = !revealed && status !== 'completed';
+
   return (
     <View
-      accessibilityActions={[{ name: 'activate', label: labels.reveal }]}
-      accessibilityHint={isDisabled ? labels.disabled : labels.reveal}
-      accessibilityLabel={`${labels.card}. ${labels.progress(controller.progress)}.`}
-      accessibilityRole="button"
-      accessibilityState={{ busy: status === 'requesting-result', disabled: isDisabled }}
-      onAccessibilityAction={(event) => {
-        if (event.nativeEvent.actionName === 'activate' && !isDisabled) {
-          void reveal().catch(() => undefined);
-        }
-      }}
       style={[
         {
           borderCurve: 'continuous',
@@ -320,9 +316,12 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
         },
         style,
       ]}
-      testID="jackpotkit-scratch-card"
+      testID="jackpotkit-scratch-card-container"
     >
       <View
+        accessibilityElementsHidden={contentHidden}
+        aria-hidden={contentHidden}
+        importantForAccessibility={contentHidden ? 'no-hide-descendants' : 'auto'}
         style={{
           alignItems: 'center',
           backgroundColor: theme.colors.surface,
@@ -330,13 +329,27 @@ function ScratchCardInner<TPrize = unknown, TRequest = void>(
           justifyContent: 'center',
           width,
         }}
+        testID="jackpotkit-scratch-card-content"
       >
         {hiddenContent}
       </View>
 
       <AnimatedView
+        accessibilityActions={[{ name: 'activate', label: labels.reveal }]}
+        accessibilityHint={isDisabled ? labels.disabled : labels.reveal}
+        accessibilityLabel={labels.card}
+        accessibilityRole="button"
+        accessibilityState={{ busy: status === 'requesting-result', disabled: isDisabled }}
+        accessibilityValue={{ text: labels.progress(controller.progress) }}
+        accessible
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'activate' && !isDisabled) {
+            void reveal().catch(() => undefined);
+          }
+        }}
         pointerEvents={isDisabled ? 'none' : 'auto'}
         style={[{ ...StyleSheetAbsoluteFill, height, width }, animatedCoverStyle]}
+        testID="jackpotkit-scratch-card"
       >
         <GestureDetector gesture={gesture}>
           <View style={{ height, width }}>

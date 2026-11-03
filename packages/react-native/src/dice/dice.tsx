@@ -212,6 +212,8 @@ function DiceInner<TRequest = void>(props: DiceProps<TRequest>, ref: React.Forwa
               {renderDie?.({ die, index, rolling, theme, value }) ?? (
                 <View
                   accessibilityLabel={`${die.label ?? `Die ${index + 1}`}: ${value}`}
+                  accessibilityRole="image"
+                  accessible
                   style={{
                     alignItems: 'center',
                     backgroundColor: theme.colors.diceFace,

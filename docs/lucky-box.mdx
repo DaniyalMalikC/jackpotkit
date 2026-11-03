@@ -50,7 +50,7 @@ import { LuckyBox } from '@jackpotkit/react-native/lucky-box';
 />;
 ```
 
-Users select an enabled box and activate Reveal. `renderBox` supports custom visuals; default content shows selection, availability, and the winning box without relying only on color. `useLuckyBox` exposes `select`, `reveal`, `revealTo`, `pick`, and `reset`; `LuckyBoxRef` provides the same imperative operations.
+Users select an enabled box and activate Reveal selection. Default accessible names start with the visible text: `Reveal selection`, and box labels such as `Locked gift, unavailable` or `Golden gift, selected`. `renderBox` supports custom visuals; default content shows selection, availability, and the winning box without relying only on color. `useLuckyBox` exposes `select`, `reveal`, `revealTo`, `pick`, and `reset`; `LuckyBoxRef` provides the same imperative operations.
 
 Use `faceStyle="tiles"` for the compact labeled cards or `faceStyle="gift-boxes"` for dimensional
 gift boxes with ribbons, bows, reward glows, and a lid that pops open on the winning box. The style
