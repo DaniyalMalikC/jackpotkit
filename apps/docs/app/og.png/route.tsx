@@ -23,8 +23,8 @@ export function GET() {
   return new ImageResponse(
     <div
       style={{
-        background: 'linear-gradient(135deg, #17142b 0%, #25194d 55%, #3b2f61 100%)',
-        color: '#f8f5ff',
+        background: 'linear-gradient(135deg, #170a0e 0%, #5c0a1f 55%, #800020 100%)',
+        color: '#fffdd0',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -35,22 +35,22 @@ export function GET() {
     >
       <div style={{ alignItems: 'center', display: 'flex', gap: 28 }}>
         <svg height="112" viewBox="0 0 64 64" width="112">
-          <rect fill="#0f0a24" height="64" rx="16" width="64" />
-          <circle cx="32" cy="32" fill="none" r="20" stroke="#ad96ff" strokeWidth="5" />
+          <rect fill="#170a0e" height="64" rx="16" width="64" />
+          <circle cx="32" cy="32" fill="none" r="20" stroke="#d7707c" strokeWidth="5" />
           <path
             d="M32 12v40M12 32h40M18 18l28 28M46 18 18 46"
-            stroke="#ad96ff"
+            stroke="#d7707c"
             strokeLinecap="round"
             strokeWidth="3"
           />
-          <circle cx="32" cy="32" fill="#ffffff" r="5" />
+          <circle cx="32" cy="32" fill="#f7edb9" r="5" />
         </svg>
         <div style={{ display: 'flex', fontSize: 84, fontWeight: 700, letterSpacing: -2 }}>
           {siteName}
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-        <div style={{ color: '#e5e0f1', display: 'flex', fontSize: 44, lineHeight: 1.25 }}>
+        <div style={{ color: '#f7edb9', display: 'flex', fontSize: 44, lineHeight: 1.25 }}>
           {siteTagline}
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
@@ -58,10 +58,10 @@ export function GET() {
             <div
               key={game}
               style={{
-                background: 'rgba(173, 150, 255, 0.16)',
-                border: '2px solid rgba(173, 150, 255, 0.55)',
+                background: 'rgba(215, 112, 124, 0.18)',
+                border: '2px solid rgba(215, 112, 124, 0.6)',
                 borderRadius: 999,
-                color: '#f3edff',
+                color: '#fffdd0',
                 display: 'flex',
                 fontSize: 26,
                 padding: '8px 22px',
