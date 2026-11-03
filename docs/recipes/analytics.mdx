@@ -1,0 +1,30 @@
+---
+title: Analytics with callbacks
+description: Forward game lifecycle events to your own analytics. JackpotKit itself sends nothing.
+---
+
+# Analytics with callbacks
+
+JackpotKit has no telemetry, no network calls, and no analytics integration. The repository's
+`check:privacy` gate keeps it that way. You decide what to record and where to send it, from the
+callbacks every game exposes.
+
+<include lang="tsx">../../apps/docs/examples/web/analytics.tsx</include>
+
+## Which callback to use
+
+- `onEvent` receives every lifecycle event as a typed `GameEvent` with `type`, `timestamp`, and
+  `payload`. One handler covers ready, play start, result request and resolution, animation and
+  reveal start, completion, reset, and errors; Slot Machine adds `reel-stop`, Scratch Card adds
+  `progress`, and Bingo adds `number-call`, `mark`, and `unmark`.
+- `onStatusChange` reports the coarse status (`idle`, `requesting-result`, `playing`, `revealing`,
+  `completed`, `error`, ...), useful for funnels.
+- The named callbacks (`onComplete`, `onError`, `onReelStop`, `onProgress`, `onSelect`, ...) are
+  convenient for one or two specific events. Each game's API reference lists them.
+
+## Privacy
+
+- Record outcomes from your server's stored play when they matter; client events can be forged.
+- Scratch Card `progress` events fire often while scratching. Sample or debounce them.
+- Ask for consent where your jurisdiction requires it, and avoid sending result `metadata` that
+  contains personal data.

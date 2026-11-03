@@ -73,4 +73,56 @@ The web component supports the same `flat` and `embossed` face styles with a gen
 perspective transform. It retains the same controlled/provider modes, `useCoinFlip` lifecycle,
 imperative methods, visible result, and reduced-motion behavior without loading React Native.
 
+## API reference
+
+Generated at build time from the exported types, so the tables always match the published
+packages. Select a row to see its full type, description, and default. Defaults are read from the
+component source; animation durations fall back to the [theme](./theming.mdx#animation).
+
+### React web props
+
+`CoinFlipProps` from `@jackpotkit/react/coin-flip`.
+
+<auto-type-table path="packages/react/src/coin-flip/types.ts" name="CoinFlipProps" />
+
+### React Native props
+
+`CoinFlipProps` from `@jackpotkit/react-native/coin-flip`.
+
+<auto-type-table path="packages/react-native/src/coin-flip/types.ts" name="CoinFlipProps" />
+
+### Platform differences
+
+<platform-differences
+  name="CoinFlipProps"
+  web="packages/react/src/coin-flip/types.ts"
+  native="packages/react-native/src/coin-flip/types.ts"
+/>
+
+### Ref
+
+`CoinFlipRef` has the same methods on both platforms. Pass a ref to call them imperatively.
+
+<auto-type-table path="packages/react/src/coin-flip/types.ts" name="CoinFlipRef" />
+
+### `CoinFace`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="CoinFace" />
+
+### `CoinFlipSelection`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="CoinFlipSelection" />
+
+### `CoinFlipResult`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="CoinFlipResult" />
+
+## Testing
+
 `@jackpotkit/testing` exports `createCoinFaces`. Random client flips are not proof of entitlement; use `resultProvider` for valuable outcomes.

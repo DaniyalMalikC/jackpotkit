@@ -1,0 +1,61 @@
+---
+title: Server-authoritative rewards
+description: An end-to-end flow where your server checks eligibility, draws and stores the outcome, and JackpotKit only animates it.
+---
+
+# Server-authoritative rewards
+
+When a reward has value (points, coupons, items, entries), the browser or app must not choose it.
+Anyone can call your component's ref, change `result`, or replay a request. Your server decides;
+JackpotKit validates and presents what the server returned. Read
+[Server-authoritative results](../server-authoritative-results.md) for the full boundary.
+
+```text
+Player presses Spin
+  -> component calls resultProvider(resultRequest)        status: requesting-result
+  -> your API checks eligibility, draws, and stores the play
+  -> your API returns { playId, segmentId }
+  -> component validates segmentId and animates to it     status: playing
+  -> onComplete(result)                                   status: completed
+```
+
+## 1. Draw and store the outcome on the server
+
+`@jackpotkit/core` has no UI or DOM dependency, so the same engine runs on your server. Give it a
+cryptographically strong random source (the built-in `MathRandomSource` and `SeededRandomSource`
+are not), and store the play before you answer:
+
+<include lang="ts">../../apps/docs/examples/server/play-endpoint.ts</include>
+
+Keep weights and eligibility rules on the server. The client's `segments` only need matching IDs
+and labels.
+
+## 2. Ask the server from the component
+
+Pass a `resultProvider`. The component calls it with `resultRequest`, waits, validates the returned
+selection against its configuration, and only then animates:
+
+<include lang="tsx">../../apps/docs/examples/web/server-authoritative.tsx</include>
+
+On React Native the props are identical: import `SpinWheel` from
+`@jackpotkit/react-native/spin-wheel` and keep the same `resultProvider`.
+
+## 3. Handle failures
+
+- A provider that throws or rejects becomes a `ResultProviderError` (its `cause` holds your error).
+  The game reports it through `onError` and status `error`, and does not animate.
+- A returned ID that does not exist in the configuration becomes an error too (for Spin Wheel,
+  `InvalidSegmentError`). Treat that as a deployment mismatch between client and server segments.
+- `reset()` (or unmounting) invalidates an in-flight request locally. The server may still have
+  stored the play, so look up the stored play rather than drawing again when the player returns.
+
+## 4. Server checklist
+
+- Authenticate the player and check eligibility (limits, campaign dates) before drawing.
+- Make the play idempotent: reuse a stored play for a repeated request instead of drawing again.
+- Fulfil the reward from the stored play, never from a client message such as "I won".
+- Return only what the client needs to present (`segmentId`, `playId`).
+
+The same pattern works for every game: Scratch Card and Lucky Box providers return a prize or box
+ID, Slot Machine returns the symbol grid, Dice return values, and Coin Flip returns a face ID. Bingo
+uses a stream of server calls (`ref.call(number)`) instead of a one-shot provider.

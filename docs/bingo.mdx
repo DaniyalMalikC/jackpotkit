@@ -18,13 +18,13 @@ The same game from `@jackpotkit/react-native`, running in the Expo gallery's web
 ## Installation
 
 ```bash
-npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-native-reanimated react-native-worklets
+npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 Expo applications should resolve native animation peers with Expo:
 
 ```bash
-npx expo install react-native-reanimated react-native-worklets
+npx expo install react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 ## Basic component
@@ -170,22 +170,49 @@ const {
 
 The hook exposes engine state without animation timing. `onCall`, `onMark`, `onUnmark`, `onComplete`, `onReset`, `onError`, `onStatusChange`, and `onEvent` integrate with application state and analytics. JackpotKit itself emits no telemetry.
 
-## Component API
+## API reference
 
-| Prop                                        | Purpose                                                                     |
-| ------------------------------------------- | --------------------------------------------------------------------------- |
-| `board`                                     | Optional externally supplied row-major card.                                |
-| `size`, `minNumber`, `maxNumber`            | Generated or supplied card dimensions and call range.                       |
-| `freeSpace`                                 | Enables the center free cell on odd-sized cards.                            |
-| `patterns`                                  | Built-in names or custom coordinate patterns.                               |
-| `randomSource`                              | Injectable card and call randomness.                                        |
-| `renderCell`                                | Custom React Native cell content.                                           |
-| `showCallButton`                            | Shows or hides the built-in call control.                                   |
-| `cellGap`, `width`, `theme`, `style`        | Responsive presentation controls.                                           |
-| `reduceMotion`                              | Uses the short reduced-motion mark transition.                              |
-| `disabled`                                  | Prevents calling and marking.                                               |
-| `accessibilityLabel`, `accessibilityLabels` | Overrides board, call, cell, and completion descriptions.                   |
-| Lifecycle callbacks / `onEvent`             | Ready, number call, mark, unmark, complete, reset, and error notifications. |
+Generated at build time from the exported types, so the tables always match the published
+packages. Select a row to see its full type, description, and default. Defaults are read from the
+component source; animation durations fall back to the [theme](./theming.mdx#animation).
+
+### React web props
+
+`BingoProps` from `@jackpotkit/react/bingo`.
+
+<auto-type-table path="packages/react/src/bingo/types.ts" name="BingoProps" />
+
+### React Native props
+
+`BingoProps` from `@jackpotkit/react-native/bingo`.
+
+<auto-type-table path="packages/react-native/src/bingo/types.ts" name="BingoProps" />
+
+### Platform differences
+
+<platform-differences
+  name="BingoProps"
+  web="packages/react/src/bingo/types.ts"
+  native="packages/react-native/src/bingo/types.ts"
+/>
+
+### Ref
+
+`BingoRef` has the same methods on both platforms. Pass a ref to call them imperatively.
+
+<auto-type-table path="packages/react/src/bingo/types.ts" name="BingoRef" />
+
+### `BingoState`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="BingoState" />
+
+### `BingoResult`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="BingoResult" />
 
 ## Custom cells
 

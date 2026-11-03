@@ -1,0 +1,44 @@
+---
+title: Quick start
+description: Render a Spin Wheel on React web and React Native, react to its result, and choose where outcomes come from.
+---
+
+# Quick start
+
+This page builds the same daily spin on both platforms. Install the packages first
+([Installation](./installation.mdx)).
+
+## React web
+
+<include lang="tsx">../apps/docs/examples/web/quick-start.tsx</include>
+
+## React Native
+
+<include lang="tsx">../apps/docs/examples/native/quick-start.tsx</include>
+
+The two components share their props, callbacks, ref methods, and result types. Platform
+differences are presentation details: the web takes `className`, CSS `style`, and CSS easing
+strings; React Native takes `StyleProp<ViewStyle>`, Reanimated easing functions, and
+`accessibilityLabels`. Each game page lists them in its generated
+[API reference](./spin-wheel.mdx#api-reference).
+
+## Where the outcome comes from
+
+Every game resolves its outcome **before** it animates. Pick one source per game:
+
+| Mode       | Props                             | Use it for                                                      |
+| ---------- | --------------------------------- | --------------------------------------------------------------- |
+| Random     | none, or `randomSource`           | Casual play, demos, and seeded previews. Not tamper-proof.      |
+| Controlled | `result`, or `ref.spinTo(...)`    | Tutorials, scripted flows, and outcomes your app already knows. |
+| Provider   | `resultProvider`, `resultRequest` | Rewards with value: your server decides and stores the outcome. |
+
+The animation never decides the winner. For anything valuable, follow the
+[server-authoritative reward recipe](./recipes/server-authoritative-rewards.mdx).
+
+## Next steps
+
+- Try each game in its playground: [Spin Wheel](./spin-wheel.mdx), [Scratch Card](./scratch-card.mdx),
+  [Slot Machine](./slot-machine.mdx), [Bingo](./bingo.mdx), [Dice](./dice.mdx),
+  [Coin Flip](./coin-flip.mdx), and [Lucky Box](./lucky-box.mdx).
+- Match your brand with [Theming](./theming.mdx).
+- Browse the [Recipes](./recipes/index.md).

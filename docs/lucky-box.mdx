@@ -70,4 +70,56 @@ The web grid uses native selection buttons and CSS transform motion. `renderBox`
 imperative play/reset methods, result-provider behavior, disabled boxes, themes, and lifecycle events
 remain aligned with the React Native surface while the implementation stays independent.
 
+## API reference
+
+Generated at build time from the exported types, so the tables always match the published
+packages. Select a row to see its full type, description, and default. Defaults are read from the
+component source; animation durations fall back to the [theme](./theming.mdx#animation).
+
+### React web props
+
+`LuckyBoxProps` from `@jackpotkit/react/lucky-box`.
+
+<auto-type-table path="packages/react/src/lucky-box/types.ts" name="LuckyBoxProps" />
+
+### React Native props
+
+`LuckyBoxProps` from `@jackpotkit/react-native/lucky-box`.
+
+<auto-type-table path="packages/react-native/src/lucky-box/types.ts" name="LuckyBoxProps" />
+
+### Platform differences
+
+<platform-differences
+  name="LuckyBoxProps"
+  web="packages/react/src/lucky-box/types.ts"
+  native="packages/react-native/src/lucky-box/types.ts"
+/>
+
+### Ref
+
+`LuckyBoxRef` has the same methods on both platforms. Pass a ref to call them imperatively.
+
+<auto-type-table path="packages/react/src/lucky-box/types.ts" name="LuckyBoxRef" />
+
+### `LuckyBoxItem`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="LuckyBoxItem" />
+
+### `LuckyBoxSelection`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="LuckyBoxSelection" />
+
+### `LuckyBoxResult`
+
+From `@jackpotkit/core`.
+
+<auto-type-table path="packages/core/src/index.ts" name="LuckyBoxResult" />
+
+## Testing
+
 `@jackpotkit/testing` exports `createLuckyBoxes`. For rewards with value, the backend must own eligibility, result choice, persistence, and replay protection; the chosen UI box is not an authority boundary.

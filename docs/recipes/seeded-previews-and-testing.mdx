@@ -1,0 +1,50 @@
+---
+title: Seeded previews and testing
+description: Repeatable previews with SeededRandomSource and deterministic tests with @jackpotkit/testing.
+---
+
+# Seeded previews and testing
+
+Randomness is injectable everywhere through `randomSource`. That makes previews repeatable and
+tests exact, with no statistical assertions and no mocked `Math.random`.
+
+## Seeded previews
+
+`SeededRandomSource` from `@jackpotkit/core` produces the same sequence for the same seed. Use it
+for design reviews, screenshots, and demos:
+
+<include lang="tsx">../../apps/docs/examples/web/seeded-preview.tsx</include>
+
+The seeded sequence is part of the public compatibility contract and does not change in minor or
+patch releases ([Versioning](../versioning.md)). It is still client randomness: never use a seed to
+decide a valuable outcome.
+
+## Deterministic tests
+
+Install the helpers as a dev dependency:
+
+```npm
+npm install --save-dev @jackpotkit/testing
+```
+
+| Export                                         | Use it to                                                                           |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `SequenceRandomSource`, `createSequenceRandom` | Feed exact values in `[0, 1)`; throws when exhausted unless `loop`.                 |
+| `MockResultProvider`                           | A provider that returns a fixed result or a resolver's result and records requests. |
+| `createWheelSegments`, `createSlotSymbols`     | Spin Wheel segments and Slot Machine symbols.                                       |
+| `createBingoBoardFixture`                      | A predictable Bingo card.                                                           |
+| `createDiceFixture`, `createCoinFaces`         | Dice definitions and coin faces.                                                    |
+| `createLuckyBoxes`                             | Lucky Box items.                                                                    |
+| `createScratchCardSelection`                   | A Scratch Card selection.                                                           |
+| `createGameResult`, `createReward`             | Generic results and rewards.                                                        |
+
+Test rules against the headless engines; they are synchronous and need no renderer. These tests run
+in the docs test suite:
+
+<include lang="ts">../../apps/docs/examples/testing/spin-wheel.test.ts</include>
+
+For component tests, prefer a controlled `result` and assert the visible result and the
+`onComplete` payload, not animation frames. On the web, `reduceMotion` shortens the animation to
+the theme's `reducedMotionDuration`. On React Native, use Gesture Handler's Jest utilities for
+Scratch Card gestures. If your test runner is Jest in CommonJS mode, see
+[Troubleshooting](../troubleshooting.md#jest-cannot-use-import-statement-outside-a-module).

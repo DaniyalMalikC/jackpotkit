@@ -1,0 +1,49 @@
+---
+title: Translating labels
+description: Which text you can translate on each platform, through your data, accessibility labels, and custom renderers.
+---
+
+# Translating labels
+
+JackpotKit has no built-in locale data. Text comes from three places, and you control each one
+differently.
+
+## 1. Your data
+
+Segment, symbol, face, die, and box `label` fields are visible text, and they are what the result
+announcement reads. Translate them where you build the configuration:
+
+<include lang="tsx">../../apps/docs/examples/web/translated-labels.tsx</include>
+
+## 2. Accessibility labels
+
+`accessibilityLabel` names the game on both platforms. On React Native, four games also accept
+`accessibilityLabels` for their controls and announcements:
+
+| Game (React Native) | `accessibilityLabels` keys                                           |
+| ------------------- | -------------------------------------------------------------------- |
+| Spin Wheel          | `wheel`, `spin`, `spinning`, `result(result)`                        |
+| Scratch Card        | `card`, `reveal`, `disabled`, `progress(progress)`, `result(result)` |
+| Slot Machine        | `machine`, `spin`, `spinning`, `result(result)`                      |
+| Bingo               | `board`, `call`, `cell(info)`, `completed(result)`                   |
+
+On React Native Spin Wheel, `spin` and `spinning` are also the visible hub text, so a translation
+changes both. On Slot Machine the visible button text stays `PULL TO SPIN`; keep those words inside
+your translated accessible name, or voice-control users cannot say what they see (WCAG 2.5.3).
+
+<include lang="tsx">../../apps/docs/examples/native/translated-labels.tsx</include>
+
+## 3. Built-in control text
+
+The React web renderers do not accept `accessibilityLabels`, and some built-in text is English
+only: for example the Spin Wheel button (`Spin`, `Spinning…`), its `Selected: …` result line, and
+Bingo's `Call next number`. Dice, Coin Flip, and Lucky Box have no `accessibilityLabels` on either
+platform. To ship a fully translated interface today:
+
+- render your own controls and result text with the game's hook (`useSpinWheel`, `useDice`, ...) and
+  your own markup, or
+- use custom renderers (`renderSegment`, `renderSymbol`, `renderCell`, `renderDie`, `renderFace`,
+  `renderBox`) for the text inside the game, which are fully yours.
+
+Each game page's [API reference](../spin-wheel.mdx#api-reference) shows which label props each
+platform accepts. Translatable built-in text on the web is tracked in the project backlog.

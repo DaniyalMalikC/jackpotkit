@@ -18,7 +18,9 @@ Accessibility is part of the public component contract, not an optional visual e
 - Default accessible names contain the control's visible text (WCAG 2.5.3), so voice-control users
   can activate a control by what they see. Extra state, such as Scratch Card progress, is exposed as
   an accessibility value or hint rather than replacing the visible words.
-- Components honor the platform reduced-motion preference and support an explicit override.
+- Components honor the platform reduced-motion preference. `reduceMotion={true}` forces reduced
+  motion on both platforms; `reduceMotion={false}` forces full motion only on the web (see
+  [Reduced motion](./recipes/reduced-motion.mdx)).
 - React Native default text inside fixed-size cells (Slot Machine symbols, Bingo squares, numeric die
   faces, coin faces, and Spin Wheel labels and hub) scales with the system text size up to 200%, or
   less when the cell is too short, then shrinks to fit. Font scaling is never turned off, and
