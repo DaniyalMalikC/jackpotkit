@@ -50,8 +50,10 @@ individually and report the doctor result as unverified, not passed.
 
 - One concern per branch: `feat/`, `fix/`, `docs/`, `test/`, `refactor/`, `chore/`, `release/`.
   Use a separate worktree for parallel work.
-- Conventional Commits (`feat(playground): ...`). Use the configured git identity. Do not add AI
-  co-author trailers or session links.
+- Conventional Commits (`feat(playground): ...`). Author and commit as the maintainer:
+  `M. Daniyal Malik .C <40606850+DaniyalMalikC@users.noreply.github.com>`. If `git config user.email`
+  shows anything else, set it in the repository (`git config user.name` / `user.email`) before
+  committing. Do not add AI co-author trailers or session links.
 - Agents may open issues and draft PRs. Merging, npm publishing, production deploys, and destructive
   operations require human approval.
 
@@ -60,5 +62,14 @@ individually and report the doctor result as unverified, not passed.
 Role definitions live in `.claude/agents/`. The orchestrator plans and assigns work; specialists stay
 within their scope and end with the report format below.
 
-Report format: **Decisions made**, **Completed** (files and the checks run, with results),
-**Remaining**, **Blockers**, **Next actions** (priority and owner agent).
+Report format, in this order:
+
+- **Decisions made**: approach, architectural decisions, trade-offs, deviations.
+- **Completed**: changes, files, and every check run with its actual result.
+- **Remaining**: unfinished requirements and follow-ups; "None." if nothing remains.
+- **Blockers**: missing access, decisions, or dependencies; "None." if there are none.
+- **Next actions**: priority and owner agent.
+- **Git summary**: repository, branch, worktree, commit hashes and messages, push/PR status
+  ("Not applicable" where a field does not apply).
+- **Final status**: exactly one of Completed, Partially Completed, Blocked, Ready for Review. Never
+  Completed while a required check failed or was not run.

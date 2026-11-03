@@ -50,7 +50,7 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 | B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done                                    |
 | B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending) |
 | B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                    |
-| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Not started                             |
+| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Done (Snack and device checks pending)  |
 | D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Live; SEO done, OG image pending        |
 | E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                             |
 
@@ -62,12 +62,19 @@ access.
 - Vercel: project `jackpotkit` (root `apps/docs`, Node 24, Git-linked) serves
   <https://jackpotkit.vercel.app>. The first deployment, built from `claude/charming-ptolemy-f1ecnh`,
   was promoted to production automatically and verified publicly (all routes 200, playgrounds mount,
-  no console errors). Confirm in Vercel → Settings → Git that the production branch is `main`.
+  no console errors). Later branch pushes build as previews, so production follows `main`.
 - An `ANTHROPIC_API_KEY` repository secret and the Claude GitHub App before the Claude Code workflows
   can run (they skip cleanly until then; see [CI and agent automation](./automation.md)).
 - No EAS project, so Expo QR previews are deferred.
-- Screen readers (VoiceOver, TalkBack), physical-device gestures, and `expo-doctor` network checks
-  remain human-operated or network-dependent gates.
+- Native preview: project `jackpotkit-native` (root `apps/expo-example`, Node 24, Git-linked) serves
+  <https://jackpotkit-native.vercel.app>. Its first deployment, from `feat/docs-native-preview`, was
+  promoted to production automatically. All seven `/embed/<game>` routes load in a cross-origin
+  iframe with no page errors or failed requests, the `frame-ancestors` policy is served, and
+  `canvaskit.wasm` is served as `application/wasm`.
+- `expo-doctor` passes on GitHub runners after the Expo SDK 57 patch bump; it stays unverifiable
+  from the cloud sandbox.
+- Screen readers (VoiceOver, TalkBack), physical-device gestures, and Expo Snack compatibility remain
+  human-operated gates.
 
 ## Follow-ups from integrated phases
 
@@ -84,6 +91,21 @@ access.
 - B2: decide whether to add an embedded Sandpack editor beside the StackBlitz handoff.
 - The `webpack` and `serialize-javascript` overrides in `pnpm-workspace.yaml` no longer match any
   dependency after the Docusaurus removal.
+
+- C1: verify Expo Snack with Expo SDK 57, Reanimated 4, and react-native-worklets before adding any
+  Snack links (snack.expo.dev was unreachable from the C1 environment). Then do C2 (companion repos
+  at `1.1.0`).
+- C1: `@jackpotkit/react-native` axe defects seen through react-native-web (E2E `test.fail()` in
+  `apps/e2e/tests/native/games.ts`): Scratch Card surface label omits its visible prize text; Bingo
+  "Call next Bingo number" vs "Call next number"; Lucky Box "Reveal Lucky Box" vs "Reveal
+  selection" and "Locked gift" vs "Locked gift · unavailable"; default Dice faces put
+  `accessibilityLabel` on a role-less View (`aria-label` on a plain `div`). Fix in one changeset
+  with native screen-reader checks.
+- C1: the Expo gallery's Spin Wheel passes the long label "Spin the example wheel" as
+  `accessibilityLabels.spin`, which is also the hub's visible text, so it truncates to "Spin th…".
+  Decide whether the hub should show a short visible label separately from its accessible name.
+- C1: narrow the preview's `frame-ancestors https://*.vercel.app` once the docs have a custom
+  domain.
 
 - Playground: segment colour swatches show a placeholder when a segment inherits its theme colour;
   show the resolved theme colour instead. Open the StackBlitz handoff in a real browser once deployed.

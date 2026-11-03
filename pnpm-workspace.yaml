@@ -22,7 +22,7 @@ catalog:
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.3
   '@shopify/react-native-skia': 2.6.2
-  expo: ~57.0.18
+  expo: ~57.0.31
   react: 19.2.3
   react-dom: 19.2.3
   react-native: 0.86.3

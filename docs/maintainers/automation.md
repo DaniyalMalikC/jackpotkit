@@ -11,14 +11,14 @@ their own; these workflows supply the triggers, scoped tokens, logs, and cost li
 
 ## Workflows at a glance
 
-| Workflow                 | Trigger                                                        | Job permissions                                                    | Secrets             |
-| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------- |
-| `ci.yml`                 | `pull_request`, push to `main`                                 | `contents: read`                                                   | none                |
-| `claude.yml`             | `@claude` in issues, comments, reviews, review comments        | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY` |
-| `claude-review.yml`      | `pull_request` opened, synchronize, ready_for_review, reopened | `contents: read`, `pull-requests: write`, `id-token: write`        | `ANTHROPIC_API_KEY` |
-| `claude-maintenance.yml` | Mondays 04:17 UTC, `workflow_dispatch`                         | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY` |
-| `release-pr.yml`         | push to `main`, `workflow_dispatch`                            | `contents`, `pull-requests`: write                                 | none                |
-| `publish.yml`            | `workflow_dispatch` on `main`, protected `npm` environment     | `contents`, `pull-requests`: write; `id-token: write` (provenance) | npm trusted publish |
+| Workflow                 | Trigger                                                        | Job permissions                                                    | Secrets                                                  |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- |
+| `ci.yml`                 | `pull_request`, push to `main`                                 | `contents: read`                                                   | none                                                     |
+| `claude.yml`             | `@claude` in issues, comments, reviews, review comments        | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY`                                      |
+| `claude-review.yml`      | `pull_request` opened, synchronize, ready_for_review, reopened | `contents: read`, `pull-requests: write`, `id-token: write`        | `ANTHROPIC_API_KEY`                                      |
+| `claude-maintenance.yml` | Mondays 04:17 UTC, `workflow_dispatch`                         | `contents`, `pull-requests`, `issues`: write; `id-token: write`    | `ANTHROPIC_API_KEY`                                      |
+| `release-pr.yml`         | push to `main`, `workflow_dispatch`                            | `contents`, `pull-requests`: write                                 | none                                                     |
+| `publish.yml`            | `workflow_dispatch` on `main`, protected `npm` environment     | `contents`, `pull-requests`: write; `id-token: write` (provenance) | npm trusted publish; optional `COMPANION_DISPATCH_TOKEN` |
 
 Every workflow sets a workflow-level `permissions: contents: read` default (or the minimum it needs),
 a `timeout-minutes` per job, and a `concurrency` group. Third-party actions are pinned to a major
@@ -33,8 +33,9 @@ token exchange; it is not used to publish anything.
   (needs network access to `exp.host`, available on GitHub runners), and every `check:*` gate.
 - **e2e** runs in parallel with `validate`. It installs dependencies, runs
   `pnpm --filter @jackpotkit/e2e exec playwright install --with-deps <browser>`, builds the gallery
-  and the docs site, and runs `pnpm test:e2e` (both the `gallery-<browser>` and `docs-<browser>`
-  projects). On failure it uploads `playwright-report-<browser>` (HTML report,
+  and the docs site, exports the Expo gallery for the web (`build:web`), and runs `pnpm test:e2e`
+  (the `gallery-<browser>`, `docs-<browser>`, and `native-<browser>` projects). The job sets
+  `NEXT_PUBLIC_NATIVE_PREVIEW_URL=http://127.0.0.1:4174` so the docs embed the local export. On failure it uploads `playwright-report-<browser>` (HTML report,
   traces, screenshots) for 14 days. The matrix runs Chromium only; add `firefox` or `webkit` to
   `matrix.browser` to widen coverage. The suite supports both engines through `E2E_BROWSERS`.
 
@@ -43,12 +44,15 @@ Browser E2E is intentionally not part of `pnpm validate`, because it needs downl
 ## Browser E2E suite (`apps/e2e`)
 
 `@jackpotkit/e2e` is a private workspace package using `@playwright/test` and `@axe-core/playwright`.
-It has two projects per browser engine:
+It has three projects per browser engine:
 
 - `gallery-<engine>` (`tests/gallery/`): the Vite gallery in `apps/web-example`, served with
   `vite preview`;
 - `docs-<engine>` (`tests/docs/`): the documentation site in `apps/docs`, served with `next start`
-  from its production build.
+  from its production build;
+- `native-<engine>` (`tests/native/`): the Expo Router web export of `apps/expo-example`
+  (`dist-web/`), served by `apps/e2e/scripts/static-server.mjs` with Vercel's `cleanUrls` behaviour
+  and the headers from `apps/expo-example/vercel.json`.
 
 Gallery coverage, for all seven games:
 
@@ -81,6 +85,21 @@ Docs playground coverage (`tests/docs/`), for all seven game pages:
 - axe WCAG 2.0/2.1/2.2 A and AA scans of the whole page before and after a round, with the site in
   light and dark mode, each with the matching and the opposite JackpotKit theme;
 - no horizontal overflow at 390 px for every preview width, and reduced motion shortens the spin.
+- the React Native preview loads only after its button is pressed, with the configured URL, sandbox,
+  title, and focus; the Spin Wheel frame renders the real React Native playground and completes a
+  spin (when the docs build points elsewhere, the test routes that origin to the local export).
+
+Native preview coverage (`tests/native/`), for all seven `/embed/<game>` routes:
+
+- each renders without the gallery's stack header, without page errors or failed requests, and a
+  round played with the keyboard completes (Bingo on a 3 x 3 board with calls and marks);
+- axe WCAG 2.0/2.1/2.2 A and AA scans before and after a round. Scratch Card, Bingo, Dice, and Lucky
+  Box are `test.fail()` for `@jackpotkit/react-native` label defects described in
+  `tests/native/games.ts`;
+- Scratch Card fetches `canvaskit.wasm` from the export's own origin and reveals by pointer
+  scratching;
+- every embed sends the `frame-ancestors` policy and no `X-Frame-Options`; no horizontal overflow at
+  390 px; the gallery index and game routes keep their chrome.
 
 ### Run E2E locally
 
@@ -92,14 +111,17 @@ pnpm test:e2e                                                    # builds the ga
 
 Useful variables:
 
-| Variable           | Effect                                                                                                                        |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| `E2E_BROWSERS`     | Comma-separated engines, for example `chromium,firefox,webkit`. Default `chromium`.                                           |
-| `PW_CHROMIUM_PATH` | Launch an existing Chromium binary instead of the Playwright download.                                                        |
-| `GALLERY_BASE_URL` | Test an already running gallery (for example `pnpm --filter @jackpotkit/web-example dev`) instead of starting `vite preview`. |
-| `GALLERY_PORT`     | Port for the automatically started preview server. Default `4173`.                                                            |
-| `DOCS_BASE_URL`    | Test an already running docs site (for example `pnpm --filter @jackpotkit/docs dev`) instead of starting `next start`.        |
-| `DOCS_PORT`        | Port for the automatically started docs server. Default `3210`.                                                               |
+| Variable                         | Effect                                                                                                                        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `E2E_BROWSERS`                   | Comma-separated engines, for example `chromium,firefox,webkit`. Default `chromium`.                                           |
+| `PW_CHROMIUM_PATH`               | Launch an existing Chromium binary instead of the Playwright download.                                                        |
+| `GALLERY_BASE_URL`               | Test an already running gallery (for example `pnpm --filter @jackpotkit/web-example dev`) instead of starting `vite preview`. |
+| `GALLERY_PORT`                   | Port for the automatically started preview server. Default `4173`.                                                            |
+| `DOCS_BASE_URL`                  | Test an already running docs site (for example `pnpm --filter @jackpotkit/docs dev`) instead of starting `next start`.        |
+| `DOCS_PORT`                      | Port for the automatically started docs server. Default `3210`.                                                               |
+| `NATIVE_BASE_URL`                | Test an already running native preview instead of starting the static server for `apps/expo-example/dist-web`.                |
+| `NATIVE_PORT`                    | Port for the automatically started native preview server. Default `4174`.                                                     |
+| `NEXT_PUBLIC_NATIVE_PREVIEW_URL` | Native preview origin the docs build embeds; set it at docs build time and test time (CI: `http://127.0.0.1:4174`).           |
 
 Run a single file or open the UI runner from the package:
 
@@ -109,9 +131,11 @@ pnpm --filter @jackpotkit/e2e test:e2e:ui
 pnpm --filter @jackpotkit/e2e exec playwright show-report
 ```
 
-Both servers start for any run, so build both first (`pnpm turbo run build
---filter=@jackpotkit/web-example... --filter=@jackpotkit/docs...`), or point `GALLERY_BASE_URL` /
-`DOCS_BASE_URL` at running servers. Run one project with `--project=docs-chromium`.
+All three servers start for any run, so build first (`pnpm turbo run build
+--filter=@jackpotkit/web-example... --filter=@jackpotkit/docs...` and `pnpm turbo run build:web
+--filter=@jackpotkit/expo-example`; `pnpm test:e2e` also runs `build:web` through turbo), or point
+`GALLERY_BASE_URL` / `DOCS_BASE_URL` / `NATIVE_BASE_URL` at running servers. Run one project with
+`--project=docs-chromium`.
 
 ## Claude Code workflows
 
@@ -199,3 +223,9 @@ approve, publish to npm, deploy, or edit workflows. A maintainer must:
 2. Add the `ANTHROPIC_API_KEY` repository secret (**Settings > Secrets and variables > Actions**).
 3. Optionally set a spend limit for the key's workspace in the Anthropic Console.
 4. Confirm the `npm` environment still requires manual approval.
+5. Optionally add `COMPANION_DISPATCH_TOKEN` to the `npm` environment so each publish starts the
+   published-package smoke tests in `jackpotkit-web` and `jackpotkit-app`. Use a fine-grained
+   personal access token (or GitHub App token) limited to those two repositories with
+   **Contents: Read and write** and **Metadata: Read**; the default `GITHUB_TOKEN` cannot trigger
+   workflows in other repositories. Without it, the step logs a notice and the smoke tests still run
+   weekly. A dispatch failure never fails the publish job.
