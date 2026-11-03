@@ -1,5 +1,46 @@
 # @jackpotkit/react-native
 
+## 1.1.1
+
+### Patch Changes
+
+- 65b6dd7: Stop default text from clipping inside fixed-size game cells at large accessibility text sizes. Slot
+  Machine symbols, Bingo cell numbers, numeric die faces, coin face text, and Spin Wheel segment and hub
+  labels now scale with the system text size up to 200% (or less when the cell is too short to hold
+  the text) and then shrink to fit. Font scaling stays enabled and accessibility labels are unchanged.
+  Custom `renderSymbol`, `renderCell`, `renderDie`, `renderFace`, and `renderSegment` output is not
+  affected.
+- 76bf177: Make default accessible names contain the visible text of their controls (WCAG 2.5.3, Label in
+  Name), and give default die faces an image role. Consumer `accessibilityLabels` overrides are
+  unchanged; only defaults change. Tests that query the old default labels must be updated.
+
+  - **Scratch Card**: the cover is now the accessible button (`testID="jackpotkit-scratch-card"`
+    moved with it; the outer wrapper is `jackpotkit-scratch-card-container`). Its default name is
+    `Scratch Card` (or `accessibilityLabel` / `accessibilityLabels.card`), and the scratch progress
+    (`accessibilityLabels.progress`) is reported as its accessibility value instead of being appended
+    to the name. Previously the name was `Scratch Card. N percent scratched.`. The prize content is a
+    sibling of the cover and stays hidden from screen readers until the reveal starts (or the
+    threshold completes with `autoReveal={false}`), so the outcome is never announced early; after
+    that it is readable text.
+  - **Bingo**: the call button's default name is its visible text (`Call next number`,
+    `Last call: n`, or `All numbers called`) instead of `Call next Bingo number`, with the hint
+    `Calls the next number` after the first call. `accessibilityLabels.call` still replaces the name.
+  - **Lucky Box**: the reveal button is named `Reveal selection` (`Revealing` while busy) instead of
+    `Reveal Lucky Box` / `Revealing Lucky Box`, with the hint `Reveals the Lucky Box result`. Boxes
+    that are unavailable add `, unavailable` to their name (for example `Locked gift, unavailable`).
+  - **Dice**: each default die face is an accessible element with the `image` role, so
+    react-native-web no longer emits `aria-label` on a role-less `div` and native screen readers
+    announce the face as one image named, for example, `D6: 5`.
+
+- 4a35acb: Preserve the generic signature of the `Dice` export, matching the other six games. Its props now
+  resolve to `DiceProps<TRequest>` (default `void`) instead of `DiceProps<unknown>`, so a `DiceProps`
+  object can be spread onto `<Dice>` under `exactOptionalPropertyTypes` and `<Dice<TRequest>>` accepts a
+  typed `resultProvider` and `resultRequest`.
+- 9434f80: Change the Slot Machine default spin labels from `Spin reels` / `Reels spinning` to `Pull to spin` /
+  `Spinning`, so the accessible name contains the visible `PULL TO SPIN` / `SPINNING…` text and
+  voice-control users can activate the button by what they see (WCAG 2.5.3). Pass
+  `accessibilityLabels.spin` and `accessibilityLabels.spinning` to keep custom copy.
+
 ## 1.1.0
 
 ### Minor Changes
