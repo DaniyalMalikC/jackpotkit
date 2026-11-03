@@ -2,7 +2,15 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
 import { Provider } from '@/components/provider';
-import { ogImage, siteDescription, siteName, siteTagline, siteUrl } from '@/lib/site';
+import {
+  authorName,
+  authorUrl,
+  ogImage,
+  siteDescription,
+  siteName,
+  siteTagline,
+  siteUrl,
+} from '@/lib/site';
 
 import './global.css';
 
@@ -14,6 +22,8 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   applicationName: siteName,
+  authors: [{ name: authorName, url: authorUrl }],
+  creator: authorName,
   openGraph: {
     type: 'website',
     siteName,

@@ -64,6 +64,17 @@ test('the Open Graph image is a static PNG referenced by the home and docs pages
   }
 });
 
+test('the home page and docs pages credit the creator', async ({ page }) => {
+  for (const path of ['/', '/docs', '/docs/spin-wheel']) {
+    await page.goto(path);
+    const credit = page.getByText(/Created and maintained by/).first();
+    await expect(credit).toBeVisible();
+    const link = credit.getByRole('link', { name: 'Muhammad Daniyal Malik' });
+    await expect(link).toHaveAttribute('href', 'https://daniyalmalikc.link');
+    await expect(link).toHaveAttribute('rel', /\bauthor\b/);
+  }
+});
+
 test.describe('every docs page', () => {
   // One test per scheme keeps the report short; the page list comes from the sitemap.
   for (const scheme of ['light', 'dark'] as const) {
