@@ -53,7 +53,9 @@ export const brandThemeOverrides: Readonly<Record<BrandScheme, JackpotThemeOverr
       border: '#4A2530',
       bingoFree: '#800020',
       bingoMarked: '#D7707C',
-      coinBack: '#A42E4A',
+      // The web coin's back face always uses `onPrimary` text, so the back must stay light enough for
+      // #1A0509 to keep 4.5:1 (6.1:1 on #D7707C; #A42E4A would be 2.9:1).
+      coinBack: '#D7707C',
       coinFront: '#F7EDB9',
       diceFace: '#2A121A',
       dicePip: '#F7EDB9',
