@@ -59,7 +59,7 @@ export function NativePreview({ game }: NativePreviewProps) {
     >
       {loaded ? (
         <iframe
-          className="block w-full border-0 bg-[#F7F6FB]"
+          className="block w-full border-0 bg-jk-cream"
           loading="lazy"
           ref={frameRef}
           referrerPolicy="strict-origin-when-cross-origin"

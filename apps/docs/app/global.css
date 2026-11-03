@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import 'fumadocs-ui/css/purple.css';
+@import 'fumadocs-ui/css/lib/default-colors.css';
 @import 'fumadocs-ui/css/preset.css';
 
 @source '../components';
@@ -16,13 +16,54 @@ html {
 }
 
 /*
- * Fumadocs' light purple primary (hsl 270 100% 52%) is 3.9:1 on the active sidebar item's tinted
- * background. A darker shade keeps it above WCAG AA 4.5:1 there and on white. The preset's dark
- * purple foreground is too dark on that shade, so text on primary surfaces is white (7.9:1).
+ * Brand palette: vanilla #F7EDB9, cream #FFFDD0, bright pink #D7707C, amaranth #A42E4A, and
+ * burgundy #800020. Light mode uses cream and vanilla surfaces with burgundy text accents; dark mode
+ * uses a burgundy-tinted near-black with vanilla text and bright pink accents. Every text token is
+ * at least 4.5:1 (WCAG AA) on every surface token it can sit on, including the 10% primary tint of
+ * the active sidebar item; the lowest pairing is dark primary on accent at 4.8:1.
  */
-html:not(.dark) {
-  --color-fd-primary: hsl(270, 100%, 42%);
-  --color-fd-primary-foreground: hsl(0, 0%, 100%);
+@theme {
+  --color-jk-vanilla: #f7edb9;
+  --color-jk-cream: #fffdd0;
+  --color-jk-pink: #d7707c;
+  --color-jk-amaranth: #a42e4a;
+  --color-jk-burgundy: #800020;
+
+  --color-fd-background: #fffeea;
+  --color-fd-foreground: #2a0a12;
+  --color-fd-card: #fffbd9;
+  --color-fd-card-foreground: #2a0a12;
+  --color-fd-popover: #fffef2;
+  --color-fd-popover-foreground: #2a0a12;
+  --color-fd-muted: #fbf3cc;
+  --color-fd-muted-foreground: #6e3a45;
+  --color-fd-secondary: #f7edb9;
+  --color-fd-secondary-foreground: #2a0a12;
+  --color-fd-accent: #f6e1c8;
+  --color-fd-accent-foreground: #5c0017;
+  --color-fd-primary: #800020;
+  --color-fd-primary-foreground: #fffdd0;
+  --color-fd-border: rgb(128 0 32 / 0.16);
+  --color-fd-ring: #a42e4a;
+}
+
+.dark {
+  --color-fd-background: #170a0e;
+  --color-fd-foreground: #f7edb9;
+  --color-fd-card: #1f0e14;
+  --color-fd-card-foreground: #fffdd0;
+  --color-fd-popover: #1b0c11;
+  --color-fd-popover-foreground: #fffdd0;
+  --color-fd-muted: #251219;
+  --color-fd-muted-foreground: #d9bfa8;
+  --color-fd-secondary: #2e161e;
+  --color-fd-secondary-foreground: #f7edb9;
+  --color-fd-accent: #3b1a24;
+  --color-fd-accent-foreground: #f6c6cc;
+  --color-fd-primary: #d7707c;
+  --color-fd-primary-foreground: #1a0509;
+  --color-fd-border: rgb(215 112 124 / 0.2);
+  --color-fd-ring: #d7707c;
 }
 
 body {
@@ -37,8 +78,15 @@ html > body[data-scroll-locked] {
 /* Homepage hero glow and floating mark. Disabled entirely for reduced-motion users. */
 .jk-hero-glow {
   background:
-    radial-gradient(60% 60% at 30% 20%, rgb(104 67 213 / 0.28), transparent 70%),
-    radial-gradient(50% 50% at 80% 60%, rgb(235 77 138 / 0.18), transparent 70%);
+    radial-gradient(60% 60% at 30% 20%, rgb(164 46 74 / 0.2), transparent 70%),
+    radial-gradient(50% 50% at 80% 60%, rgb(215 112 124 / 0.24), transparent 70%),
+    radial-gradient(40% 40% at 10% 90%, rgb(247 237 185 / 0.5), transparent 70%);
+}
+
+.dark .jk-hero-glow {
+  background:
+    radial-gradient(60% 60% at 30% 20%, rgb(164 46 74 / 0.3), transparent 70%),
+    radial-gradient(50% 50% at 80% 60%, rgb(128 0 32 / 0.35), transparent 70%);
 }
 
 @keyframes jk-float {
@@ -79,7 +127,7 @@ html > body[data-scroll-locked] {
 
 .jk-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px -12px rgb(104 67 213 / 0.45);
+  box-shadow: 0 8px 24px -12px rgb(128 0 32 / 0.4);
 }
 
 .jk-demo-surface {
