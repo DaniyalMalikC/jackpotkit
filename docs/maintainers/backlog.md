@@ -44,6 +44,8 @@ physical device and cannot be closed by an agent alone.
   label omits its visible prize text; Bingo "Call next Bingo number" vs "Call next number"; Lucky
   Box "Reveal Lucky Box" vs "Reveal selection" and "Locked gift" vs "Locked gift · unavailable";
   default Dice faces put `accessibilityLabel` on a role-less view.
+- **Status**: code fix, Changeset (`rn-accessible-names`), and marker removal landed on
+  `feat/docs-reference-and-brand`; only the device check remains.
 - **Acceptance criteria**:
   - One Changeset fixes all listed cases; the matching `test.fail()` markers are removed and pass.
   - VoiceOver and TalkBack confirm the announced names on a device.
@@ -81,6 +83,21 @@ physical device and cannot be closed by an agent alone.
   unverified, so game pages have no Snack links.
 - **Acceptance criteria**: A Snack runs at least Spin Wheel and Dice; if it works, each game page
   links a Snack; if not, the incompatibility is recorded in the project plan.
+
+### Coin Flip back face: choose a readable text color
+
+- **Labels**: `bug`, `a11y`, `package:react`, `package:react-native`
+- **Owner**: library-developer
+- **Context**: the web coin's back face always draws text in `theme.colors.onPrimary`
+  (`packages/react/src/coin-flip/coin-flip.tsx`), while the front face uses
+  `selectReadableColor`. A custom theme with a mid-tone `coinBack` fails WCAG contrast; the docs
+  dark brand theme hit 2.9:1 until its `coinBack` was lightened. The docs axe test only caught it
+  when the random result was Tails.
+- **Acceptance criteria**:
+  - Both faces choose a readable text color on both platforms, with a regression test using a
+    mid-tone `coinBack`; a patch Changeset.
+  - The docs axe test checks both faces deterministically (controlled `faceId`), not one random
+    outcome.
 
 ### Move prop descriptions into TSDoc on the exported types
 
@@ -173,6 +190,8 @@ physical device and cannot be closed by an agent alone.
 
 - **Labels**: `enhancement`, `docs`
 - **Owner**: playground-engineer
+- **Status**: the swatch now shows the active theme's `wheelPalette` color; the E2E assertion is
+  still missing.
 - **Acceptance criteria**: A segment without its own color shows the theme palette color it
   inherits; an E2E assertion covers it.
 
