@@ -4,6 +4,7 @@ import { GameIcon } from '@/components/home/game-icon';
 import { HeroWheel } from '@/components/home/hero-wheel';
 import { InstallTabs } from '@/components/home/install-tabs';
 import { LogoMark } from '@/components/logo';
+import { SiteCredit } from '@/components/site-credit';
 import { games } from '@/lib/games';
 import { githubUrl, npmUrl, siteTagline } from '@/lib/site';
 
@@ -194,7 +195,7 @@ export default function HomePage() {
 
       <footer className="mt-auto border-t">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-fd-muted-foreground md:px-6">
-          <span>MIT licensed. No telemetry.</span>
+          <SiteCredit />
           <nav aria-label="Footer" className="flex gap-4">
             <Link href="/docs">Docs</Link>
             <a href={githubUrl} rel="noreferrer">

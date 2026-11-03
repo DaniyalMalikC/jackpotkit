@@ -14,6 +14,10 @@ export const siteTagline = 'Game mechanics and animated components for React and
 export const siteDescription =
   'Open-source spin wheels, scratch cards, slot machines, bingo, dice, coin flips, and lucky boxes. Headless TypeScript engines with accessible React and React Native renderers.';
 
+/** The project's creator and maintainer, credited in the site footer and page metadata. */
+export const authorName = 'Muhammad Daniyal Malik';
+export const authorUrl = 'https://daniyalmalikc.link';
+
 export const githubUrl = 'https://github.com/DaniyalMalikC/jackpotkit';
 export const npmUrl = 'https://www.npmjs.com/org/jackpotkit';
 export const docsRoute = '/docs';

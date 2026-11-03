@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getMDXComponents } from '@/components/mdx';
+import { SiteCredit } from '@/components/site-credit';
 import { githubUrl, ogImage } from '@/lib/site';
 import { source } from '@/lib/source';
 
@@ -37,6 +38,7 @@ export default async function Page({ params }: DocsRouteProps) {
         />
       </DocsBody>
       <EditOnGitHub href={`${githubUrl}/blob/main/docs/${page.path}`} />
+      <SiteCredit className="border-t pt-4 text-sm text-fd-muted-foreground" />
     </DocsPage>
   );
 }
