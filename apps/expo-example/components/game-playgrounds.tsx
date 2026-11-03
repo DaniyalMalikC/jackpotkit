@@ -17,10 +17,11 @@ export const gameSlugs = [
 ] as const;
 
 /**
- * Neutral embed surface, equal to the gallery background. The playgrounds draw light cards with
- * dark text, so a transparent frame would put that text on a dark host page.
+ * Embed surface: the documentation site's cream (#FFFDD0), so the iframe blends with the docs
+ * palette. Only the embed route uses it; the gallery keeps its own background. The playgrounds draw
+ * light cards with dark text, so a transparent frame would put that text on a dark host page.
  */
-export const embedBackground = '#F7F6FB';
+export const embedBackground = '#FFFDD0';
 
 export type GameSlug = (typeof gameSlugs)[number];
 

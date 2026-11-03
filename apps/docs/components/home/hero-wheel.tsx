@@ -36,7 +36,7 @@ export function HeroWheel() {
             onReset={() => setLastSegmentId(undefined)}
             segments={segments}
             size={WHEEL_SIZE}
-            {...(theme === undefined ? {} : { theme })}
+            theme={theme}
           />
         ) : (
           <div

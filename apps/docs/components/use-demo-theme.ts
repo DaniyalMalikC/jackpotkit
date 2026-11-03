@@ -1,13 +1,15 @@
 'use client';
 
-import { neonTheme, type JackpotThemeOverride } from '@jackpotkit/theme';
+import type { JackpotTheme } from '@jackpotkit/theme';
 import { useTheme } from 'next-themes';
 
+import { brandThemes } from '@/lib/brand-theme';
+
 /**
- * Picks a JackpotKit theme that matches the site colour scheme: the package default in light
- * mode and the shipped `neonTheme` preset in dark mode.
+ * Picks the site brand theme (`lib/brand-theme.ts`, built with `createJackpotTheme`) that matches
+ * the site colour scheme.
  */
-export function useDemoTheme(): JackpotThemeOverride | undefined {
+export function useDemoTheme(): JackpotTheme {
   const { resolvedTheme } = useTheme();
-  return resolvedTheme === 'dark' ? neonTheme : undefined;
+  return brandThemes[resolvedTheme === 'dark' ? 'dark' : 'light'];
 }

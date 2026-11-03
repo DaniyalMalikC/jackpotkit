@@ -32,17 +32,17 @@ export type GameDemoProps = GameDemoVariant & {
 
 function merge<K extends GameId>(
   game: K,
-  theme: JackpotThemeOverride | undefined,
+  theme: JackpotThemeOverride,
   overrides: Partial<GameDemoPropsMap[K]> | undefined,
 ): GameDemoPropsMap[K] {
   return {
     ...(gameDemoDefaults[game] as GameDemoPropsMap[K]),
-    ...(theme === undefined ? {} : { theme }),
+    theme,
     ...overrides,
   };
 }
 
-function renderGame(demo: GameDemoVariant, theme: JackpotThemeOverride | undefined) {
+function renderGame(demo: GameDemoVariant, theme: JackpotThemeOverride) {
   switch (demo.game) {
     case 'spin-wheel':
       return <SpinWheel {...merge(demo.game, theme, demo.props)} />;
