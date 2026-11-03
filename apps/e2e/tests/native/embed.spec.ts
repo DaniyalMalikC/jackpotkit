@@ -52,7 +52,7 @@ test.describe('native embed routes', () => {
     expect(new URL(response.url()).pathname).toBe('/canvaskit.wasm');
     expect(response.status()).toBe(200);
 
-    const surface = page.getByRole('button', { name: /percent scratched/ });
+    const surface = page.getByRole('button', { name: 'Scratch Card', exact: true });
     const canvas = surface.locator('canvas').first();
     await canvas.scrollIntoViewIfNeeded();
     const box = await canvas.boundingBox();

@@ -40,7 +40,7 @@ async function playBingo(page: Page): Promise<void> {
   await page.getByRole('button', { name: 'Board size: 3 × 3' }).click();
   for (let call = 0; call < 30; call += 1) {
     if ((await result.count()) > 0) return;
-    await press(page, /^Call next Bingo number$/);
+    await press(page, /^(Call next number|Last call: \d+)$/);
     for (const cell of await page.getByRole('button', { name: /^Number \d+, called$/ }).all()) {
       await cell.focus();
       await cell.press('Enter');
@@ -62,10 +62,6 @@ export const nativeGames: readonly NativeGameContract[] = [
     control: /^Reveal$/,
     completed: /^Result ID: points$/,
     play: (page) => press(page, /^Reveal$/),
-    axeDefect:
-      'label-content-name-mismatch: the scratch surface button is named "Scratch Card. N percent ' +
-      'scratched." while it contains the visible prize text (packages/react-native/src/' +
-      'scratch-card/scratch-card.tsx, labels.card and labels.progress).',
   },
   {
     slug: 'slot-machine',
@@ -77,12 +73,9 @@ export const nativeGames: readonly NativeGameContract[] = [
   {
     slug: 'bingo',
     title: 'Bingo',
-    control: /^Call next Bingo number$/,
+    control: /^Call next number$/,
     completed: /^Bingo! Completed .+\.$/,
     play: playBingo,
-    axeDefect:
-      'label-content-name-mismatch: the call button is named "Call next Bingo number" but shows ' +
-      '"Call next number" (packages/react-native/src/bingo/bingo.tsx, accessibilityLabels.call).',
   },
   {
     slug: 'dice',
@@ -90,10 +83,6 @@ export const nativeGames: readonly NativeGameContract[] = [
     control: /^Roll dice$/,
     completed: /^Total: \d+$/,
     play: (page) => press(page, /^Roll dice$/),
-    axeDefect:
-      'aria-prohibited-attr: each default die face is a View with accessibilityLabel and no role, ' +
-      'so react-native-web emits aria-label on a plain div (packages/react-native/src/dice/' +
-      'dice.tsx, default die face).',
   },
   {
     slug: 'coin-flip',
@@ -105,16 +94,12 @@ export const nativeGames: readonly NativeGameContract[] = [
   {
     slug: 'lucky-box',
     title: 'Lucky Box',
-    control: /^Reveal Lucky Box$/,
+    control: /^Reveal selection$/,
     completed: /^(You found the winning box!|Winning box: .+)$/,
     play: async (page) => {
       await press(page, /^Golden gift$/);
-      await press(page, /^Reveal Lucky Box$/);
+      await press(page, /^Reveal selection$/);
     },
-    axeDefect:
-      'label-content-name-mismatch: the reveal button is named "Reveal Lucky Box" but shows ' +
-      '"Reveal selection", and a disabled box is named "Locked gift" but shows "Locked gift · ' +
-      'unavailable" (packages/react-native/src/lucky-box/lucky-box.tsx).',
   },
 ];
 
