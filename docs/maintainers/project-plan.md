@@ -43,16 +43,16 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 
 ## Phases
 
-| Phase | Scope                                                                            | Owner agent                                | Status                                           |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------ |
-| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                             |
-| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Done                                             |
-| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done                                             |
-| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending)          |
-| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                             |
-| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | C1 done (pending integration and Vercel project) |
-| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Live; SEO done, OG image pending                 |
-| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                                      |
+| Phase | Scope                                                                            | Owner agent                                | Status                                  |
+| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------- |
+| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                    |
+| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Done                                    |
+| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done                                    |
+| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending) |
+| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                    |
+| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Done (Snack and device checks pending)  |
+| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Live; SEO done, OG image pending        |
+| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                             |
 
 B1, B3, and B4 can run in parallel after A. B2 integrates into B1. C and E follow B1. D needs Vercel
 access.
@@ -66,12 +66,15 @@ access.
 - An `ANTHROPIC_API_KEY` repository secret and the Claude GitHub App before the Claude Code workflows
   can run (they skip cleanly until then; see [CI and agent automation](./automation.md)).
 - No EAS project, so Expo QR previews are deferred.
-- Native preview (C1): a second Vercel project must serve the `apps/expo-example` web export at
-  `https://jackpotkit-native.vercel.app` (settings in `apps/expo-example/README.md`), or the docs
-  must set `NEXT_PUBLIC_NATIVE_PREVIEW_URL` to wherever it is deployed. Until then the "Load React
-  Native preview" button on each game page loads a frame that fails to resolve.
-- Screen readers (VoiceOver, TalkBack), physical-device gestures, and `expo-doctor` network checks
-  remain human-operated or network-dependent gates.
+- Native preview: project `jackpotkit-native` (root `apps/expo-example`, Node 24, Git-linked) serves
+  <https://jackpotkit-native.vercel.app>. Its first deployment, from `feat/docs-native-preview`, was
+  promoted to production automatically. All seven `/embed/<game>` routes load in a cross-origin
+  iframe with no page errors or failed requests, the `frame-ancestors` policy is served, and
+  `canvaskit.wasm` is served as `application/wasm`.
+- `expo-doctor` passes on GitHub runners after the Expo SDK 57 patch bump; it stays unverifiable
+  from the cloud sandbox.
+- Screen readers (VoiceOver, TalkBack), physical-device gestures, and Expo Snack compatibility remain
+  human-operated gates.
 
 ## Follow-ups from integrated phases
 
