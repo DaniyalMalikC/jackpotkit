@@ -5,6 +5,7 @@ import type { MDXComponents } from 'mdx/types';
 import { GameDemo } from '@/components/game-demo/lazy';
 import { NativePreview } from '@/components/native-preview/native-preview';
 import { Playground } from '@/components/playground';
+import { UnreleasedChanges } from '@/components/unreleased-changes';
 
 /**
  * Components available to every page in `docs/` without an import. Add new embeds here so the
@@ -18,6 +19,7 @@ export function getMDXComponents(components?: MDXComponents) {
     Playground,
     // Output of `<auto-type-table>` (generated at build time by fumadocs-typescript).
     TypeTable,
+    UnreleasedChanges,
     ...components,
   } satisfies MDXComponents;
 }

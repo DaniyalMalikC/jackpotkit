@@ -18,13 +18,13 @@ The same game from `@jackpotkit/react-native`, running in the Expo gallery's web
 ## Installation
 
 ```bash
-npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme @shopify/react-native-skia react-native-reanimated react-native-worklets react-native-gesture-handler
+npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme @shopify/react-native-skia react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 Expo projects should use Expo's resolver for native dependencies:
 
 ```bash
-npx expo install @shopify/react-native-skia react-native-reanimated react-native-worklets react-native-gesture-handler
+npx expo install @shopify/react-native-skia react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 Skia is an optional peer and is intentionally absent from the package root. Import Scratch Card only from `@jackpotkit/react-native/scratch-card`.
@@ -188,8 +188,8 @@ With `autoReveal={false}`, threshold completion leaves the cover visible until `
 ## API reference
 
 Generated at build time from the exported types, so the tables always match the published
-packages. Select a row to see its full type, description, and default. Defaults in the **Default**
-column are read from the component source; animation durations fall back to the theme.
+packages. Select a row to see its full type, description, and default. Defaults are read from the
+component source; animation durations fall back to the [theme](./theming.mdx#animation).
 
 ### React web props
 

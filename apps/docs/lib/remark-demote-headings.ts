@@ -1,15 +1,16 @@
 import type { Root } from 'mdast';
 
 /**
- * On pages whose frontmatter sets `demoteHeadings: true`, moves every heading one level down.
- * The changelog page includes the package `CHANGELOG.md` files, whose `# @jackpotkit/<name>`
- * titles then become the page's sections. Runs after `remarkStripTitle`, so the page title is
- * already removed.
+ * Pages whose headings all move one level down. The changelog page includes the package
+ * `CHANGELOG.md` files, whose `# @jackpotkit/<name>` titles then become the page's sections.
+ * Runs after `remarkStripTitle`, so the page's own title is already removed.
  */
+const demotedPages = ['docs/changelog.mdx'];
+
 export function remarkDemoteHeadings() {
-  return (tree: Root, file: { data: Record<string, unknown> }) => {
-    const frontmatter = file.data.frontmatter as { demoteHeadings?: unknown } | undefined;
-    if (frontmatter?.demoteHeadings !== true) return;
+  return (tree: Root, file: { path?: string }) => {
+    const path = (file.path ?? '').replaceAll('\\', '/');
+    if (!demotedPages.some((page) => path.endsWith(`/${page}`))) return;
     const visit = (node: { children?: unknown[]; depth?: number; type: string }) => {
       if (node.type === 'heading' && node.depth !== undefined) {
         node.depth = Math.min(6, node.depth + 1);

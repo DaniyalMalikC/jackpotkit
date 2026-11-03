@@ -8,7 +8,8 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['test/**/*.test.ts'],
+    // `examples/testing` holds the testing recipe's samples; running them proves they pass.
+    include: ['test/**/*.test.ts', 'examples/testing/**/*.test.ts'],
     // The generated-code check runs the TypeScript compiler over every game.
     testTimeout: 120_000,
   },

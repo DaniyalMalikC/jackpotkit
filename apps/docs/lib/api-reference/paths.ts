@@ -7,9 +7,10 @@ import { dirname, join, resolve } from 'node:path';
  * stable there; every entry point (fumadocs-mdx, `next build`, vitest) runs inside the repository.
  */
 export function findRepoRoot(from: string = process.cwd()): string {
-  let current = resolve(from);
+  let current = resolve(/* turbopackIgnore: true */ from);
   for (;;) {
-    if (existsSync(join(current, 'pnpm-workspace.yaml'))) return current;
+    if (existsSync(/* turbopackIgnore: true */ join(current, 'pnpm-workspace.yaml')))
+      return current;
     const parent = dirname(current);
     if (parent === current) {
       throw new Error(`Could not find the repository root (pnpm-workspace.yaml) above ${from}.`);

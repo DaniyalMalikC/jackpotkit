@@ -15,7 +15,9 @@ Accessibility is part of the public component contract, not an optional visual e
 - Bingo uses semantic buttons and prevents activation of uncalled cells.
 - Scratch Card includes an explicit Reveal action so pointer gestures are never the only path.
 - Default content does not rely on color alone for selected, winning, unavailable, or completed state.
-- Components honor the platform reduced-motion preference and support an explicit override.
+- Components honor the platform reduced-motion preference. `reduceMotion={true}` forces reduced
+  motion on both platforms; `reduceMotion={false}` forces full motion only on the web (see
+  [Reduced motion](./recipes/reduced-motion.mdx)).
 - React Native default text inside fixed-size cells (Slot Machine symbols, Bingo squares, numeric die
   faces, coin faces, and Spin Wheel labels and hub) scales with the system text size up to 200%, or
   less when the cell is too short, then shrinks to fit. Font scaling is never turned off, and

@@ -26,7 +26,7 @@ npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-na
 Expo users should install native peers with Expo's resolver:
 
 ```bash
-npx expo install react-native-reanimated react-native-worklets react-native-svg
+npx expo install react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 ## Basic example
@@ -126,8 +126,8 @@ const { status, result, error, spin, spinTo, reset } = useSpinWheel({
 ## API reference
 
 Generated at build time from the exported types, so the tables always match the published
-packages. Select a row to see its full type, description, and default. Defaults in the **Default**
-column are read from the component source; animation durations fall back to the theme.
+packages. Select a row to see its full type, description, and default. Defaults are read from the
+component source; animation durations fall back to the [theme](./theming.mdx#animation).
 
 ### React web props
 

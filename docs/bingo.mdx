@@ -18,13 +18,13 @@ The same game from `@jackpotkit/react-native`, running in the Expo gallery's web
 ## Installation
 
 ```bash
-npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-native-reanimated react-native-worklets
+npm install @jackpotkit/react-native @jackpotkit/core @jackpotkit/theme react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 Expo applications should resolve native animation peers with Expo:
 
 ```bash
-npx expo install react-native-reanimated react-native-worklets
+npx expo install react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
 ```
 
 ## Basic component
@@ -173,8 +173,8 @@ The hook exposes engine state without animation timing. `onCall`, `onMark`, `onU
 ## API reference
 
 Generated at build time from the exported types, so the tables always match the published
-packages. Select a row to see its full type, description, and default. Defaults in the **Default**
-column are read from the component source; animation durations fall back to the theme.
+packages. Select a row to see its full type, description, and default. Defaults are read from the
+component source; animation durations fall back to the [theme](./theming.mdx#animation).
 
 ### React web props
 

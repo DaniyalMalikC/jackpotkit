@@ -1,0 +1,69 @@
+---
+title: Migration guide
+description: Upgrade notes for every JackpotKit release, from 1.0 to 1.1 and the unreleased changes waiting for the next version.
+---
+
+# Migration guide
+
+JackpotKit follows Semantic Versioning, and each package versions independently. The
+[Versioning and migrations](./versioning.md) policy defines what counts as breaking and what a major
+release must document. Full release notes are in the [Changelog](./changelog.mdx).
+
+| Package                    | Latest | Changes since 1.0.0                       |
+| -------------------------- | ------ | ----------------------------------------- |
+| `@jackpotkit/react`        | 1.1.0  | Minor: new face styles and visual updates |
+| `@jackpotkit/react-native` | 1.1.0  | Minor: new face styles and visual updates |
+| `@jackpotkit/core`         | 1.0.0  | None                                      |
+| `@jackpotkit/theme`        | 1.0.0  | None                                      |
+| `@jackpotkit/testing`      | 1.0.0  | None                                      |
+
+## Unreleased
+
+These changesets are merged on `main` and will ship in the next version pull request. This list is
+read from the repository's `.changeset/` directory when the site is built.
+
+<UnreleasedChanges />
+
+Two of them can affect existing code even though they are patches:
+
+- **Tests that query the Slot Machine spin button by name.** React web no longer overrides the
+  button's visible text with `aria-label="Spin reels"`; its name is now the visible `PULL TO SPIN` /
+  `SPINNING…`. React Native's default labels change from `Spin reels` / `Reels spinning` to
+  `Pull to spin` / `Spinning`. Update queries such as `getByRole('button', { name: 'Spin reels' })`,
+  or pass `accessibilityLabels.spin` and `accessibilityLabels.spinning` on React Native to keep custom
+  copy.
+- **`Dice` generic props.** `Dice` now keeps its generic signature on both platforms
+  (`DiceProps<TRequest>`, default `void`). If you passed a typed `resultProvider`, write
+  `<Dice<MyRequest> ... />` so `resultRequest` is checked.
+
+The web primary actions of Spin Wheel, Dice, Coin Flip, Slot Machine, and Lucky Box now stay
+disabled for the whole play, and a `disabled` control keeps its idle label with
+`aria-busy="false"`. Assertions on `aria-busy` while a game is disabled may need updating.
+
+## 1.0 to 1.1
+
+`@jackpotkit/react` and `@jackpotkit/react-native` 1.1.0 are backward compatible with 1.0. No code
+changes are required.
+
+New, opt-in features:
+
+- `faceStyle` on Dice (`'numbers'` default, or `'pips'`) and Coin Flip (`'flat'` default, or
+  `'embossed'`).
+- `faceStyle` on Lucky Box (`'tiles'` default, or `'gift-boxes'`).
+- Improved Slot Machine reel animation, symbol rendering, and accessibility, and improved Scratch
+  Card rendering (the web renderer is canvas-backed).
+
+Visible changes to check in screenshot or visual tests:
+
+- Default Slot Machine and Scratch Card visuals changed.
+- Coin Flip face text switches to a readable color when a theme color does not meet WCAG contrast.
+- On React Native, Lucky Box reliably resets its selection, and Dice, Coin Flip, and Lucky Box no longer
+  crash on Hermes when their animations complete.
+
+`@jackpotkit/core`, `@jackpotkit/theme`, and `@jackpotkit/testing` stayed at 1.0.0. Install
+matching 1.x versions of all packages; the renderers depend on `@jackpotkit/core` and
+`@jackpotkit/theme` with `^1.0.0` ranges.
+
+## Before 1.0
+
+See [Migrating from pre-1.0](./versioning.md#migrating-from-pre-10).

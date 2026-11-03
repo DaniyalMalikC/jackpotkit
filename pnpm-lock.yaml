@@ -133,6 +133,9 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(react@19.2.3)
     devDependencies:
+      '@jackpotkit/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
       '@tailwindcss/postcss':
         specifier: 4.3.3
         version: 4.3.3
