@@ -50,6 +50,26 @@ describe('Dice', () => {
     ).toHaveLength(5);
     expect(screen.getByText('Total: 5')).toBeVisible();
   });
+  // Regression: the default face carried a label without a role, which react-native-web emits as
+  // a prohibited aria-label on a generic div. It is now an image, like the web renderer.
+  it.each(['numbers', 'pips'] as const)(
+    'exposes each default %s face as a labelled image',
+    async (faceStyle) => {
+      await render(
+        <Dice count={2} faceStyle={faceStyle} reduceMotion result={{ values: [2, 6] }} />,
+      );
+      await act(async () => {
+        fireEvent.press(screen.getByRole('button', { name: 'Roll dice' }));
+        await Promise.resolve();
+      });
+
+      const faces = screen.getAllByRole('image');
+      expect(faces).toHaveLength(2);
+      expect(screen.getByRole('image', { name: 'D6: 2' })).toHaveProp('accessible', true);
+      expect(screen.getByRole('image', { name: 'D6: 6' })).toBeVisible();
+    },
+  );
+
   // Type-level regression, enforced by `pnpm typecheck`: the Dice export lost its generic, so its
   // props resolved to DiceProps<unknown> and neither a DiceProps object nor a typed request fit.
   it('keeps generic props on the export', async () => {

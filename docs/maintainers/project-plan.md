@@ -43,16 +43,16 @@ Verified on Node 24.22.2 and pnpm 11.21.0 against `main` at `543b599`.
 
 ## Phases
 
-| Phase | Scope                                                                            | Owner agent                                | Status                                  |
-| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------- |
-| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                    |
-| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Done                                    |
-| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done                                    |
-| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending) |
-| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                    |
-| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Done (Snack and device checks pending)  |
-| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Live; SEO done, OG image pending        |
-| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Not started                             |
+| Phase | Scope                                                                            | Owner agent                                | Status                                   |
+| ----- | -------------------------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------- |
+| A     | `CLAUDE.md`, agent definitions, maintainer-doc separation, this record           | orchestrator                               | Done                                     |
+| B1    | Fumadocs site, homepage, navigation, content migration                           | docs-engineer                              | Done                                     |
+| B2    | Playground component, control schemas for all seven games, event log             | playground-engineer                        | Done                                     |
+| B3    | Slot Machine font-scale fix with regression test; deeper React web tests         | library-developer, react-native-specialist | Done (real-device verification pending)  |
+| B4    | Playwright E2E, CI gates, Claude Code workflows                                  | qa-engineer, devops-engineer               | Done                                     |
+| C     | Native preview deploy and embeds, Snack verification, companion repos at `1.1.0` | react-native-specialist                    | Done (Snack and device checks pending)   |
+| D     | Vercel deployment, SEO metadata, verified public access                          | devops-engineer                            | Live; SEO and OG image done              |
+| E     | Missing reference pages, theming, recipes, FAQ, migration guide, backlog issues  | docs-engineer, product-researcher          | Done (backlog written, issues not filed) |
 
 B1, B3, and B4 can run in parallel after A. B2 integrates into B1. C and E follow B1. D needs Vercel
 access.
@@ -80,8 +80,6 @@ access.
 
 - B3: verify the fixed-cell font-scale cap on an iOS simulator and an Android device at the largest
   accessibility text size.
-- React Native label-in-name mismatches remain on Lucky Box ("Reveal Lucky Box" vs "Reveal
-  selection") and Bingo ("Call next Bingo number" vs "Call next number").
 - Web game wrappers are `div` elements with `aria-label` and no role (axe "needs review"). Decide
   whether to add `role="group"` across all games in one changeset.
 - B2: the docs site had WCAG AA contrast failures outside the playground (Shiki `github-light/dark`
@@ -95,20 +93,29 @@ access.
 - C1: verify Expo Snack with Expo SDK 57, Reanimated 4, and react-native-worklets before adding any
   Snack links (snack.expo.dev was unreachable from the C1 environment). Then do C2 (companion repos
   at `1.1.0`).
-- C1: `@jackpotkit/react-native` axe defects seen through react-native-web (E2E `test.fail()` in
-  `apps/e2e/tests/native/games.ts`): Scratch Card surface label omits its visible prize text; Bingo
-  "Call next Bingo number" vs "Call next number"; Lucky Box "Reveal Lucky Box" vs "Reveal
-  selection" and "Locked gift" vs "Locked gift · unavailable"; default Dice faces put
-  `accessibilityLabel` on a role-less View (`aria-label` on a plain `div`). Fix in one changeset
-  with native screen-reader checks.
-- C1: the Expo gallery's Spin Wheel passes the long label "Spin the example wheel" as
-  `accessibilityLabels.spin`, which is also the hub's visible text, so it truncates to "Spin th…".
-  Decide whether the hub should show a short visible label separately from its accessible name.
+- C1: the `@jackpotkit/react-native` axe defects seen through react-native-web (Scratch Card,
+  Bingo, Lucky Box label-in-name; Dice role-less face label) are fixed on `fix/rn-accessible-names`
+  and their E2E `test.fail()` markers removed. VoiceOver and TalkBack checks of the new names, the
+  Scratch Card value, and the hidden-until-revealed prize are still pending.
+- C1: the Expo gallery's Spin Wheel no longer overrides `accessibilityLabels.spin` with the long
+  "Spin the example wheel", which was also the hub's visible text and truncated to "Spin th…"; it
+  uses the default `Spin` / `Spinning`. The library default `Spinning` may still be tight in the
+  76 pt hub on web, where react-native-web cannot shrink text to fit.
 - C1: narrow the preview's `frame-ancestors https://*.vercel.app` once the docs have a custom
   domain.
 
 - Playground: segment colour swatches show a placeholder when a segment inherits its theme colour;
   show the resolved theme colour instead. Open the StackBlitz handoff in a real browser once deployed.
+
+- E: props, ref, and core type tables are generated from the exported types
+  (`apps/docs/lib/api-reference/`, fumadocs-typescript 5.6.0). Prop descriptions live in the docs
+  app because the types have almost no TSDoc; moving them into TSDoc is a backlog item. The
+  generator depends on `typescript@7.1.0-beta` (docs build only).
+- E: found during the docs audit: React web renderers have no translatable control text (no
+  `accessibilityLabels`), and `reduceMotion={false}` cannot override the system setting on React
+  Native while it does on the web. Both are in the [backlog](./backlog.md).
+- E: all follow-ups above are collected, prioritized, and written as issue-ready entries in the
+  [backlog](./backlog.md). A maintainer files the issues.
 
 ## Human approval gates
 

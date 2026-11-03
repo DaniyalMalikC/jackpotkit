@@ -1,0 +1,13 @@
+{
+  "//": "Resolves the workspace packages from source for generated API tables (lib/api-reference).",
+  "extends": "@jackpotkit/shared-config/tsconfig/react.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@jackpotkit/core": ["../../packages/core/src/index.ts"],
+      "@jackpotkit/core/*": ["../../packages/core/src/*/index.ts"],
+      "@jackpotkit/theme": ["../../packages/theme/src/index.ts"]
+    }
+  },
+  "files": []
+}

@@ -1,0 +1,38 @@
+---
+title: Reduced motion
+description: How each platform follows the system reduce-motion setting, and how to add an in-app setting.
+---
+
+# Reduced motion
+
+Every game follows the operating system's reduce-motion setting by default and switches to a short
+transition (`animation.reducedMotionDuration` in the [theme](../theming.mdx), 160 ms by default).
+When reduced motion is active, Spin Wheel makes no extra rotations and Slot Machine reels stop
+together without a stagger. The outcome and every callback are unchanged.
+
+## Platform behaviour of `reduceMotion`
+
+| Value   | React web                                        | React Native                             |
+| ------- | ------------------------------------------------ | ---------------------------------------- |
+| omitted | Follows `prefers-reduced-motion`                 | Follows the system Reduce Motion setting |
+| `true`  | Always reduced                                   | Always reduced                           |
+| `false` | Always full motion, even if the OS asks for less | Still follows the system setting         |
+
+On React Native, `reduceMotion` can only add a reduction; it never overrides a user's system
+setting. On the web, `false` does override it, so pass `false` only when the user explicitly chose
+full motion in your app.
+
+## An in-app setting
+
+### React web
+
+<include lang="tsx">../../apps/docs/examples/web/reduced-motion.tsx</include>
+
+### React Native
+
+<include lang="tsx">../../apps/docs/examples/native/reduced-motion.tsx</include>
+
+## Tests
+
+Pass `reduceMotion` (`true`) in component tests to keep them fast. The docs end-to-end suite checks
+that a reduced-motion spin finishes in the short duration.

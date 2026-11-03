@@ -39,7 +39,7 @@ function BingoInner(props: BingoProps, ref: React.ForwardedRef<BingoRef>) {
   const labels = useMemo(
     () => ({
       board: accessibilityLabels.board ?? accessibilityLabel ?? 'Bingo board',
-      call: accessibilityLabels.call ?? 'Call next Bingo number',
+      call: accessibilityLabels.call,
       completed:
         accessibilityLabels.completed ??
         ((result) => `Bingo! Completed ${result.matches.map((match) => match.label).join(', ')}.`),
@@ -94,6 +94,11 @@ function BingoInner(props: BingoProps, ref: React.ForwardedRef<BingoRef>) {
   const minNumber = props.minNumber ?? 1;
   const maxNumber = props.maxNumber ?? 75;
   const allNumbersCalled = controller.state.calledNumbers.length >= maxNumber - minNumber + 1;
+  const callText = allNumbersCalled
+    ? 'All numbers called'
+    : lastCalled === undefined
+      ? 'Call next number'
+      : `Last call: ${lastCalled}`;
 
   useImperativeHandle(
     ref,
@@ -168,7 +173,14 @@ function BingoInner(props: BingoProps, ref: React.ForwardedRef<BingoRef>) {
 
       {showCallButton ? (
         <Pressable
-          accessibilityLabel={labels.call}
+          // The default name is the visible text (WCAG 2.5.3); the hint names the action when the
+          // visible text shows the last call instead.
+          accessibilityHint={
+            labels.call === undefined && lastCalled !== undefined && !allNumbersCalled
+              ? 'Calls the next number'
+              : undefined
+          }
+          accessibilityLabel={labels.call ?? callText}
           accessibilityRole="button"
           accessibilityState={{
             disabled: isDisabled || controller.state.completed || allNumbersCalled,
@@ -192,11 +204,7 @@ function BingoInner(props: BingoProps, ref: React.ForwardedRef<BingoRef>) {
               fontWeight: '900',
             }}
           >
-            {allNumbersCalled
-              ? 'All numbers called'
-              : lastCalled === undefined
-                ? 'Call next number'
-                : `Last call: ${lastCalled}`}
+            {callText}
           </Text>
         </Pressable>
       ) : null}

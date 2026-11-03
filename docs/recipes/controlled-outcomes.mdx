@@ -1,0 +1,41 @@
+---
+title: Controlled outcomes
+description: Choose the next outcome yourself for tutorials, onboarding, and scripted flows.
+---
+
+# Controlled outcomes
+
+A controlled outcome is one your application already knows: an onboarding wheel that always lands on
+the welcome bonus, a tutorial slot machine, or a result your server returned earlier. Two APIs set
+it, on both platforms.
+
+## The `result` prop
+
+The next play resolves to `result` instead of drawing:
+
+<include lang="tsx">../../apps/docs/examples/web/controlled-outcome.tsx#prop</include>
+
+| Game         | `result` shape                           |
+| ------------ | ---------------------------------------- |
+| Spin Wheel   | `{ segmentId }`                          |
+| Scratch Card | `{ prize, metadata? }`                   |
+| Slot Machine | `{ reels: string[][], metadata? }`       |
+| Dice         | `{ values: number[], metadata? }`        |
+| Coin Flip    | `{ faceId, metadata? }`                  |
+| Lucky Box    | `{ boxId, metadata? }` (the winning box) |
+
+Bingo has no `result`; call numbers with `ref.call(number)`.
+
+## Ref methods
+
+Choose the destination at the moment of play with the ref's `*To` method (`spinTo`, `rollTo`,
+`flipTo`, `revealTo`). Each returns a promise that resolves after the animation:
+
+<include lang="tsx">../../apps/docs/examples/web/controlled-outcome.tsx#ref</include>
+
+Every selection is validated against the configuration before animating. An unknown ID or an
+out-of-range value is reported as an error (`onError`, status `error`) and nothing animates.
+
+A controlled result is still decided on the client. If it comes from your server, it is only as
+trustworthy as the request that fetched it; for rewards with value use a
+[`resultProvider`](./server-authoritative-rewards.mdx).

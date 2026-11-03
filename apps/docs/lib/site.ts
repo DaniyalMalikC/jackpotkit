@@ -27,3 +27,12 @@ export const docsRoute = '/docs';
 export const nativePreviewUrl = (
   process.env.NEXT_PUBLIC_NATIVE_PREVIEW_URL || 'https://jackpotkit-native.vercel.app'
 ).replace(/\/+$/, '');
+
+/** The static Open Graph image rendered by `app/og.png/route.tsx`, used by every page. */
+export const ogImage = {
+  alt: `${siteName}: ${siteTagline}`,
+  height: 630,
+  type: 'image/png',
+  url: '/og.png',
+  width: 1200,
+} as const;

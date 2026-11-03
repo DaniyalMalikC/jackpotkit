@@ -2,6 +2,7 @@
   "title": "Maintainers",
   "pages": [
     "project-plan",
+    "backlog",
     "automation",
     "releasing",
     "release-readiness",

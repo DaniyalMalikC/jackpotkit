@@ -62,7 +62,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
-                className="rounded-lg bg-[#6843D5] px-4 py-2 text-sm font-medium text-white hover:bg-[#5a36c4]"
+                className="rounded-lg bg-fd-primary px-4 py-2 text-sm font-medium text-fd-primary-foreground hover:bg-fd-primary/90"
                 href="/docs"
               >
                 Get started

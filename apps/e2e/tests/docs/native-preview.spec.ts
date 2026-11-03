@@ -63,7 +63,7 @@ test.describe('React Native preview', () => {
     await preview.getByRole('button', { name: 'Load React Native preview' }).click();
 
     const frame = preview.frameLocator('iframe');
-    const spin = frame.getByRole('button', { name: 'Spin the example wheel' });
+    const spin = frame.getByRole('button', { name: 'Spin', exact: true });
     await expect(spin).toBeVisible({ timeout: 30_000 });
     await spin.click();
     await expect(

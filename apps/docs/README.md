@@ -36,6 +36,36 @@ read at build time, so redeploy the docs after changing it.
   work on GitHub and are rewritten to site routes. `scripts/check-links.mjs` fails the build and
   `test` on missing files or heading anchors.
 
+## Generated API reference
+
+Props, ref, and core type tables are generated at build time from the exported TypeScript types
+with [fumadocs-typescript](https://fumadocs.dev/docs/integrations/typescript) (`remarkAutoTypeTable`
+in `source.config.ts`). In MDX:
+
+```mdx
+<auto-type-table path="packages/react/src/spin-wheel/types.ts" name="SpinWheelProps" />
+
+<platform-differences
+  name="SpinWheelProps"
+  web="packages/react/src/spin-wheel/types.ts"
+  native="packages/react-native/src/spin-wheel/types.ts"
+/>
+```
+
+- `path` is relative to the repository root. `tsconfig.api.json` resolves `@jackpotkit/core` and
+  `@jackpotkit/theme` to their `src/`, so generation needs no package build and no network.
+- `lib/api-reference/generator.ts` sorts members (required, optional, then `on*` callbacks), adds a
+  description from `lib/api-reference/descriptions.ts` when the source has no TSDoc, and adds the
+  default that the component assigns while destructuring its props (`lib/api-reference/defaults.ts`
+  reads `const { size = 320 } = props` from `<Component>Inner`).
+- `<platform-differences>` (`lib/api-reference/remark-platform-differences.ts`) lists props that
+  exist on only one platform and props whose types differ, computed from both types.
+- `test/api-reference.test.ts` fails when a table cannot be generated, when a member has no
+  description, when a description or default names a member that no longer exists, when a game
+  page lacks either platform's props table, or when the two platforms' ref methods diverge.
+
+When a package adds a prop, add one sentence for it to `descriptions.ts` (or TSDoc in the source).
+
 ## Game playgrounds
 
 Each game page embeds `<Playground game="spin-wheel" />` (registered in `components/mdx.tsx`, no
@@ -50,7 +80,9 @@ import needed). It renders the real `@jackpotkit/react` component with:
 - reset (the component's imperative `reset()`), remount, and restore-defaults buttons;
 - an event log of every callback prop with a timestamp and JSON payload. It announces a summary
   through a polite live region at most every two seconds;
-- a theme switch (match site, default, neon), a preview-width switch (360, 768, full);
+- a theme switch and a preview-width switch (360, 768, full). "Match site" renders the site's
+  brand theme (`lib/brand-theme.ts`, built with the public `createJackpotTheme`) in its light or
+  dark variant; "Default" and "Neon" render the library's `defaultTheme` and `neonTheme` presets;
 - generated code with a copy button and an "Open in StackBlitz" handoff.
 
 ### Schemas cannot drift from the components
@@ -68,7 +100,9 @@ library's own error message.
 `lib/playground/codegen.ts` prints a complete module: the game imported from its exact subpath,
 only props that differ from the component's own defaults (`libraryDefaults`, read from the
 component and engine sources and the exported `defaultTheme`, `DEFAULT_COIN_FACES`, and
-`DEFAULT_BINGO_*` values), and the current result mode and theme. `test/codegen.test.ts` writes the
+`DEFAULT_BINGO_*` values), and the current result mode and theme. The site brand theme is printed
+as a `createJackpotTheme({ ... })` call so the pasted code matches the preview; the default theme
+prints nothing and neon imports `neonTheme`. `test/codegen.test.ts` writes the
 default and several modified states of all seven games to temporary `.tsx` files and type-checks
 them with the TypeScript compiler API against `@jackpotkit/react` under the repository's strict
 settings.
@@ -134,8 +168,35 @@ NEXT_PUBLIC_NATIVE_PREVIEW_URL=http://127.0.0.1:4174 pnpm --filter @jackpotkit/d
 pnpm --filter @jackpotkit/docs test   # link check, then vitest (codegen type-check, schemas, state)
 ```
 
+## Code samples
+
+Guide and recipe samples live in `examples/` (`web/`, `native/`, `server/`, `testing/`) and are
+embedded in MDX with Fumadocs' include syntax, optionally a `// #region name` of the file:
+
+```mdx
+<include lang="tsx">../apps/docs/examples/web/theming.tsx#provider</include>
+```
+
+`test/examples.test.ts` type-checks every sample with the TypeScript compiler API under the shared
+strict presets (React web or React Native), resolving the workspace packages to their sources.
+`examples/testing/*.test.ts` also run as Vitest tests. `examples/` is excluded from the app's
+`tsconfig.json` because the native samples need React Native types.
+
+## Changelog and unreleased changes
+
+`docs/changelog.mdx` includes each `packages/*/CHANGELOG.md` with `<include>`;
+`lib/remark-demote-headings.ts` moves the included headings one level down. The migration guide's
+`<UnreleasedChanges />` (`components/unreleased-changes.tsx`) reads `.changeset/*.md` while the
+page is prerendered. `turbo.json` in this app adds those files and the package sources to the
+`build` and `test` inputs, so cached builds are invalidated when they change.
+
 ## Search and SEO
 
 Search uses Fumadocs' static Orama index from `app/api/search/route.ts`, built at build time and
 queried in the browser. No external search service is used. `app/sitemap.ts`, `app/robots.ts`, and
 the metadata in `app/layout.tsx` provide the SEO basics.
+
+`app/og.png/route.tsx` renders the site's Open Graph image (1200 x 630) with `next/og` at build
+time (`dynamic = 'force-static'`), using only the font bundled with Next.js, so the build fetches
+nothing. The root layout and every docs page reference it as `og:image` and `twitter:image` with a
+`summary_large_image` card (`ogImage` in `lib/site.ts`).

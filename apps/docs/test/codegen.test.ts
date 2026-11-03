@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import { afterAll, describe, expect, it } from 'vitest';
 
+import { brandThemeOverrides } from '@/lib/brand-theme';
 import { gameIds, type GameId } from '@/lib/games';
 import { changedProps, generateCode, type ResolvedTheme } from '@/lib/playground/codegen';
 import { playgroundSchemas } from '@/lib/playground/games';
@@ -59,7 +60,10 @@ function modifiedFirstControl(
 function variants(game: GameId): readonly Variant[] {
   const schema = playgroundSchemas[game];
   const base = initialState(schema);
-  const all: Variant[] = [{ label: 'default', state: base, theme: 'default' }];
+  const all: Variant[] = [
+    { label: 'default', state: base, theme: 'default' },
+    { label: 'site brand, light', state: base, theme: 'brand-light' },
+  ];
   const animated: Record<string, unknown> = {};
   for (const control of schema.controls) {
     if (control.kind === 'number' && control.optional !== undefined)
@@ -89,6 +93,12 @@ function variants(game: GameId): readonly Variant[] {
       theme: 'neon',
     });
   }
+  if (schema.modes.controlled)
+    all.push({
+      label: 'controlled, site brand, dark',
+      state: { ...base, mode: 'controlled' },
+      theme: 'brand-dark',
+    });
   return all;
 }
 
@@ -193,5 +203,25 @@ describe('generated code', () => {
     expect(failing).toContain('onError=');
     const seeded = generateCode({ schema, state: { ...base, seed: "o'brien" }, theme: 'default' });
     expect(seeded).toContain("new SeededRandomSource('o\\'brien')");
+  });
+
+  it('prints the site brand theme with createJackpotTheme, and nothing for the default theme', () => {
+    const schema = playgroundSchemas['spin-wheel'];
+    const base = initialState(schema);
+    const plain = generateCode({ schema, state: base, theme: 'default' });
+    expect(plain).not.toContain('@jackpotkit/theme');
+    expect(plain).not.toContain('theme=');
+    for (const [theme, override] of [
+      ['brand-light', brandThemeOverrides.light],
+      ['brand-dark', brandThemeOverrides.dark],
+    ] as const) {
+      const code = generateCode({ schema, state: base, theme });
+      expect(code).toContain("import { createJackpotTheme } from '@jackpotkit/theme';");
+      expect(code).toContain('const brandTheme = createJackpotTheme({');
+      expect(code).toContain('theme={brandTheme}');
+      expect(code).not.toContain('neonTheme');
+      for (const color of Object.values(override.colors ?? {}).flat())
+        expect(code).toContain(`'${color}'`);
+    }
   });
 });

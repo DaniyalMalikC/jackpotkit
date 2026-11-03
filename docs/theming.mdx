@@ -1,0 +1,95 @@
+---
+title: Theming and customization
+description: Theme contracts, the default and neon presets, provider usage on React and React Native, per-component overrides, and custom renderers.
+---
+
+# Theming and customization
+
+Themes come from `@jackpotkit/theme` and are platform-neutral: the same theme object styles React
+web and React Native. A theme controls presentation and animation timing only; it never changes
+outcomes.
+
+## Presets
+
+| Export         | Description                                                              |
+| -------------- | ------------------------------------------------------------------------ |
+| `defaultTheme` | Light surfaces, violet primary, amber accents. Used when nothing is set. |
+| `neonTheme`    | Dark surfaces with cyan, magenta, and yellow accents.                    |
+
+Both are frozen `JackpotTheme` objects. `createJackpotTheme(override, base)` returns a new frozen
+theme: each token group (`colors`, `typography`, `spacing`, `radii`, `animation`) is shallowly
+merged over `base`, which defaults to `defaultTheme`.
+
+<include lang="tsx">../apps/docs/examples/web/theming.tsx#create-theme</include>
+
+## Providing a theme
+
+`JackpotKitProvider` is exported from the package root of both renderers. Its `theme` prop takes a
+complete `JackpotTheme` (build one with `createJackpotTheme`) and defaults to `defaultTheme`. Each
+game's `theme` prop takes a partial `JackpotThemeOverride` that is merged over the provider theme
+for that component only.
+
+### React web
+
+<include lang="tsx">../apps/docs/examples/web/theming.tsx#provider</include>
+
+### React Native
+
+<include lang="tsx">../apps/docs/examples/native/theming.tsx</include>
+
+`useJackpotKitTheme()` returns the provider theme on both platforms, so your own UI can match the
+games:
+
+<include lang="tsx">../apps/docs/examples/web/use-theme.tsx</include>
+
+The web and native providers are separate contexts. A web provider does not theme React Native
+components rendered through react-native-web, and the reverse.
+
+## Theme contract
+
+### `JackpotTheme`
+
+<auto-type-table path="packages/theme/src/index.ts" name="JackpotTheme" />
+
+### Colors
+
+<auto-type-table path="packages/theme/src/index.ts" name="JackpotThemeColors" />
+
+### Typography, spacing, and radii
+
+<auto-type-table path="packages/theme/src/index.ts" name="JackpotThemeTypography" />
+
+<auto-type-table path="packages/theme/src/index.ts" name="JackpotThemeSpacing" />
+
+<auto-type-table path="packages/theme/src/index.ts" name="JackpotThemeRadii" />
+
+### Animation
+
+Animation tokens are durations in milliseconds, except `spinRotations` (full turns). A component's
+own `duration`, `rotations`, `reelDelay`, or `revealDuration` prop wins over its token, and
+`reducedMotionDuration` replaces them when reduced motion is active.
+
+<auto-type-table path="packages/theme/src/index.ts" name="JackpotThemeAnimation" />
+
+## Per-component customization
+
+Beyond `theme`, every game accepts presentation props and render callbacks. Each callback receives
+the resolved theme, so custom artwork can use the same tokens.
+
+| Game         | Presentation props                     | Render callbacks                 |
+| ------------ | -------------------------------------- | -------------------------------- |
+| Spin Wheel   | `size`, `direction`, `easing`          | `renderSegment`, `renderPointer` |
+| Scratch Card | `cover`, `borderRadius`, `brushRadius` | `renderCover`, `children`        |
+| Slot Machine | `width`, `symbolHeight`, `easing`      | `renderSymbol`                   |
+| Bingo        | `width`, `cellGap`, `showCallButton`   | `renderCell`                     |
+| Dice         | `width`, `faceStyle`, `easing`         | `renderDie`                      |
+| Coin Flip    | `size`, `faceStyle`, `easing`          | `renderFace`                     |
+| Lucky Box    | `width`, `columns`, `faceStyle`        | `renderBox`                      |
+
+On the web, every game also accepts `className` and a CSS `style`; on React Native, `style` takes a
+`StyleProp<ViewStyle>`. The exact props and types are in each game page's generated API reference.
+
+Custom renderers and custom colors are your responsibility for contrast, readable labels, and
+non-color-only state. Check every pairing you ship, in light and dark surroundings, against WCAG AA
+(4.5:1 for text). The built-in Coin Flip faces switch to a readable text color when a theme color
+does not meet contrast; other games use your colors as given.
