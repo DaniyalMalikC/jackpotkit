@@ -281,6 +281,7 @@ export function Playground({ game }: { readonly game: GameId }) {
           fallback={schema.libraryDefaults[control.prop]}
           key={control.prop}
           onChange={(value) => setValue(control.prop, value)}
+          paletteFallback={resolvedThemes[theme].colors.wheelPalette}
           value={state.values[control.prop]}
         />
       ));

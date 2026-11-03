@@ -12,6 +12,11 @@ export interface ControlProps<C extends ErasedControl = ErasedControl> {
   /** The value shown when unset: the component's own default. */
   readonly fallback: unknown;
   readonly onChange: (value: unknown) => void;
+  /**
+   * Colours the component uses for list items without an explicit colour (the active theme's
+   * `wheelPalette`, cycled by index), so colour swatches show what is actually drawn.
+   */
+  readonly paletteFallback?: readonly string[];
 }
 
 function clamp(value: number, control: NumberControl): number {
@@ -84,6 +89,7 @@ function ListEditor({
   control,
   fallback,
   onChange,
+  paletteFallback = [],
   value,
 }: ControlProps<Extract<ErasedControl, { kind: 'list' }>>) {
   const items = (
@@ -137,7 +143,11 @@ function ListEditor({
                           className="h-9 w-12 flex-none cursor-pointer rounded-md border bg-fd-background p-1"
                           onChange={(event) => update(index, field.key, event.currentTarget.value)}
                           type="color"
-                          value={typeof fieldValue === 'string' ? fieldValue : '#800020'}
+                          value={
+                            typeof fieldValue === 'string'
+                              ? fieldValue
+                              : (paletteFallback[index % paletteFallback.length] ?? '#800020')
+                          }
                         />
                         {typeof fieldValue === 'string' ? (
                           <Button
